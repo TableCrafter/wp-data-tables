@@ -5,6 +5,7 @@
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
  * Version: 1.0.0
  * Author: TableCrafter Team
+ * Author URI: https://github.com/fahdi
  * License: MIT
  * Text Domain: tablecrafter
  */
