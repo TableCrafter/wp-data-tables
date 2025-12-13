@@ -21,6 +21,11 @@ class TableCrafter {
     
     private static $instance = null;
     
+    /**
+     * Get singleton instance.
+     * 
+     * @return TableCrafter
+     */
     public static function get_instance() {
         if (self::$instance === null) {
             self::$instance = new self();
@@ -28,17 +33,31 @@ class TableCrafter {
         return self::$instance;
     }
     
+    /**
+     * Constructor.
+     */
     private function __construct() {
+        add_action('init', array($this, 'load_textdomain'));
         add_action('wp_enqueue_scripts', array($this, 'register_assets'));
-        add_action('admin_enqueue_scripts', array($this, 'register_assets')); // Register for admin too
+        add_action('admin_enqueue_scripts', array($this, 'register_assets'));
         add_shortcode('tablecrafter', array($this, 'render_table'));
         add_action('admin_menu', array($this, 'add_admin_menu'));
     }
 
+    /**
+     * Load text domain for translation.
+     */
+    public function load_textdomain() {
+        load_plugin_textdomain('tablecrafter', false, dirname(plugin_basename(__FILE__)) . '/languages');
+    }
+
+    /**
+     * Add admin menu page.
+     */
     public function add_admin_menu() {
         add_menu_page(
-            'TableCrafter',
-            'TableCrafter',
+            __('TableCrafter', 'tablecrafter'),
+            __('TableCrafter', 'tablecrafter'),
             'manage_options',
             'tablecrafter',
             array($this, 'render_admin_page'),
@@ -47,14 +66,21 @@ class TableCrafter {
         );
     }
 
+    /**
+     * Render the admin dashboard page.
+     */
     public function render_admin_page() {
         // Enqueue assets for the preview
         wp_enqueue_script('tablecrafter-lib');
         wp_enqueue_style('tablecrafter-style');
+        
+        $users_url = esc_url(TABLECRAFTER_URL . 'demo-data/users.json');
+        $products_url = esc_url(TABLECRAFTER_URL . 'demo-data/products.json');
+        $metrics_url = esc_url(TABLECRAFTER_URL . 'demo-data/metrics.json');
         ?>
         <div class="wrap">
-            <h1 class="wp-heading-inline">TableCrafter</h1>
-            <p>Generate dynamic HTML tables from any JSON data source.</p>
+            <h1 class="wp-heading-inline"><?php _e('TableCrafter', 'tablecrafter'); ?></h1>
+            <p><?php _e('Generate dynamic HTML tables from any JSON data source.', 'tablecrafter'); ?></p>
             <hr class="wp-header-end">
 
             <div class="tc-admin-layout" style="display: flex; gap: 20px; margin-top: 20px; align-items: flex-start;">
@@ -63,34 +89,34 @@ class TableCrafter {
                 <div class="tc-sidebar" style="flex: 0 0 350px;">
                     <!-- Configuration Card -->
                     <div class="card" style="margin: 0 0 20px 0; max-width: none;">
-                        <h2>Settings</h2>
+                        <h2><?php _e('Settings', 'tablecrafter'); ?></h2>
                         <div style="margin-bottom: 15px;">
-                            <label for="tc-preview-url" style="font-weight: 600; display: block; margin-bottom: 5px;">Data Source URL</label>
+                            <label for="tc-preview-url" style="font-weight: 600; display: block; margin-bottom: 5px;"><?php _e('Data Source URL', 'tablecrafter'); ?></label>
                             <input type="text" id="tc-preview-url" class="widefat" placeholder="https://api.example.com/data.json">
-                            <p class="description">Must be a publicly accessible JSON endpoint.</p>
+                            <p class="description"><?php _e('Must be a publicly accessible JSON endpoint.', 'tablecrafter'); ?></p>
                         </div>
                         
                         <div style="display: flex; gap: 10px; margin-top: 15px;">
-                            <button id="tc-preview-btn" class="button button-primary button-large" style="flex: 1;">Preview Table</button>
+                            <button id="tc-preview-btn" class="button button-primary button-large" style="flex: 1;"><?php _e('Preview Table', 'tablecrafter'); ?></button>
                         </div>
                     </div>
 
                     <!-- Usage info -->
                      <div class="card" style="margin: 0 0 20px 0; max-width: none;">
-                        <h2>Usage</h2>
-                        <p>Copy the shortcode below to use this table:</p>
+                        <h2><?php _e('Usage', 'tablecrafter'); ?></h2>
+                        <p><?php _e('Copy the shortcode below to use this table:', 'tablecrafter'); ?></p>
                         <code id="tc-shortcode-display" style="display: block; padding: 10px; background: #f0f0f1; margin: 10px 0;">[tablecrafter source="..."]</code>
-                        <button id="tc-copy-shortcode" class="button button-secondary" style="width: 100%;">Copy Shortcode</button>
+                        <button id="tc-copy-shortcode" class="button button-secondary" style="width: 100%;"><?php _e('Copy Shortcode', 'tablecrafter'); ?></button>
                      </div>
 
                     <!-- Demos -->
                     <div class="card" style="margin: 0; max-width: none;">
-                        <h2>Quick Demos</h2>
-                        <p>Click a dataset to load:</p>
+                        <h2><?php _e('Quick Demos', 'tablecrafter'); ?></h2>
+                        <p><?php _e('Click a dataset to load:', 'tablecrafter'); ?></p>
                         <ul class="tc-demo-links" style="margin: 0;">
-                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;" data-url="<?php echo TABLECRAFTER_URL . 'demo-data/users.json'; ?>">👤 User Directory (JSON)</a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;" data-url="<?php echo TABLECRAFTER_URL . 'demo-data/products.json'; ?>">📦 Product Inventory (JSON)</a></li>
-                            <li style="margin-bottom: 0;"><a href="#" class="button" style="width: 100%; text-align: left;" data-url="<?php echo TABLECRAFTER_URL . 'demo-data/metrics.json'; ?>">📈 Sales Metrics (JSON)</a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;" data-url="<?php echo $users_url; ?>">👤 <?php _e('User Directory (JSON)', 'tablecrafter'); ?></a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;" data-url="<?php echo $products_url; ?>">📦 <?php _e('Product Inventory (JSON)', 'tablecrafter'); ?></a></li>
+                            <li style="margin-bottom: 0;"><a href="#" class="button" style="width: 100%; text-align: left;" data-url="<?php echo $metrics_url; ?>">📈 <?php _e('Sales Metrics (JSON)', 'tablecrafter'); ?></a></li>
                         </ul>
                     </div>
                 </div>
@@ -98,13 +124,13 @@ class TableCrafter {
                 <!-- Main Preview Area -->
                 <div class="tc-preview-area" style="flex: 1; min-width: 0;">
                     <div class="card" style="margin: 0; max-width: none; min-height: 500px; display: flex; flex-direction: column;">
-                        <h2 style="border-bottom: 1px solid #f0f0f1; padding-bottom: 15px; margin-bottom: 15px; margin-top: 0;">Live Preview</h2>
+                        <h2 style="border-bottom: 1px solid #f0f0f1; padding-bottom: 15px; margin-bottom: 15px; margin-top: 0;"><?php _e('Live Preview', 'tablecrafter'); ?></h2>
                         
                         <div id="tc-preview-wrap" style="flex: 1; overflow: auto; background: #fff;">
                             <div id="tc-preview-container" style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666;">
                                 <div style="text-align: center;">
                                     <span class="dashicons dashicons-editor-table" style="font-size: 48px; width: 48px; height: 48px; color: #ddd;"></span>
-                                    <p>Select a demo or enter a URL to generate a table.</p>
+                                    <p><?php _e('Select a demo or enter a URL to generate a table.', 'tablecrafter'); ?></p>
                                 </div>
                             </div>
                         </div>
@@ -142,7 +168,7 @@ class TableCrafter {
                 previewBtn.addEventListener('click', function() {
                     const url = urlInput.value.trim();
                     if (!url) {
-                        alert('Please enter a valid URL');
+                        alert('<?php _e('Please enter a valid URL', 'tablecrafter'); ?>');
                         return;
                     }
 
@@ -154,7 +180,7 @@ class TableCrafter {
                     if (typeof TableCrafter !== 'undefined') {
                         // Create a unique ID for the inner container
                         const tableId = 'tc-preview-' + Date.now();
-                        container.innerHTML = `<div id="${tableId}" class="tablecrafter-container">Loading data from source...</div>`;
+                        container.innerHTML = `<div id="${tableId}" class="tablecrafter-container"><?php _e('Loading data from source...', 'tablecrafter'); ?></div>`;
                         
                         // Init TableCrafter
                         new TableCrafter({
@@ -162,7 +188,7 @@ class TableCrafter {
                             source: url
                         });
                     } else {
-                        container.innerHTML = '<div class="notice notice-error inline"><p>TableCrafter library not loaded.</p></div>';
+                        container.innerHTML = '<div class="notice notice-error inline"><p><?php _e('TableCrafter library not loaded.', 'tablecrafter'); ?></p></div>';
                     }
                 });
 
@@ -193,14 +219,14 @@ class TableCrafter {
                             } catch (e) {
                                 console.error('Copy failed', e);
                                 textArea.remove();
-                                alert('Failed to copy to clipboard. Please copy manually.');
+                                alert('<?php _e('Failed to copy to clipboard. Please copy manually.', 'tablecrafter'); ?>');
                                 return;
                             }
                         }
                         
                         // Success feedback
                         const originalText = copyBtn.innerText;
-                        copyBtn.innerText = 'Copied to Clipboard!';
+                        copyBtn.innerText = '<?php _e('Copied to Clipboard!', 'tablecrafter'); ?>';
                         setTimeout(() => copyBtn.innerText = originalText, 2000);
                     };
 
@@ -213,7 +239,7 @@ class TableCrafter {
     }
     
     /**
-     * Register frontend assets
+     * Register frontend assets.
      */
     public function register_assets() {
         wp_register_script(
@@ -233,8 +259,11 @@ class TableCrafter {
     }
     
     /**
-     * Shortcode to render the table container
+     * Shortcode to render the table container.
      * Usage: [tablecrafter source="/path/to/data.json"]
+     * 
+     * @param array $atts Shortcode attributes.
+     * @return string HTML output.
      */
     public function render_table($atts) {
         $atts = shortcode_atts(array(
@@ -242,8 +271,11 @@ class TableCrafter {
             'id' => 'tc-' . uniqid()
         ), $atts, 'tablecrafter');
         
+        // Sanitize the source URL
+        $atts['source'] = esc_url_raw($atts['source']);
+        
         if (empty($atts['source'])) {
-            return '<p>Error: TableCrafter requires a "source" attribute.</p>';
+            return '<p>' . __('Error: TableCrafter requires a "source" attribute.', 'tablecrafter') . '</p>';
         }
         
         // Enqueue assets only when shortcode is used
@@ -254,7 +286,7 @@ class TableCrafter {
         ob_start();
         ?>
         <div id="<?php echo esc_attr($atts['id']); ?>" class="tablecrafter-container" data-source="<?php echo esc_url($atts['source']); ?>">
-            Loading TableCrafter...
+            <?php _e('Loading TableCrafter...', 'tablecrafter'); ?>
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
