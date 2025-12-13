@@ -53,31 +53,63 @@ class TableCrafter {
         wp_enqueue_style('tablecrafter-style');
         ?>
         <div class="wrap">
-            <h1>TableCrafter</h1>
-            <p>Welcome to TableCrafter! Use the shortcode below to display tables.</p>
-            
-            <div class="card">
-                <h2>Live Preview</h2>
-                <p>Enter a JSON data URL to preview the table:</p>
-                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                    <input type="text" id="tc-preview-url" placeholder="https://api.example.com/data.json" style="flex: 1; padding: 8px;">
-                    <button id="tc-preview-btn" class="button button-primary">Preview Table</button>
-                    <button id="tc-copy-shortcode" class="button">Copy Shortcode</button>
-                </div>
-                
-                <div id="tc-preview-container" style="min-height: 200px; border: 1px dashed #ccc; padding: 20px; display: flex; align-items: center; justify-content: center;">
-                    <p style="color: #999;">Table preview will appear here...</p>
-                </div>
-            </div>
+            <h1 class="wp-heading-inline">TableCrafter</h1>
+            <p>Generate dynamic HTML tables from any JSON data source.</p>
+            <hr class="wp-header-end">
 
-            <div class="card" style="margin-top: 20px;">
-                <h2>Demo Data</h2>
-                <p>Try these built-in demo files (click to fill preview):</p>
-                <ul class="tc-demo-links">
-                    <li><a href="#" data-url="<?php echo TABLECRAFTER_URL . 'demo-data/users.json'; ?>"><?php echo TABLECRAFTER_URL . 'demo-data/users.json'; ?></a> (Users)</li>
-                    <li><a href="#" data-url="<?php echo TABLECRAFTER_URL . 'demo-data/products.json'; ?>"><?php echo TABLECRAFTER_URL . 'demo-data/products.json'; ?></a> (Products)</li>
-                    <li><a href="#" data-url="<?php echo TABLECRAFTER_URL . 'demo-data/metrics.json'; ?>"><?php echo TABLECRAFTER_URL . 'demo-data/metrics.json'; ?></a> (Metrics)</li>
-                </ul>
+            <div class="tc-admin-layout" style="display: flex; gap: 20px; margin-top: 20px; align-items: flex-start;">
+                
+                <!-- Sidebar Controls -->
+                <div class="tc-sidebar" style="flex: 0 0 350px;">
+                    <!-- Configuration Card -->
+                    <div class="card" style="margin: 0 0 20px 0; max-width: none;">
+                        <h2>Settings</h2>
+                        <div style="margin-bottom: 15px;">
+                            <label for="tc-preview-url" style="font-weight: 600; display: block; margin-bottom: 5px;">Data Source URL</label>
+                            <input type="text" id="tc-preview-url" class="widefat" placeholder="https://api.example.com/data.json">
+                            <p class="description">Must be a publicly accessible JSON endpoint.</p>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button id="tc-preview-btn" class="button button-primary button-large" style="flex: 1;">Preview Table</button>
+                        </div>
+                    </div>
+
+                    <!-- Usage info -->
+                     <div class="card" style="margin: 0 0 20px 0; max-width: none;">
+                        <h2>Usage</h2>
+                        <p>Copy the shortcode below to use this table:</p>
+                        <code id="tc-shortcode-display" style="display: block; padding: 10px; background: #f0f0f1; margin: 10px 0;">[tablecrafter source="..."]</code>
+                        <button id="tc-copy-shortcode" class="button button-secondary" style="width: 100%;">Copy Shortcode</button>
+                     </div>
+
+                    <!-- Demos -->
+                    <div class="card" style="margin: 0; max-width: none;">
+                        <h2>Quick Demos</h2>
+                        <p>Click a dataset to load:</p>
+                        <ul class="tc-demo-links" style="margin: 0;">
+                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;" data-url="<?php echo TABLECRAFTER_URL . 'demo-data/users.json'; ?>">👤 User Directory (JSON)</a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;" data-url="<?php echo TABLECRAFTER_URL . 'demo-data/products.json'; ?>">📦 Product Inventory (JSON)</a></li>
+                            <li style="margin-bottom: 0;"><a href="#" class="button" style="width: 100%; text-align: left;" data-url="<?php echo TABLECRAFTER_URL . 'demo-data/metrics.json'; ?>">📈 Sales Metrics (JSON)</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Main Preview Area -->
+                <div class="tc-preview-area" style="flex: 1; min-width: 0;">
+                    <div class="card" style="margin: 0; max-width: none; min-height: 500px; display: flex; flex-direction: column;">
+                        <h2 style="border-bottom: 1px solid #f0f0f1; padding-bottom: 15px; margin-bottom: 15px; margin-top: 0;">Live Preview</h2>
+                        
+                        <div id="tc-preview-wrap" style="flex: 1; overflow: auto; background: #fff;">
+                            <div id="tc-preview-container" style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666;">
+                                <div style="text-align: center;">
+                                    <span class="dashicons dashicons-editor-table" style="font-size: 48px; width: 48px; height: 48px; color: #ddd;"></span>
+                                    <p>Select a demo or enter a URL to generate a table.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <script>
@@ -85,14 +117,23 @@ class TableCrafter {
                 const urlInput = document.getElementById('tc-preview-url');
                 const previewBtn = document.getElementById('tc-preview-btn');
                 const copyBtn = document.getElementById('tc-copy-shortcode');
+                const shortcodeDisplay = document.getElementById('tc-shortcode-display');
                 const container = document.getElementById('tc-preview-container');
                 const demoLinks = document.querySelectorAll('.tc-demo-links a');
+
+                // Update shortcode display on input
+                urlInput.addEventListener('input', function() {
+                    const url = this.value.trim() || 'URL';
+                    shortcodeDisplay.innerText = `[tablecrafter source="${url}"]`;
+                });
 
                 // Load demo URL on click
                 demoLinks.forEach(link => {
                     link.addEventListener('click', function(e) {
                         e.preventDefault();
                         urlInput.value = this.dataset.url;
+                        // Trigger input event to update shortcode
+                        urlInput.dispatchEvent(new Event('input'));
                         previewBtn.click();
                     });
                 });
@@ -107,11 +148,13 @@ class TableCrafter {
 
                     // Reset container
                     container.innerHTML = '';
+                    // Reset styling in case centered was used
+                    container.style.display = 'block';
                     
                     if (typeof TableCrafter !== 'undefined') {
                         // Create a unique ID for the inner container
                         const tableId = 'tc-preview-' + Date.now();
-                        container.innerHTML = `<div id="${tableId}" class="tablecrafter-container">Loading...</div>`;
+                        container.innerHTML = `<div id="${tableId}" class="tablecrafter-container">Loading data from source...</div>`;
                         
                         // Init TableCrafter
                         new TableCrafter({
@@ -119,23 +162,49 @@ class TableCrafter {
                             source: url
                         });
                     } else {
-                        container.innerHTML = '<p style="color: red;">TableCrafter library not loaded.</p>';
+                        container.innerHTML = '<div class="notice notice-error inline"><p>TableCrafter library not loaded.</p></div>';
                     }
                 });
 
                 // Copy shortcode functionality
                 copyBtn.addEventListener('click', function() {
-                    const url = urlInput.value.trim();
-                    if (!url) {
-                        alert('Please enter a URL first');
-                        return;
-                    }
-                    const shortcode = `[tablecrafter source="${url}"]`;
-                    navigator.clipboard.writeText(shortcode).then(function() {
+                    const text = shortcodeDisplay.innerText;
+                    
+                    // Robust copy function with fallback
+                    const copyToClipboard = async (text) => {
+                        try {
+                            if (navigator.clipboard && window.isSecureContext) {
+                                await navigator.clipboard.writeText(text);
+                            } else {
+                                throw new Error('Clipboard API unavailable');
+                            }
+                        } catch (err) {
+                            // Fallback for HTTP/non-secure contexts
+                            const textArea = document.createElement("textarea");
+                            textArea.value = text;
+                            textArea.style.position = "fixed";
+                            textArea.style.left = "-9999px";
+                            document.body.appendChild(textArea);
+                            textArea.focus();
+                            textArea.select();
+                            try {
+                                document.execCommand('copy');
+                                textArea.remove();
+                            } catch (e) {
+                                console.error('Copy failed', e);
+                                textArea.remove();
+                                alert('Failed to copy to clipboard. Please copy manually.');
+                                return;
+                            }
+                        }
+                        
+                        // Success feedback
                         const originalText = copyBtn.innerText;
-                        copyBtn.innerText = 'Copied!';
+                        copyBtn.innerText = 'Copied to Clipboard!';
                         setTimeout(() => copyBtn.innerText = originalText, 2000);
-                    });
+                    };
+
+                    copyToClipboard(text);
                 });
             });
             </script>
