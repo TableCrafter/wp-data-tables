@@ -1,27 +1,94 @@
-# TableCrafter for WordPress
+# TableCrafter – JSON Data Tables & API Data Viewer
 
-**TableCrafter** is a lightweight WordPress plugin that turns raw JSON data into beautiful, responsive HTML tables. It is designed to be a thin wrapper around the TableCrafter JavaScript library.
+**Contributors:** fahdi  
+**Tags:** table, json, api, data table, dynamic table, json table, api data, json viewer, responsive table, datatables  
+**Requires at least:** 5.0  
+**Tested up to:** 6.4  
+**Stable tag:** 1.0.0  
+**Requires PHP:** 7.4  
+**License:** MIT  
+**License URI:** https://opensource.org/licenses/MIT  
 
-## Features
+Instantly create dynamic, searchable, and responsive HTML tables from any JSON API or file. The lightweight, no-code alternative to complex table plugins.
 
-*   **Single Data Source:** Loads data from a URL (JSON format).
-*   **Native JavaScript:** No jQuery dependency.
-*   **Responsive:** Handles basic overflow for mobile screens.
-*   **Zero Configuration:** Just paste the shortcode.
+## Description
+
+**TableCrafter** is the ultimate lightweight solution for displaying dynamic data in WordPress. 
+
+Unlike heavy table builders that bloat your database, TableCrafter acts as a direct window to your data. Connect to any external API or JSON file, and we'll render a beautiful, responsive, and searchable table instantly. 
+
+We fill the gap between complex, expensive plugins like *wpDataTables/TablePress* and raw HTML tables. 
+
+**Why choose TableCrafter?**
+*   **🏎️ Blazing Fast:** Zero database bloat. Data is fetched on-the-fly via JavaScript.
+*   **🔗 Dynamic & Live:** Perfect for financial data, stock tickers, crypto prices, or live inventory that changes every minute.
+*   **📱 Mobile Ready:** Automatically responsive tables that look great on phones.
+*   **🛠️ Zero Config:** Smart column detection means you just paste a URL, and we handle the rest.
+
+### 🚀 Key Features
+
+*   **Universal JSON Support:** Works with any public API or `.json` file.
+*   **Smart Auto-Formatting:** Automatically detects headers and formats data intelligently.
+*   **Live Admin Preview:** Test your API endpoints directly in the customized dashboard.
+*   **Client-Side Processing:** Search and sort large datasets instantly without reloading the page.
+*   **Developer Friendly:** Vanilla JavaScript core with no jQuery dependencies.
+
+### 💡 Powerful Use Cases
+
+*   **Crypto & Finance Portals:** Display live Bitcoin/ETH prices from CoinGecko or Binance APIs.
+*   **Company Intranets:** Show employee directories fetched from your internal HR systems.
+*   **E-Commerce Stock:** Display real-time product availability from external suppliers.
+*   **Open Data Projects:** Visualize government datasets, weather data, or sports statistics.
+*   **Affiliate Marketers:** Create dynamic comparison tables that auto-update from a central JSON feed.
+
+### ⚡ TableCrafter vs. The Giants
+
+| Feature | TableCrafter | TablePress / wpDataTables |
+| :--- | :--- | :--- |
+| **Primary Data Source** | JSON / API (Dynamic) | Manual Entry / SQL / Excel |
+| **Setup Time** | < 1 Minute | 10-30 Minutes |
+| **Database Impact** | None (Zero Bloat) | High (Stores data in WP DB) |
+| **Performance** | Instant Client-Side | Server-Side Heavy |
+| **Cost** | 100% Free | Freemium / Expensive |
+
+If you need a static table you edit manually, use TablePress. If you need a **live, dynamic data view** from an API, **TableCrafter is the only tool you need.**
+
+## Installation
+
+1.  Upload the `tablecrafter` folder to the `/wp-content/plugins/` directory.
+2.  Activate the plugin through the 'Plugins' menu in WordPress.
+3.  Navigate to the **TableCrafter** admin menu.
+4.  Paste your JSON URL to generate a shortcode.
+5.  Add `[tablecrafter source="YOUR_URL"]` to any page.
 
 ## Usage
 
-Use the shortcode in any post or page:
+**Basic Shortcode:**
+`[tablecrafter source="https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"]`
 
-```shortcode
-[tablecrafter source="https://api.example.com/data.json"]
-```
+**With Custom ID:**
+`[tablecrafter source="..." id="my-crypto-table"]`
 
-## Attributes
+## Frequently Asked Questions
 
-*   `source` (required): The URL of the JSON data source. Access-Control-Allow-Origin (CORS) headers must be set on the source if it is on a different domain.
-*   `id` (optional): Unique HTML ID for the table container.
+### Does this store data in my WordPress database?
+No! That's the beauty of TableCrafter. It's a lightweight *viewer*. Your data stays in the JSON source, keeping your WordPress site fast and your database clean.
 
-## Development
+### My API has Cross-Origin (CORS) errors. What do I do?
+TableCrafter runs in the browser, so your API must allow requests from your website domain. Most public APIs allow this. If you control the API, simple add `Access-Control-Allow-Origin: *` to your headers.
 
-Based on the [TableCrafter JS Library](https://github.com/TableCrafter/tablecrafter).
+### Can I use this for CSV files?
+TableCrafter is optimized for the modern web (JSON). However, we are exploring CSV support for future versions. For now, we recommend converting CSV to JSON for the best performance.
+
+## Screenshots
+
+1. **Instant Preview** - Test any API URL and see the table build instantly in your dashboard.
+2. **Frontend Display** - A clean, professional data table on a live site.
+3. **Smart Search** - Built-in search functionality works automatically.
+
+## Changelog
+
+### 1.0.0
+*   Initial release.
+*   Added live admin previewer.
+*   Released smart column detection.
