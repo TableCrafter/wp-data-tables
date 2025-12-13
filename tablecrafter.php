@@ -6,7 +6,7 @@
  * Version: 1.0.0
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
- * License: MIT
+ * License: GPLv2 or later
  * Text Domain: tablecrafter
  */
 

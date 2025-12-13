@@ -1,12 +1,12 @@
 === TableCrafter – JSON Data Tables & API Data Viewer ===
 Contributors: fahdi
-Tags: table, json, api, data table, dynamic table, json table, api data, json viewer, responsive table, datatables
+Tags: table, json, api, dynamic table, datatables
 Requires at least: 5.0
-Tested up to: 6.4
+Tested up to: 6.7
 Stable tag: 1.0.0
 Requires PHP: 7.4
-License: MIT
-License URI: https://opensource.org/licenses/MIT
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Instantly create dynamic, searchable, and responsive HTML tables from any JSON API or file. The lightweight, no-code alternative to complex table plugins.
 
