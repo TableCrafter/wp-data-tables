@@ -1,0 +1,44 @@
+[
+    {
+        "date": "2025-01-01",
+        "region": "North America",
+        "sales_count": 1500,
+        "revenue": 45000.00,
+        "growth": "+5.2%"
+    },
+    {
+        "date": "2025-01-01",
+        "region": "Europe",
+        "sales_count": 1200,
+        "revenue": 38500.50,
+        "growth": "+2.1%"
+    },
+    {
+        "date": "2025-01-01",
+        "region": "Asia Pacific",
+        "sales_count": 1850,
+        "revenue": 52000.00,
+        "growth": "+8.4%"
+    },
+    {
+        "date": "2025-02-01",
+        "region": "North America",
+        "sales_count": 1600,
+        "revenue": 48000.00,
+        "growth": "+6.5%"
+    },
+    {
+        "date": "2025-02-01",
+        "region": "Europe",
+        "sales_count": 1250,
+        "revenue": 40100.00,
+        "growth": "+3.0%"
+    },
+    {
+        "date": "2025-02-01",
+        "region": "Asia Pacific",
+        "sales_count": 1900,
+        "revenue": 55000.00,
+        "growth": "+9.1%"
+    }
+]

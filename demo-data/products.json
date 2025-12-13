@@ -1,0 +1,50 @@
+[
+    {
+        "sku": "PRD-001",
+        "product_name": "Wireless Headphones",
+        "category": "Electronics",
+        "price": 99.99,
+        "stock_level": 45,
+        "rating": 4.5
+    },
+    {
+        "sku": "PRD-002",
+        "product_name": "Ergonomic Office Chair",
+        "category": "Furniture",
+        "price": 249.50,
+        "stock_level": 12,
+        "rating": 4.8
+    },
+    {
+        "sku": "PRD-003",
+        "product_name": "Mechanical Keyboard",
+        "category": "Electronics",
+        "price": 129.00,
+        "stock_level": 8,
+        "rating": 4.7
+    },
+    {
+        "sku": "PRD-004",
+        "product_name": "Stainless Steel Water Bottle",
+        "category": "Home & Kitchen",
+        "price": 24.99,
+        "stock_level": 150,
+        "rating": 4.2
+    },
+    {
+        "sku": "PRD-005",
+        "product_name": "USB-C Docking Station",
+        "category": "Accessories",
+        "price": 79.99,
+        "stock_level": 30,
+        "rating": 4.0
+    },
+    {
+        "sku": "PRD-006",
+        "product_name": "Bluetooth Mouse",
+        "category": "Electronics",
+        "price": 34.50,
+        "stock_level": 65,
+        "rating": 4.3
+    }
+]
