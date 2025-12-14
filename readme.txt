@@ -14,7 +14,7 @@ Create dynamic, responsive HTML tables from any JSON API or file. A lightweight,
 
 **TableCrafter** is the ultimate lightweight solution for displaying dynamic data in WordPress. 
 
-Unlike heavy table builders that bloat your database, TableCrafter acts as a direct window to your data. Connect to any external API or JSON file, and we'll render a beautiful, responsive, and searchable table instantly. 
+Unlike heavy table builders that bloat your database, TableCrafter acts as a direct window to your data. Connect to any external API or JSON file, and we'll render a beautiful, responsive table instantly. 
 
 We fill the gap between complex, expensive plugins like *wpDataTables/TablePress* and raw HTML tables. 
 
@@ -29,7 +29,6 @@ We fill the gap between complex, expensive plugins like *wpDataTables/TablePress
 *   **Universal JSON Support:** Works with any public API or `.json` file.
 *   **Smart Auto-Formatting:** Automatically detects headers and formats data intelligently.
 *   **Live Admin Preview:** Test your API endpoints directly in the customized dashboard.
-*   **Client-Side Processing:** Search and sort large datasets instantly without reloading the page.
 *   **Developer Friendly:** Vanilla JavaScript core with no jQuery dependencies.
 
 ### 💡 Powerful Use Cases
@@ -83,7 +82,6 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 
 1. **Instant Preview** - Test any API URL and see the table build instantly in your dashboard.
 2. **Frontend Display** - A clean, professional data table on a live site.
-3. **Smart Search** - Built-in search functionality works automatically.
 
 == Changelog ==
 
