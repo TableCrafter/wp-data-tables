@@ -81,8 +81,15 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 
 ## Screenshots
 
-1. **Admin Dashboard Preview** - The TableCrafter settings panel with live preview functionality. Enter any JSON URL and see your data rendered instantly in the WordPress admin.
-2. **Frontend Table Display** - A clean, responsive data table as it appears on your website. Automatically formatted and mobile-friendly.
+### 1. Admin Dashboard Preview
+The TableCrafter settings panel with live preview functionality. Enter any JSON URL (or select from demo URLs) and see your data rendered instantly in the WordPress admin.
+
+![Admin Dashboard Preview](screenshot-1.png)
+
+### 2. Frontend Table Display
+A clean, responsive data table as it appears on your website. Automatically formatted and mobile-friendly.
+
+![Frontend Table Display](screenshot-2.png)
 
 ## Changelog
 
