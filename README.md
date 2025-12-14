@@ -1,21 +1,21 @@
 # TableCrafter – JSON Data Tables & API Data Viewer
 
 **Contributors:** fahdi  
-**Tags:** table, json, api, data table, dynamic table, json table, api data, json viewer, responsive table, datatables  
+**Tags:** table, json, api, dynamic table, datatables  
 **Requires at least:** 5.0  
-**Tested up to:** 6.4  
+**Tested up to:** 6.9  
 **Stable tag:** 1.0.0  
 **Requires PHP:** 7.4  
-**License:** MIT  
-**License URI:** https://opensource.org/licenses/MIT  
+**License:** GPLv2 or later  
+**License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 
-Instantly create dynamic, searchable, and responsive HTML tables from any JSON API or file. The lightweight, no-code alternative to complex table plugins.
+Create dynamic, responsive HTML tables from any JSON API or file. A lightweight, no-code alternative to complex table plugins.
 
 ## Description
 
 **TableCrafter** is the ultimate lightweight solution for displaying dynamic data in WordPress. 
 
-Unlike heavy table builders that bloat your database, TableCrafter acts as a direct window to your data. Connect to any external API or JSON file, and we'll render a beautiful, responsive, and searchable table instantly. 
+Unlike heavy table builders that bloat your database, TableCrafter acts as a direct window to your data. Connect to any external API or JSON file, and we'll render a beautiful, responsive table instantly. 
 
 We fill the gap between complex, expensive plugins like *wpDataTables/TablePress* and raw HTML tables. 
 
@@ -30,7 +30,6 @@ We fill the gap between complex, expensive plugins like *wpDataTables/TablePress
 *   **Universal JSON Support:** Works with any public API or `.json` file.
 *   **Smart Auto-Formatting:** Automatically detects headers and formats data intelligently.
 *   **Live Admin Preview:** Test your API endpoints directly in the customized dashboard.
-*   **Client-Side Processing:** Search and sort large datasets instantly without reloading the page.
 *   **Developer Friendly:** Vanilla JavaScript core with no jQuery dependencies.
 
 ### 💡 Powerful Use Cases
@@ -84,7 +83,6 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 
 1. **Instant Preview** - Test any API URL and see the table build instantly in your dashboard.
 2. **Frontend Display** - A clean, professional data table on a live site.
-3. **Smart Search** - Built-in search functionality works automatically.
 
 ## Changelog
 
