@@ -85,6 +85,12 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 
 == Changelog ==
 
+= 1.0.1 =
+* Refactored script handling for full WP.org directory compliance.
+* Moved all inline JavaScript to external files.
+* Implemented wp_localize_script for safer data handling in admin.
+* Optimized shortcode renderer to eliminate inline JS injection.
+
 = 1.0.0 =
 *   Initial release.
 *   Added live admin previewer.
