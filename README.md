@@ -3,7 +3,7 @@
 **Contributors:** fahdi  
 **Tags:** table, json, api, dynamic table, datatables  
 **Requires at least:** 5.0  
-**Tested up to:** 6.9  
+**Tested up to:** 6.7  
 **Stable tag:** 1.0.1  
 **Requires PHP:** 7.4  
 **License:** GPLv2 or later  
@@ -92,6 +92,12 @@ A clean, responsive data table as it appears on your website. Automatically form
 ![Frontend Table Display](screenshot-2.png)
 
 ## Changelog
+ 
+### 1.0.1
+* Refactored script handling for full WP.org directory compliance.
+* Moved all inline JavaScript to external files.
+* Implemented wp_localize_script for safer data handling in admin.
+* Optimized shortcode renderer to eliminate inline JS injection.
 
 ### 1.0.0
 *   Initial release.
