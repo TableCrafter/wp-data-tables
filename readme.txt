@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -41,17 +41,6 @@ We fill the gap between complex, expensive plugins like *wpDataTables/TablePress
 *   **Open Data Projects:** Visualize government datasets, weather data, or sports statistics.
 *   **Affiliate Marketers:** Create dynamic comparison tables that auto-update from a central JSON feed.
 
-### ⚡ TableCrafter vs. The Giants
-
-| Feature | TableCrafter | TablePress / wpDataTables |
-| :--- | :--- | :--- |
-| **Primary Data Source** | JSON / API (Dynamic) | Manual Entry / SQL / Excel |
-| **Setup Time** | < 1 Minute | 10-30 Minutes |
-| **Database Impact** | None (Zero Bloat) | High (Stores data in WP DB) |
-| **Performance** | Instant Client-Side | Server-Side Heavy |
-| **Cost** | 100% Free | Freemium / Expensive |
-
-If you need a static table you edit manually, use TablePress. If you need a **live, dynamic data view** from an API, **TableCrafter is the only tool you need.**
 
 == Installation ==
 
@@ -87,6 +76,13 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 
 == Changelog ==
 
+= 1.1.0 =
+* Feat: Added Server-Side Proxy to bypass CORS restrictions.
+* Feat: Added Automated Background Cache Warming via WP-Cron.
+* Feat: Added WP-CLI support for cache management.
+* Docs: Updated branding and donation links.
+* Docs: Removed comparison section.
+
 = 1.0.1 =
 * Refactored script handling for full WP.org directory compliance.
 * Moved all inline JavaScript to external files.
@@ -98,6 +94,9 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 *   Added live admin previewer.
 *   Released smart column detection.
 == Upgrade Notice ==
+
+= 1.1.0 =
+Major update: Includes CORS bypass proxy and background cache warming for better performance.
 
 = 1.0.1 =
 This version fixes text domain issues and improves script compliance for WordPress.org.
