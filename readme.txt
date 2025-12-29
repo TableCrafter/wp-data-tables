@@ -64,7 +64,7 @@ We fill the gap between complex, expensive plugins like *wpDataTables/TablePress
 No! That's the beauty of TableCrafter. It's a lightweight *viewer*. Your data stays in the JSON source, keeping your WordPress site fast and your database clean.
 
 = My API has Cross-Origin (CORS) errors. What do I do? =
-TableCrafter runs in the browser, so your API must allow requests from your website domain. Most public APIs allow this. If you control the API, simple add `Access-Control-Allow-Origin: *` to your headers.
+TableCrafter includes a built-in server-side proxy that automatically bypasses most CORS restrictions. If your browser blocks the request, the plugin will securely fetch the data via your WordPress server instead. This happens automatically—no configuration needed!
 
 = Can I use this for CSV files? =
 TableCrafter is optimized for the modern web (JSON). However, we are exploring CSV support for future versions. For now, we recommend converting CSV to JSON for the best performance.
@@ -80,6 +80,9 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 * Feat: Added Server-Side Proxy to bypass CORS restrictions.
 * Feat: Added Automated Background Cache Warming via WP-Cron.
 * Feat: Added WP-CLI support for cache management.
+* Fixed: Resolved shortcode rendering issues in various theme environments.
+* Fixed: Prevented "smart quote" conversion in documentation to ensure copy-paste reliability.
+* Fixed: Optimized frontend initialization to prevent race conditions.
 * Docs: Updated branding and donation links.
 * Docs: Removed comparison section.
 
