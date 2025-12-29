@@ -7,7 +7,7 @@ Stable tag: 1.0.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Donate link: https://tablecrafter.com/donate/
+Donate link: https://www.paypal.me/fahadmurtaza
 
 Create dynamic, responsive HTML tables from any JSON API or file. A lightweight, no-code alternative to complex table plugins.
 
