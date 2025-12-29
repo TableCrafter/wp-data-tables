@@ -40,8 +40,23 @@ class TableCrafter {
     private function __construct() {
         add_action('wp_enqueue_scripts', array($this, 'register_assets'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
-        add_shortcode('tablecrafter-wp-data-tables', array($this, 'render_table'));
+        add_shortcode('tablecrafter', array($this, 'render_table'));
         add_action('admin_menu', array($this, 'add_admin_menu'));
+
+        // AJAX Proxy Handlers
+        add_action('wp_ajax_tc_proxy_fetch', array($this, 'ajax_proxy_fetch'));
+        add_action('wp_ajax_nopriv_tc_proxy_fetch', array($this, 'ajax_proxy_fetch'));
+
+        // Automated Cron
+        add_action('tc_refresher_cron', array($this, 'automated_cache_refresh'));
+        if (!wp_next_scheduled('tc_refresher_cron')) {
+            wp_schedule_event(time(), 'hourly', 'tc_refresher_cron');
+        }
+
+        // WP-CLI Support
+        if (defined('WP_CLI') && WP_CLI) {
+            WP_CLI::add_command('tablecrafter', array($this, 'cli_commands'));
+        }
     }
 
     /**
@@ -155,6 +170,11 @@ class TableCrafter {
             TABLECRAFTER_VERSION,
             true
         );
+
+        wp_localize_script('tablecrafter-frontend', 'tablecrafterData', array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce'   => wp_create_nonce('tc_proxy_nonce')
+        ));
         
         wp_register_style(
             'tablecrafter-style',
@@ -182,6 +202,8 @@ class TableCrafter {
         );
 
         wp_localize_script('tablecrafter-admin', 'tablecrafterAdmin', array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce'   => wp_create_nonce('tc_proxy_nonce'),
             'i18n' => array(
                 'enterUrl'   => __('Please enter a valid URL', 'tablecrafter-wp-data-tables'),
                 'loading'    => __('Loading data from source...', 'tablecrafter-wp-data-tables'),
@@ -210,7 +232,7 @@ class TableCrafter {
         $atts = shortcode_atts(array(
             'source' => '', // The single data source URL
             'id' => 'tc-' . uniqid()
-        ), $atts, 'tablecrafter-wp-data-tables');
+        ), $atts, 'tablecrafter');
         
         // Sanitize the source URL
         $atts['source'] = esc_url_raw($atts['source']);
@@ -220,6 +242,7 @@ class TableCrafter {
         }
         
         // Enqueue assets only when shortcode is used
+        $this->register_assets();
         wp_enqueue_script('tablecrafter-frontend');
         wp_enqueue_style('tablecrafter-style');
         
@@ -227,10 +250,104 @@ class TableCrafter {
         ob_start();
         ?>
         <div id="<?php echo esc_attr($atts['id']); ?>" class="tablecrafter-container" data-source="<?php echo esc_url($atts['source']); ?>">
-            <?php esc_html_e('Loading TableCrafter...', 'tablecrafter-wp-data-tables'); ?>
+            <div class="tc-loading"><?php esc_html_e('Loading TableCrafter...', 'tablecrafter-wp-data-tables'); ?></div>
         </div>
         <?php
         return ob_get_clean();
+    }
+
+    /**
+     * AJAX Proxy Fetch Handler
+     * 
+     * Fetches remote JSON data server-side to bypass CORS and implement caching.
+     */
+    public function ajax_proxy_fetch() {
+        check_ajax_referer('tc_proxy_nonce', 'nonce');
+
+        $url = isset($_POST['url']) ? esc_url_raw($_POST['url']) : '';
+        
+        if (empty($url)) {
+            wp_send_json_error('Invalid URL');
+        }
+
+        // Cache parameters
+        $cache_key = 'tc_cache_' . md5($url);
+        $cached_data = get_transient($cache_key);
+
+        if ($cached_data !== false) {
+            wp_send_json_success($cached_data);
+        }
+
+        // Fetch fresh data
+        $response = wp_remote_get($url, array(
+            'timeout' => 15,
+            'sslverify' => false // For compatibility with some older servers
+        ));
+
+        if (is_wp_error($response)) {
+            wp_send_json_error('TableCrafter Proxy Error: ' . $response->get_error_message());
+        }
+
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body);
+
+        if ($data === null) {
+            wp_send_json_error('TableCrafter Proxy Error: Invalid JSON response from source.');
+        }
+
+        // Cache for 1 hour
+        set_transient($cache_key, $data, HOUR_IN_SECONDS);
+
+        // Automated Tracking: Keep track of used URLs for background warming
+        $this->track_url($url);
+
+        wp_send_json_success($data);
+    }
+
+    /**
+     * Automated URL Tracking
+     */
+    private function track_url($url) {
+        $urls = get_option('tc_tracked_urls', array());
+        if (!in_array($url, $urls)) {
+            $urls[] = $url;
+            update_option('tc_tracked_urls', array_slice($urls, -50)); // Keep last 50
+        }
+    }
+
+    /**
+     * Automated Cache Refresher (WP-Cron Task)
+     */
+    public function automated_cache_refresh() {
+        $urls = get_option('tc_tracked_urls', array());
+        foreach ($urls as $url) {
+            $response = wp_remote_get($url, array('timeout' => 10));
+            if (!is_wp_error($response)) {
+                $body = wp_remote_retrieve_body($response);
+                $data = json_decode($body);
+                if ($data) {
+                    set_transient('tc_cache_' . md5($url), $data, HOUR_IN_SECONDS);
+                }
+            }
+        }
+    }
+
+    /**
+     * WP-CLI Commands for Automation
+     */
+    public function cli_commands($args, $assoc_args) {
+        $action = isset($args[0]) ? $args[0] : '';
+
+        if ($action === 'clear-cache') {
+            global $wpdb;
+            $wpdb->query("DELETE FROM $wpdb->options WHERE option_name LIKE '_transient_tc_cache_%'");
+            WP_CLI::success('TableCrafter cache cleared.');
+        } elseif ($action === 'warm-cache') {
+            $this->automated_cache_refresh();
+            WP_CLI::success('TableCrafter cache warmed for all tracked URLs.');
+        } else {
+            WP_CLI::error('Usage: wp tablecrafter [clear-cache|warm-cache]');
+        }
     }
 }
 

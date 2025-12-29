@@ -1,10 +1,6 @@
-/**
- * TableCrafter JS Library (Placeholder/Base)
- * based on git@github.com:TableCrafter/tablecrafter.git
- */
-
 class TableCrafter {
     constructor(config) {
+        this.config = config;
         this.selector = config.selector;
         this.source = config.source;
         this.container = document.querySelector(this.selector);
@@ -16,15 +12,34 @@ class TableCrafter {
 
         this.init();
     }
-
     async init() {
         try {
             this.container.innerHTML = '<div class="tc-loading">Fetching data...</div>';
 
-            const response = await fetch(this.source);
-            if (!response.ok) throw new Error('Network response was not ok');
+            let data;
 
-            const data = await response.json();
+            // Check if we should use the WordPress Proxy (for CORS and Caching)
+            if (this.config.proxy && this.config.proxy.url) {
+                const formData = new FormData();
+                formData.append('action', 'tc_proxy_fetch');
+                formData.append('url', this.source);
+                formData.append('nonce', this.config.proxy.nonce);
+
+                const response = await fetch(this.config.proxy.url, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (!result.success) throw new Error(result.data || 'Proxy fetch failed');
+                data = result.data;
+            } else {
+                // Direct fetch fallback
+                const response = await fetch(this.source);
+                if (!response.ok) throw new Error('Network response was not ok');
+                data = await response.json();
+            }
+
             this.render(data);
 
         } catch (error) {

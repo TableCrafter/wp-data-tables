@@ -1,12 +1,13 @@
 === TableCrafter – JSON Data Tables & API Data Viewer ===
 Contributors: fahdi
-Tags: table, json, api, dynamic table, datatables
+Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
 Stable tag: 1.0.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Donate link: https://tablecrafter.com/donate/
 
 Create dynamic, responsive HTML tables from any JSON API or file. A lightweight, no-code alternative to complex table plugins.
 
@@ -19,6 +20,7 @@ Unlike heavy table builders that bloat your database, TableCrafter acts as a dir
 We fill the gap between complex, expensive plugins like *wpDataTables/TablePress* and raw HTML tables. 
 
 **Why choose TableCrafter?**
+
 *   **🏎️ Blazing Fast:** Zero database bloat. Data is fetched on-the-fly via JavaScript.
 *   **🔗 Dynamic & Live:** Perfect for financial data, stock tickers, crypto prices, or live inventory that changes every minute.
 *   **📱 Mobile Ready:** Automatically responsive tables that look great on phones.
@@ -95,3 +97,7 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 *   Initial release.
 *   Added live admin previewer.
 *   Released smart column detection.
+== Upgrade Notice ==
+
+= 1.0.1 =
+This version fixes text domain issues and improves script compliance for WordPress.org.
