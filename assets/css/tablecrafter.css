@@ -71,3 +71,37 @@
     outline: none;
     box-shadow: 0 0 0 1px #2271b1;
 }
+
+/* Pagination styles */
+.tc-pagination {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 14px;
+}
+
+.tc-pagination button {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tc-pagination button:hover:not(:disabled) {
+    border-color: #2271b1;
+    color: #2271b1;
+}
+
+.tc-pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tc-page-info {
+    color: #666;
+    font-weight: 500;
+}

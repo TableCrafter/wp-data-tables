@@ -5,18 +5,30 @@ class TableCrafter {
         this.source = config.source;
         this.container = document.querySelector(this.selector);
 
+        // Pagination state
+        this.currentPage = 1;
+        this.perPage = parseInt(this.container.dataset.perPage) || 0;
+        this.allData = [];
+        this.filteredData = [];
+
         if (!this.container) {
             console.error('TableCrafter: Container not found', this.selector);
             return;
         }
 
         // --- HYBRID HYDRATION START ---
-        // If the table was pre-rendered on the server (SSR), skip the fetch/render cycle
         if (this.container.dataset.ssr === "true" && this.container.querySelector('table')) {
             this.container.dataset.tcInitialized = "true";
-            // Still initialize search if enabled
-            this.initSearch();
-            return;
+
+            // For SSR tables, we can't easily paginate without the full data
+            // unless we've enabled hydration. 
+            // In v1.4.0, we always initialize fully if pagination or search is needed.
+            if (this.perPage > 0) {
+                this.init(); // Re-fetch and re-render with pagination UI
+            } else {
+                this.initSearch();
+                return;
+            }
         }
         // --- HYBRID HYDRATION END ---
 
@@ -26,8 +38,9 @@ class TableCrafter {
     async init() {
         try {
             this.container.innerHTML = '<div class="tc-loading">Fetching data...</div>';
-            const data = await this.fetchData();
-            this.render(data);
+            this.allData = await this.fetchData();
+            this.filteredData = this.allData;
+            this.render();
             this.initSearch();
         } catch (error) {
             console.error('TableCrafter Error:', error);
@@ -37,7 +50,6 @@ class TableCrafter {
 
     async fetchData() {
         let data;
-        // Check if we should use the WordPress Proxy (for CORS and Caching)
         if (this.config.proxy && this.config.proxy.url) {
             const formData = new FormData();
             formData.append('action', 'tc_proxy_fetch');
@@ -53,18 +65,26 @@ class TableCrafter {
             if (!result.success) throw new Error(result.data || 'Proxy fetch failed');
             data = result.data;
         } else {
-            // Direct fetch fallback
             const response = await fetch(this.source);
             if (!response.ok) throw new Error('Network response was not ok');
             data = await response.json();
         }
-        return data;
+
+        // Handle root path
+        const rootPath = this.container.dataset.root ? this.container.dataset.root.split('.') : [];
+        if (rootPath.length > 0) {
+            rootPath.forEach(segment => {
+                if (data && data[segment]) {
+                    data = data[segment];
+                }
+            });
+        }
+
+        return Array.isArray(data) ? data : [];
     }
 
     initSearch() {
         if (this.container.dataset.search !== "true") return;
-
-        // Prevent duplicate search bars
         if (this.container.querySelector('.tc-search-container')) return;
 
         const table = this.container.querySelector('table');
@@ -83,79 +103,80 @@ class TableCrafter {
 
         searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
-            const rows = table.querySelectorAll('tbody tr');
-
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(query) ? '' : 'none';
+            this.filteredData = this.allData.filter(row => {
+                return Object.values(row).some(val => String(val).toLowerCase().includes(query));
             });
+            this.currentPage = 1;
+            this.render();
         });
     }
 
-    render(data) {
-        if (!Array.isArray(data) || data.length === 0) {
+    render() {
+        let data = this.filteredData;
+        const totalItems = data.length;
+
+        if (totalItems === 0) {
             this.container.innerHTML = '<div class="tc-empty">No data found</div>';
             return;
+        }
+
+        // Apply Pagination
+        if (this.perPage > 0) {
+            const start = (this.currentPage - 1) * this.perPage;
+            const end = start + this.perPage;
+            data = data.slice(start, end);
         }
 
         // Configuration for columns
         const include = this.container.dataset.include ? this.container.dataset.include.split(',').map(s => s.trim()) : [];
         const exclude = this.container.dataset.exclude ? this.container.dataset.exclude.split(',').map(s => s.trim()) : [];
-        const rootPath = this.container.dataset.root ? this.container.dataset.root.split('.') : [];
 
-        // Navigate to the root path if provided
-        if (rootPath.length > 0) {
-            rootPath.forEach(segment => {
-                if (data && data[segment]) {
-                    data = data[segment];
-                }
-            });
-        }
-
-        if (!Array.isArray(data) || data.length === 0) {
-            this.container.innerHTML = '<div class="notice notice-warning inline"><p>TableCrafter: No data found at the specified root.</p></div>';
-            return;
-        }
-
-        // Determine which headers to show
-        let headers = Object.keys(data[0]);
-
-        if (include.length > 0) {
-            headers = headers.filter(h => include.includes(h));
-        }
-        if (exclude.length > 0) {
-            headers = headers.filter(h => !exclude.includes(h));
-        }
+        // Determine columns
+        let headers = Object.keys(this.filteredData[0]);
+        if (include.length > 0) headers = headers.filter(h => include.includes(h));
+        if (exclude.length > 0) headers = headers.filter(h => !exclude.includes(h));
 
         let html = '<table class="tc-table">';
-
-        // Header
-        html += '<thead><tr>';
-        headers.forEach(header => {
-            html += `<th>${this.escapeHTML(this.formatHeader(header))}</th>`;
-        });
-        html += '</tr></thead>';
-
-        // Body
+        html += '<thead><tr>' + headers.map(h => `<th>${this.escapeHTML(this.formatHeader(h))}</th>`).join('') + '</tr></thead>';
         html += '<tbody>';
         data.forEach(row => {
-            html += '<tr>';
-            headers.forEach(header => {
-                const val = row[header];
-                html += `<td>${this.renderValue(val)}</td>`;
-            });
-            html += '</tr>';
+            html += '<tr>' + headers.map(h => `<td>${this.renderValue(row[h])}</td>`).join('') + '</tr>';
         });
-        html += '</tbody>';
-        html += '</table>';
+        html += '</tbody></table>';
 
-        this.container.innerHTML = html;
-        this.container.dataset.tcInitialized = "true";
+        // Pagination Controls
+        if (this.perPage > 0 && totalItems > this.perPage) {
+            const totalPages = Math.ceil(totalItems / this.perPage);
+            html += `<div class="tc-pagination">
+                <button ${this.currentPage === 1 ? 'disabled' : ''} class="tc-page-prev">Previous</button>
+                <span class="tc-page-info">Page ${this.currentPage} of ${totalPages}</span>
+                <button ${this.currentPage === totalPages ? 'disabled' : ''} class="tc-page-next">Next</button>
+            </div>`;
+        }
+
+        const searchHtml = this.container.querySelector('.tc-search-container')?.outerHTML || '';
+        this.container.innerHTML = searchHtml + html;
+        this.bindEvents();
     }
 
-    /**
-     * Secures output by escaping HTML tags.
-     */
+    bindEvents() {
+        const prevBtn = this.container.querySelector('.tc-page-prev');
+        const nextBtn = this.container.querySelector('.tc-page-next');
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                this.currentPage--;
+                this.render();
+            });
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                this.currentPage++;
+                this.render();
+            });
+        }
+    }
+
     escapeHTML(str) {
         if (typeof str !== 'string') return str;
         const div = document.createElement('div');
@@ -163,29 +184,19 @@ class TableCrafter {
         return div.innerHTML;
     }
 
-    /**
-     * Smartly renders values (detects images and links)
-     */
     renderValue(val) {
         if (val === null || val === undefined) return '';
-
         const strVal = String(val).trim();
-
-        // Detect Images
         if (strVal.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i) || strVal.startsWith('data:image')) {
-            return `<img src="${encodeURI(strVal)}" style="max-width: 100px; height: auto; display: block;" onerror="this.onerror=null; this.outerHTML='${this.escapeHTML(strVal)}';">`;
+            return `<img src="${encodeURI(strVal)}" style="max-width: 100px; height: auto; display: block;">`;
         }
-
-        // Detect Links
         if (strVal.startsWith('http://') || strVal.startsWith('https://')) {
             return `<a href="${encodeURI(strVal)}" target="_blank" rel="noopener noreferrer">${this.escapeHTML(strVal)}</a>`;
         }
-
         return this.escapeHTML(strVal);
     }
 
     formatHeader(str) {
-        // basic title case
         return str.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     }
 }

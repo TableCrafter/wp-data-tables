@@ -48,6 +48,13 @@
                             help: 'Adds a real-time search bar above the table.'
                         }),
                         el(TextControl, {
+                            label: 'Rows Per Page',
+                            value: attributes.per_page,
+                            type: 'number',
+                            onChange: (val) => setAttributes({ per_page: parseInt(val) || 0 }),
+                            help: 'Number of rows to show per page (0 to show all).'
+                        }),
+                        el(TextControl, {
                             label: 'Include Columns (Optional)',
                             value: attributes.include,
                             onChange: updateInclude,
