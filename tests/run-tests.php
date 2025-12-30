@@ -19,6 +19,7 @@ class TableCrafterTests {
         $this->test_json_root_path();
         $this->test_block_registration();
         $this->test_live_search_logic();
+        $this->test_pagination_logic();
         $this->test_version_consistency();
         $this->test_directory_structure();
 
@@ -102,6 +103,16 @@ class TableCrafterTests {
             $this->pass($test_name);
         } else {
             $this->fail($test_name, "Logic for 'search' attribute not found in shortcode handler.");
+        }
+    }
+
+    private function test_pagination_logic() {
+        $test_name = "Pagination Attribute Check";
+        $content = file_get_contents(__DIR__ . '/../tablecrafter.php');
+        if (strpos($content, "'per_page'") !== false) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "Logic for 'per_page' attribute not found in shortcode handler.");
         }
     }
 

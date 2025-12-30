@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -100,6 +100,12 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 
 == Changelog ==
 
+= 1.4.0 =
+* **Pagination Support:** Added client-side pagination for smoother navigation of large datasets.
+* **Control UI:** New Pagination footer with Previous/Next controls.
+* **Smart Search Integration:** Live Search now intelligently resets and works across paginated result sets.
+* **Data Settings:** Added 'per_page' attribute to both shortcode and block sidebar.
+
 = 1.3.1 =
 * **Instant Filtering:** Added Live Search support for real-time dataset filtering.
 * **UX:** Added search bar toggle in Gutenberg block and shortcode attribute.
@@ -157,6 +163,9 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 *   Added live admin previewer.
 *   Released smart column detection.
 == Upgrade Notice ==
+
+= 1.4.0 =
+Major Update: Adds Pagination support for better handling of large datasets. Recommended for all users.
 
 = 1.3.1 =
 Performance Update: Now includes Live Search for instant table filtering.
