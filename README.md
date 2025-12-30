@@ -1,99 +1,75 @@
-# TableCrafter – JSON Data Tables & API Data Viewer
+# 🚀 TableCrafter: The SEO-First JSON Table Engine for WordPress
 
-**Contributors:** fahdi
-**Tags:** table, json, api, data table, datatables
-**Requires at least:** 5.0
-**Tested up to:** 6.9
-**Stable tag:** 1.2.1
-**Requires PHP:** 7.4
-**License:** GPLv2 or later
-**License URI:** https://www.gnu.org/licenses/gpl-2.0.html
-**Donate link:** https://www.paypal.me/fahadmurtaza
+**Turn any JSON API or remote file into a high-performance, responsive table in seconds.** 
 
-Create dynamic, responsive HTML tables from any JSON API or file. A lightweight, no-code alternative to complex table plugins. Now with **Server-Side Rendering (SSR)** for maximum SEO and performance.
+TableCrafter is not just another table plugin—it's a mission-critical bridge between your dynamic external data and your WordPress site. Built for speed, hardened for security, and optimized for search engines.
 
-## Description
+---
 
-**TableCrafter** is the ultimate lightweight solution for displaying dynamic data in WordPress. 
+### � Why TableCrafter?
 
-Unlike heavy table builders that bloat your database, TableCrafter acts as a direct window to your data. Connect to any external API or JSON file, and we'll render a beautiful, responsive table instantly. 
+| Feature | The TableCrafter Advantage |
+| :--- | :--- |
+| **🚀 Instant Performance** | Powered by **SSR (Server-Side Rendering)** and **SWR (Stale-While-Revalidate)** caching for sub-100ms load times. |
+| **🔍 SEO-Ready** | Data is rendered in PHP before the page loads, making every cell crawlable by Google. |
+| **�️ Bank-Grade Security** | Automated sanitization and XSS protection for all remote data sources. |
+| **� Zero Database Bloat** | Your data lives at the source. We provide the window without the overhead. |
 
-### 🚀 Now with SSR Engine (v1.2.0)
-TableCrafter now renders your tables on the server before the page even loads. 
-*   **SEO Optimized:** Content is visible to search engine crawlers immediately.
-*   **Zero Loading Flicker:** No more "Loading..." spinners for your users.
-*   **Performance Caching:** Built-in transient caching reduces external API hits.
+---
 
-**Why choose TableCrafter?**
-*   **🏎️ Blazing Fast:** Zero database bloat. Data is pre-rendered for instant viewing.
-*   **🔗 Dynamic & Live:** Perfect for financial data, stock tickers, crypto prices, or live inventory.
-*   **📱 Mobile Ready:** Automatically responsive tables that look great on phones.
-*   **🛠️ Zero Config:** Smart column detection handles headers and formatting intelligently.
+### ✨ Key Features
 
-### 💡 Key Features
+*   **Universal JSON Connectivity:** Connect to any public API, crypto ticker, inventory feed, or `.json` file.
+*   **Smart Auto-Formatting:** Intelligent detection of **Images**, **Logos**, and **Links**—automatically rendered as visual elements.
+*   **Precision Data Curation:** Use `include` or `exclude` attributes to cherry-pick exactly what matters from messy API responses.
+*   **Built-in CORS Proxy:** Bypasses browser-level data restrictions automatically via server-side fetching.
+*   **Mobile-First Design:** Responsive tables that look stunning on any device, right out of the box.
 
-*   **Universal JSON Support:** Instant connection to any public API or `.json` dataset.
-*   **Smart Auto-Formatting:** Automatically detects logos, product images, and clickable links in PHP and JS.
-*   **Precision Curated Tables:** Only show the data that matters via `include`/`exclude` attributes.
-*   **Bank-Grade Security:** Strict HTML escaping and sanitization for safe remote data handling.
+---
 
-## Installation
+### 🕹️ How It Works
 
-1.  Upload the `tablecrafter` folder to the `/wp-content/plugins/` directory.
-2.  Activate the plugin through the 'Plugins' menu in WordPress.
-3.  Navigate to the **TableCrafter** admin menu.
-4.  Paste your JSON URL to generate a shortcode.
-5.  Add `[tablecrafter source="YOUR_URL"]` to any page.
+1.  **Install & Activate:** Up and running in under 60 seconds.
+2.  **Paste & Preview:** Use the Admin Dashboard to test your API URL and see your data live.
+3.  **Deploy:** Drop a shortcode anywhere: 
+    ```text
+    [tablecrafter source="https://api.example.com/data.json" include="name,price,status"]
+    ```
 
-## Usage
+---
 
-The `[tablecrafter]` shortcode is highly flexible. Use the following attributes to customize your data display:
+### 🛠️ Advanced Usage & Shortcuts
 
-*   **source**: (Required) The URL to your JSON API or file.
-*   **include**: (Optional) A comma-separated list of keys you want to show.
-*   **exclude**: (Optional) A comma-separated list of keys you want to hide.
-*   **id**: (Optional) A custom CSS ID for the table container.
+The `[tablecrafter]` shortcode is your control center:
 
-### Examples:
+*   **`source`**: The JSON endpoint you want to visualize.
+*   **`include`**: Limit columns to a specific set (e.g., `include="name,price"`).
+*   **`exclude`**: Hide sensitive or redundant fields (e.g., `exclude="id,metadata"`).
+*   **`id`**: Apply a custom CSS ID for bespoke styling.
 
-**1. Basic Display**
-Show all data from an API:
+**Example: A Curated Crypto Table**
 ```text
-[tablecrafter source="https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"]
+[tablecrafter source="https://api.coingecko.com/..." include="symbol,current_price,price_change_24h"]
 ```
 
-**2. Specific Columns (Curated View)**
-Only show the name, price, and symbol:
-```text
-[tablecrafter source="..." include="name,current_price,symbol"]
-```
+---
 
-## Changelog
+### 📈 Technical Pedigree (v1.2.1)
 
-### 1.2.1
-* **Instant TTFB:** Implemented Stale-While-Revalidate (SWR) caching logic.
-* **Resilience:** Systems now serve stale data while refreshing in the background, ensuring tables load instantly even if APIs are slow.
-* **Smart Refresh:** Added non-blocking background refresh via WP-Cron/WP-Events.
+*   **SSR Engine:** Server-side pre-rendering for instant TTFB.
+*   **SWR Caching:** Serves stale data while refreshing the cache in the background. No more waiting on slow 3rd-party APIs.
+*   **WP-CLI Ready:** Manage and warm your caches directly from the command line.
+*   **Secure Proxy:** Nonce-protected AJAX endpoints for admin previews.
 
-### 1.2.0
-* Major: Implemented Server-Side Rendering (SSR) Engine for instant page loads and SEO optimization.
-* Feat: Added smart link and image detection in PHP to match frontend library.
-* Feat: Integrated transient-based caching (1-hour) for rendered HTML fragments.
-* Optimized: Balanced Hybrid loading - tables render on server, JS adds interactivity.
+---
 
-### 1.1.2
-* Docs: Significantly expanded shortcode documentation with detailed attribute descriptions and examples.
+### 📃 Documentation & Metadata
 
-### 1.1.1
-* **Precision Curation:** Added the ability to include/exclude specific columns.
-* **Visual Tables:** Added automatic rendering for images, logos, and links.
-* **Hardened Security:** Implemented advanced security filters.
-* **Performance Polish:** Optimized the core engine.
+**Contributors:** @fahdi  
+**License:** GPLv2 or later  
+**Stable tag:** 1.2.1  
+**Requires PHP:** 7.4+
 
-### 1.1.0
-* Feat: Added Server-Side Proxy to bypass CORS restrictions.
-* Feat: Added Automated Background Cache Warming via WP-Cron.
-* Feat: Added WP-CLI support for cache management.
+---
 
-### 1.0.0
-* Initial release.
+**Love TableCrafter?** [Support Development](https://www.paypal.me/fahadmurtaza) ☕
