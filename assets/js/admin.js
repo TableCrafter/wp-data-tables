@@ -46,7 +46,11 @@ document.addEventListener('DOMContentLoaded', function () {
             // Init TableCrafter
             new TableCrafter({
                 selector: '#' + tableId,
-                source: url
+                source: url,
+                proxy: {
+                    url: tablecrafterAdmin.ajaxUrl,
+                    nonce: tablecrafterAdmin.nonce
+                }
             });
         } else {
             container.innerHTML = `<div class="notice notice-error inline"><p>${tablecrafterAdmin.i18n.libMissing}</p></div>`;

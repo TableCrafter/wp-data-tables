@@ -1,10 +1,6 @@
-/**
- * TableCrafter JS Library (Placeholder/Base)
- * based on git@github.com:TableCrafter/tablecrafter.git
- */
-
 class TableCrafter {
     constructor(config) {
+        this.config = config;
         this.selector = config.selector;
         this.source = config.source;
         this.container = document.querySelector(this.selector);
@@ -16,15 +12,34 @@ class TableCrafter {
 
         this.init();
     }
-
     async init() {
         try {
             this.container.innerHTML = '<div class="tc-loading">Fetching data...</div>';
 
-            const response = await fetch(this.source);
-            if (!response.ok) throw new Error('Network response was not ok');
+            let data;
 
-            const data = await response.json();
+            // Check if we should use the WordPress Proxy (for CORS and Caching)
+            if (this.config.proxy && this.config.proxy.url) {
+                const formData = new FormData();
+                formData.append('action', 'tc_proxy_fetch');
+                formData.append('url', this.source);
+                formData.append('nonce', this.config.proxy.nonce);
+
+                const response = await fetch(this.config.proxy.url, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (!result.success) throw new Error(result.data || 'Proxy fetch failed');
+                data = result.data;
+            } else {
+                // Direct fetch fallback
+                const response = await fetch(this.source);
+                if (!response.ok) throw new Error('Network response was not ok');
+                data = await response.json();
+            }
+
             this.render(data);
 
         } catch (error) {
@@ -39,15 +54,26 @@ class TableCrafter {
             return;
         }
 
-        // Basic table generation
-        const headers = Object.keys(data[0]);
+        // Configuration for columns
+        const include = this.container.dataset.include ? this.container.dataset.include.split(',').map(s => s.trim()) : [];
+        const exclude = this.container.dataset.exclude ? this.container.dataset.exclude.split(',').map(s => s.trim()) : [];
+
+        // Determine which headers to show
+        let headers = Object.keys(data[0]);
+
+        if (include.length > 0) {
+            headers = headers.filter(h => include.includes(h));
+        }
+        if (exclude.length > 0) {
+            headers = headers.filter(h => !exclude.includes(h));
+        }
 
         let html = '<table class="tc-table">';
 
         // Header
         html += '<thead><tr>';
         headers.forEach(header => {
-            html += `<th>${this.formatHeader(header)}</th>`;
+            html += `<th>${this.escapeHTML(this.formatHeader(header))}</th>`;
         });
         html += '</tr></thead>';
 
@@ -56,7 +82,8 @@ class TableCrafter {
         data.forEach(row => {
             html += '<tr>';
             headers.forEach(header => {
-                html += `<td>${row[header] !== null ? row[header] : ''}</td>`;
+                const val = row[header];
+                html += `<td>${this.renderValue(val)}</td>`;
             });
             html += '</tr>';
         });
@@ -64,6 +91,37 @@ class TableCrafter {
         html += '</table>';
 
         this.container.innerHTML = html;
+    }
+
+    /**
+     * Secures output by escaping HTML tags.
+     */
+    escapeHTML(str) {
+        if (typeof str !== 'string') return str;
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    /**
+     * Smartly renders values (detects images and links)
+     */
+    renderValue(val) {
+        if (val === null || val === undefined) return '';
+
+        const strVal = String(val).trim();
+
+        // Detect Images
+        if (strVal.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i) || strVal.startsWith('data:image')) {
+            return `<img src="${encodeURI(strVal)}" style="max-width: 100px; height: auto; display: block;" onerror="this.onerror=null; this.outerHTML='${this.escapeHTML(strVal)}';">`;
+        }
+
+        // Detect Links
+        if (strVal.startsWith('http://') || strVal.startsWith('https://')) {
+            return `<a href="${encodeURI(strVal)}" target="_blank" rel="noopener noreferrer">${this.escapeHTML(strVal)}</a>`;
+        }
+
+        return this.escapeHTML(strVal);
     }
 
     formatHeader(str) {
