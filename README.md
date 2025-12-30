@@ -51,11 +51,38 @@ We fill the gap between complex, expensive plugins like *wpDataTables/TablePress
 
 ## Usage
 
-**Basic Shortcode:**
-`[tablecrafter source="https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"]`
+The `[tablecrafter]` shortcode is highly flexible. Use the following attributes to customize your data display:
 
-**With Custom ID:**
-`[tablecrafter source="..." id="my-crypto-table"]`
+*   **source**: (Required) The URL to your JSON API or file.
+*   **include**: (Optional) A comma-separated list of keys you want to show. Perfect for limiting data from large APIs.
+*   **exclude**: (Optional) A comma-separated list of keys you want to hide.
+*   **id**: (Optional) A custom CSS ID for the table container.
+
+### Examples:
+
+**1. Basic Display**
+Show all data from an API:
+```text
+[tablecrafter source="https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"]
+```
+
+**2. Specific Columns (Curated View)**
+Only show the name, price, and symbol:
+```text
+[tablecrafter source="..." include="name,current_price,symbol"]
+```
+
+**3. Cleanup (Exclude Fields)**
+Hide internal IDs or long descriptions:
+```text
+[tablecrafter source="..." exclude="id,last_updated,roi"]
+```
+
+**4. Custom Styling**
+Target your table with specific CSS:
+```text
+[tablecrafter source="..." id="my-custom-table"]
+```
 
 ## Frequently Asked Questions
 
