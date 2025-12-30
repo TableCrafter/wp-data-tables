@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – JSON Data Tables & API Data Viewer
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('TABLECRAFTER_VERSION', '1.2.0');
+define('TABLECRAFTER_VERSION', '1.2.1');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -49,6 +49,8 @@ class TableCrafter {
 
         // Automated Cron
         add_action('tc_refresher_cron', array($this, 'automated_cache_refresh'));
+        add_action('tc_refresh_single_source', array($this, 'refresh_source_cache'), 10, 1);
+        
         if (!wp_next_scheduled('tc_refresher_cron')) {
             wp_schedule_event(time(), 'hourly', 'tc_refresher_cron');
         }
@@ -243,14 +245,30 @@ class TableCrafter {
             return '<p>' . esc_html__('Error: TableCrafter requires a "source" attribute.', 'tablecrafter-wp-data-tables') . '</p>';
         }
 
-        // --- SSR ENGINe START ---
+        // --- SSR ENGINE START (SWR Implementation) ---
         $cache_key = 'tc_html_' . md5($atts['source'] . $atts['include'] . $atts['exclude']);
-        $html_content = get_transient($cache_key);
+        $cache_data = get_transient($cache_key);
+        $html_content = '';
 
-        if ($html_content === false) {
+        if ($cache_data !== false) {
+            // We have a cache! Extract HTML and check if it's "stale"
+            $html_content = isset($cache_data['html']) ? $cache_data['html'] : '';
+            $timestamp = isset($cache_data['time']) ? $cache_data['time'] : 0;
+            
+            // If cache is older than 5 minutes, trigger a background refresh
+            if (time() - $timestamp > (5 * MINUTE_IN_SECONDS)) {
+                if (!wp_next_scheduled('tc_refresh_single_source', array($atts))) {
+                    wp_schedule_single_event(time(), 'tc_refresh_single_source', array($atts));
+                }
+            }
+        } else {
+            // No cache at all - perform synchronous fetch for the first time
             $html_content = $this->fetch_and_render_php($atts);
             if ($html_content) {
-                set_transient($cache_key, $html_content, HOUR_IN_SECONDS);
+                set_transient($cache_key, array(
+                    'html' => $html_content,
+                    'time' => time()
+                ), HOUR_IN_SECONDS);
             }
         }
         // --- SSR ENGINE END ---
@@ -399,9 +417,25 @@ class TableCrafter {
      */
     private function track_url($url) {
         $urls = get_option('tc_tracked_urls', array());
+        if (!is_array($urls)) $urls = array();
+        
         if (!in_array($url, $urls)) {
             $urls[] = $url;
             update_option('tc_tracked_urls', array_slice($urls, -50)); // Keep last 50
+        }
+    }
+
+    /**
+     * Refresh a specific source cache (Triggered by SWR)
+     */
+    public function refresh_source_cache($atts) {
+        $html = $this->fetch_and_render_php($atts);
+        if ($html) {
+            $cache_key = 'tc_html_' . md5($atts['source'] . $atts['include'] . $atts['exclude']);
+            set_transient($cache_key, array(
+                'html' => $html,
+                'time' => time()
+            ), HOUR_IN_SECONDS);
         }
     }
 
