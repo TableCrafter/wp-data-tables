@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,6 +76,12 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 
 == Changelog ==
 
+= 1.1.1 =
+* Feat: Added Column Filtering (include/exclude attributes).
+* Feat: Added Smart Rendering for Links and Images.
+* Security: Implemented XSS protection for all remote data output.
+* Optimized: Refactored JS library for better performance and safety.
+
 = 1.1.0 =
 * Feat: Added Server-Side Proxy to bypass CORS restrictions.
 * Feat: Added Automated Background Cache Warming via WP-Cron.
@@ -97,6 +103,9 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 *   Added live admin previewer.
 *   Released smart column detection.
 == Upgrade Notice ==
+
+= 1.1.1 =
+Security and Feature Update: Adds XSS protection and column filtering support.
 
 = 1.1.0 =
 Major update: Includes CORS bypass proxy and background cache warming for better performance.

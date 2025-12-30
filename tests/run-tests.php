@@ -13,6 +13,8 @@ class TableCrafterTests {
 
         $this->test_shortcode_parsing();
         $this->test_data_sanitization();
+        $this->test_column_attributes();
+        $this->test_security_escaping();
         $this->test_version_consistency();
         $this->test_directory_structure();
 
@@ -36,6 +38,26 @@ class TableCrafterTests {
             $this->pass($test_name);
         } else {
             $this->fail($test_name, "esc_url_raw not used for source attribute.");
+        }
+    }
+
+    private function test_column_attributes() {
+        $test_name = "Column Attribute Check (Include/Exclude)";
+        $content = file_get_contents(__DIR__ . '/../tablecrafter.php');
+        if (strpos($content, "'include'") !== false && strpos($content, "'exclude'") !== false) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "Shortcode lacks 'include' or 'exclude' support.");
+        }
+    }
+
+    private function test_security_escaping() {
+        $test_name = "Security Escaping (JS)";
+        $content = file_get_contents(__DIR__ . '/../assets/js/tablecrafter.js');
+        if (strpos($content, "escapeHTML") !== false) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "No escapeHTML function found in JS library.");
         }
     }
 

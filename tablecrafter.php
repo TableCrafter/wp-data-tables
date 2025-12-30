@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – JSON Data Tables & API Data Viewer
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('TABLECRAFTER_VERSION', '1.1.0');
+define('TABLECRAFTER_VERSION', '1.1.1');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -230,8 +230,10 @@ class TableCrafter {
      */
     public function render_table($atts) {
         $atts = shortcode_atts(array(
-            'source' => '', // The single data source URL
-            'id' => 'tc-' . uniqid()
+            'source'  => '', // The single data source URL
+            'id'      => 'tc-' . uniqid(),
+            'include' => '', // Comma-separated list of keys to include
+            'exclude' => ''  // Comma-separated list of keys to exclude
         ), $atts, 'tablecrafter');
         
         // Sanitize the source URL
@@ -249,7 +251,11 @@ class TableCrafter {
         // Output container
         ob_start();
         ?>
-        <div id="<?php echo esc_attr($atts['id']); ?>" class="tablecrafter-container" data-source="<?php echo esc_url($atts['source']); ?>">
+        <div id="<?php echo esc_attr($atts['id']); ?>" 
+             class="tablecrafter-container" 
+             data-source="<?php echo esc_url($atts['source']); ?>"
+             data-include="<?php echo esc_attr($atts['include']); ?>"
+             data-exclude="<?php echo esc_attr($atts['exclude']); ?>">
             <div class="tc-loading"><?php esc_html_e('Loading TableCrafter...', 'tablecrafter-wp-data-tables'); ?></div>
         </div>
         <?php
