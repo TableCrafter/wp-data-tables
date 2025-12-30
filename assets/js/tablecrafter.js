@@ -65,6 +65,21 @@ class TableCrafter {
         // Configuration for columns
         const include = this.container.dataset.include ? this.container.dataset.include.split(',').map(s => s.trim()) : [];
         const exclude = this.container.dataset.exclude ? this.container.dataset.exclude.split(',').map(s => s.trim()) : [];
+        const rootPath = this.container.dataset.root ? this.container.dataset.root.split('.') : [];
+
+        // Navigate to the root path if provided
+        if (rootPath.length > 0) {
+            rootPath.forEach(segment => {
+                if (data && data[segment]) {
+                    data = data[segment];
+                }
+            });
+        }
+
+        if (!Array.isArray(data) || data.length === 0) {
+            this.container.innerHTML = '<div class="notice notice-warning inline"><p>TableCrafter: No data found at the specified root.</p></div>';
+            return;
+        }
 
         // Determine which headers to show
         let headers = Object.keys(data[0]);

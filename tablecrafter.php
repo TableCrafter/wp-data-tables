@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – JSON Data Tables & API Data Viewer
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 1.2.1
+ * Version: 1.2.2
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('TABLECRAFTER_VERSION', '1.2.1');
+define('TABLECRAFTER_VERSION', '1.2.2');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -235,7 +235,8 @@ class TableCrafter {
             'source'  => '', // The single data source URL
             'id'      => 'tc-' . uniqid(),
             'include' => '', // Comma-separated list of keys to include
-            'exclude' => ''  // Comma-separated list of keys to exclude
+            'exclude' => '', // Comma-separated list of keys to exclude
+            'root'    => ''  // Path to the data array in the JSON response (e.g., 'data' or 'products')
         ), $atts, 'tablecrafter');
         
         // Sanitize the source URL
@@ -286,6 +287,7 @@ class TableCrafter {
              data-source="<?php echo esc_url($atts['source']); ?>"
              data-include="<?php echo esc_attr($atts['include']); ?>"
              data-exclude="<?php echo esc_attr($atts['exclude']); ?>"
+             data-root="<?php echo esc_attr($atts['root']); ?>"
              data-ssr="true">
             <?php echo $html_content ? $html_content : '<div class="tc-loading">' . esc_html__('Loading TableCrafter...', 'tablecrafter-wp-data-tables') . '</div>'; ?>
         </div>
@@ -304,6 +306,21 @@ class TableCrafter {
         $data = json_decode($body, true);
 
         if (!is_array($data) || empty($data)) return false;
+
+        // Navigate to the root path if provided
+        if (!empty($atts['root'])) {
+            $path = explode('.', $atts['root']);
+            foreach ($path as $segment) {
+                if (isset($data[$segment])) {
+                    $data = $data[$segment];
+                } else {
+                    return false; // Path not found
+                }
+            }
+        }
+
+        // Ensure we ended up with an array of items
+        if (!is_array($data) || empty($data) || !is_array(reset($data))) return false;
 
         // Handle Include/Exclude
         $include = !empty($atts['include']) ? array_map('trim', explode(',', $atts['include'])) : array();

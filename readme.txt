@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -100,6 +100,11 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 
 == Changelog ==
 
+= 1.2.2 =
+* **Deep Connectivity:** Added 'root' attribute to support nested JSON structures. 
+* **Compatibility:** Now supports APIs that wrap data (e.g., WordPress REST, Shopify, etc.).
+* **Hybrid Sync:** Updated JS library to handle nested roots in preview and manual fetch modes.
+
 = 1.2.1 =
 * **Instant TTFB:** Implemented Stale-While-Revalidate (SWR) caching logic.
 * **Resilience:** Systems now serve stale data while refreshing in the background, ensuring tables load instantly even if APIs are slow.
@@ -142,6 +147,9 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 *   Added live admin previewer.
 *   Released smart column detection.
 == Upgrade Notice ==
+
+= 1.2.2 =
+Feature Update: Adds JSON root path support for better API compatibility.
 
 = 1.2.1 =
 Performance Update: Adds Stale-While-Revalidate caching for even faster page loads.
