@@ -18,6 +18,7 @@ class TableCrafterTests {
         $this->test_ssr_engine();
         $this->test_json_root_path();
         $this->test_block_registration();
+        $this->test_live_search_logic();
         $this->test_version_consistency();
         $this->test_directory_structure();
 
@@ -91,6 +92,16 @@ class TableCrafterTests {
             $this->pass($test_name);
         } else {
             $this->fail($test_name, "No block registration logic found in the main plugin file.");
+        }
+    }
+
+    private function test_live_search_logic() {
+        $test_name = "Live Search Attribute Check";
+        $content = file_get_contents(__DIR__ . '/../tablecrafter.php');
+        if (strpos($content, "'search'") !== false) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "Logic for 'search' attribute not found in shortcode handler.");
         }
     }
 

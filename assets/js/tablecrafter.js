@@ -14,46 +14,82 @@ class TableCrafter {
         // If the table was pre-rendered on the server (SSR), skip the fetch/render cycle
         if (this.container.dataset.ssr === "true" && this.container.querySelector('table')) {
             this.container.dataset.tcInitialized = "true";
+            // Still initialize search if enabled
+            this.initSearch();
             return;
         }
         // --- HYBRID HYDRATION END ---
 
         this.init();
     }
+
     async init() {
         try {
             this.container.innerHTML = '<div class="tc-loading">Fetching data...</div>';
-
-            let data;
-
-            // Check if we should use the WordPress Proxy (for CORS and Caching)
-            if (this.config.proxy && this.config.proxy.url) {
-                const formData = new FormData();
-                formData.append('action', 'tc_proxy_fetch');
-                formData.append('url', this.source);
-                formData.append('nonce', this.config.proxy.nonce);
-
-                const response = await fetch(this.config.proxy.url, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.json();
-                if (!result.success) throw new Error(result.data || 'Proxy fetch failed');
-                data = result.data;
-            } else {
-                // Direct fetch fallback
-                const response = await fetch(this.source);
-                if (!response.ok) throw new Error('Network response was not ok');
-                data = await response.json();
-            }
-
+            const data = await this.fetchData();
             this.render(data);
-
+            this.initSearch();
         } catch (error) {
             console.error('TableCrafter Error:', error);
-            this.container.innerHTML = `<div class="tc-error">Error loading data: ${error.message}</div>`;
+            this.container.innerHTML = `<div class="notice notice-error inline"><p>${error.message}</p></div>`;
         }
+    }
+
+    async fetchData() {
+        let data;
+        // Check if we should use the WordPress Proxy (for CORS and Caching)
+        if (this.config.proxy && this.config.proxy.url) {
+            const formData = new FormData();
+            formData.append('action', 'tc_proxy_fetch');
+            formData.append('url', this.source);
+            formData.append('nonce', this.config.proxy.nonce);
+
+            const response = await fetch(this.config.proxy.url, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (!result.success) throw new Error(result.data || 'Proxy fetch failed');
+            data = result.data;
+        } else {
+            // Direct fetch fallback
+            const response = await fetch(this.source);
+            if (!response.ok) throw new Error('Network response was not ok');
+            data = await response.json();
+        }
+        return data;
+    }
+
+    initSearch() {
+        if (this.container.dataset.search !== "true") return;
+
+        // Prevent duplicate search bars
+        if (this.container.querySelector('.tc-search-container')) return;
+
+        const table = this.container.querySelector('table');
+        if (!table) return;
+
+        const searchContainer = document.createElement('div');
+        searchContainer.className = 'tc-search-container';
+
+        const searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.placeholder = 'Search table...';
+        searchInput.className = 'tc-search-input';
+
+        searchContainer.appendChild(searchInput);
+        this.container.insertBefore(searchContainer, table);
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const rows = table.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        });
     }
 
     render(data) {
@@ -114,6 +150,7 @@ class TableCrafter {
         html += '</table>';
 
         this.container.innerHTML = html;
+        this.container.dataset.tcInitialized = "true";
     }
 
     /**
