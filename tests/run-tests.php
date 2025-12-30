@@ -17,6 +17,7 @@ class TableCrafterTests {
         $this->test_security_escaping();
         $this->test_ssr_engine();
         $this->test_json_root_path();
+        $this->test_block_registration();
         $this->test_version_consistency();
         $this->test_directory_structure();
 
@@ -80,6 +81,16 @@ class TableCrafterTests {
             $this->pass($test_name);
         } else {
             $this->fail($test_name, "Logic for 'root' attribute not found in shortcode handler.");
+        }
+    }
+
+    private function test_block_registration() {
+        $test_name = "Block Editor Registration Check";
+        $content = file_get_contents(__DIR__ . '/../tablecrafter.php');
+        if (strpos($content, "register_block_type") !== false || strpos($content, "init_block") !== false) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "No block registration logic found in the main plugin file.");
         }
     }
 

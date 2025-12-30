@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.2.2
+Stable tag: 1.3.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -100,6 +100,11 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 
 == Changelog ==
 
+= 1.3.0 =
+* **Gutenberg Ready:** Added native WordPress Block support with live preview.
+* **UX:** New TableCrafter block includes a sidebar with all configuration options (Source, Root, Include/Exclude).
+* **SSR Integration:** Blocks use the high-performance SSR engine and SWR caching for instant previews.
+
 = 1.2.2 =
 * **Deep Connectivity:** Added 'root' attribute to support nested JSON structures. 
 * **Compatibility:** Now supports APIs that wrap data (e.g., WordPress REST, Shopify, etc.).
@@ -147,6 +152,9 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 *   Added live admin previewer.
 *   Released smart column detection.
 == Upgrade Notice ==
+
+= 1.3.0 =
+Gutenberg Update: tablecrafter is now a native WordPress block! You can now add and configure tables directly in the Block Editor.
 
 = 1.2.2 =
 Feature Update: Adds JSON root path support for better API compatibility.
