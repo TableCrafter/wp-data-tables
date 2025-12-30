@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -100,6 +100,11 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 
 == Changelog ==
 
+= 1.3.1 =
+* **Instant Filtering:** Added Live Search support for real-time dataset filtering.
+* **UX:** Added search bar toggle in Gutenberg block and shortcode attribute.
+* **Architecture:** Enhanced hybrid hydration to support interactive features immediately.
+
 = 1.3.0 =
 * **Gutenberg Ready:** Added native WordPress Block support with live preview.
 * **UX:** New TableCrafter block includes a sidebar with all configuration options (Source, Root, Include/Exclude).
@@ -152,6 +157,9 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 *   Added live admin previewer.
 *   Released smart column detection.
 == Upgrade Notice ==
+
+= 1.3.1 =
+Performance Update: Now includes Live Search for instant table filtering.
 
 = 1.3.0 =
 Gutenberg Update: tablecrafter is now a native WordPress block! You can now add and configure tables directly in the Block Editor.

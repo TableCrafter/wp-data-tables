@@ -12,16 +12,19 @@
             root: { type: 'string', default: '' },
             include: { type: 'string', default: '' },
             exclude: { type: 'string', default: '' },
+            search: { type: 'boolean', default: false },
             id: { type: 'string', default: '' }
         },
 
         edit: function (props) {
             const { attributes, setAttributes } = props;
+            const { PanelBody, TextControl, ToggleControl, ExternalLink } = components;
 
             const updateSource = (value) => setAttributes({ source: value });
             const updateRoot = (value) => setAttributes({ root: value });
             const updateInclude = (value) => setAttributes({ include: value });
             const updateExclude = (value) => setAttributes({ exclude: value });
+            const updateSearch = (value) => setAttributes({ search: value });
 
             return [
                 el(InspectorControls, { key: 'controls' },
@@ -37,6 +40,12 @@
                             value: attributes.root,
                             onChange: updateRoot,
                             help: 'Dot-notation path to the data array (e.g., data.items).'
+                        }),
+                        el(ToggleControl, {
+                            label: 'Enable Live Search',
+                            checked: attributes.search,
+                            onChange: updateSearch,
+                            help: 'Adds a real-time search bar above the table.'
                         }),
                         el(TextControl, {
                             label: 'Include Columns (Optional)',
