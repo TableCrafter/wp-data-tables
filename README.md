@@ -4,7 +4,7 @@
 **Tags:** table, json, api, data table, datatables
 **Requires at least:** 5.0
 **Tested up to:** 6.9
-**Stable tag:** 1.2.0
+**Stable tag:** 1.2.1
 **Requires PHP:** 7.4
 **License:** GPLv2 or later
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html
@@ -69,6 +69,11 @@ Only show the name, price, and symbol:
 ```
 
 ## Changelog
+
+### 1.2.1
+* **Instant TTFB:** Implemented Stale-While-Revalidate (SWR) caching logic.
+* **Resilience:** Systems now serve stale data while refreshing in the background, ensuring tables load instantly even if APIs are slow.
+* **Smart Refresh:** Added non-blocking background refresh via WP-Cron/WP-Events.
 
 ### 1.2.0
 * Major: Implemented Server-Side Rendering (SSR) Engine for instant page loads and SEO optimization.

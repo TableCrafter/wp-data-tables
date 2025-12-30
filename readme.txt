@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -100,6 +100,11 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 
 == Changelog ==
 
+= 1.2.1 =
+* **Instant TTFB:** Implemented Stale-While-Revalidate (SWR) caching logic.
+* **Resilience:** Systems now serve stale data while refreshing in the background, ensuring tables load instantly even if APIs are slow.
+* **Smart Refresh:** Added non-blocking background refresh via WP-Cron/WP-Events.
+
 = 1.2.0 =
 * Major: Implemented Server-Side Rendering (SSR) Engine for instant page loads and SEO optimization.
 * Feat: Added smart link and image detection in PHP to match frontend library.
@@ -137,6 +142,9 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 *   Added live admin previewer.
 *   Released smart column detection.
 == Upgrade Notice ==
+
+= 1.2.1 =
+Performance Update: Adds Stale-While-Revalidate caching for even faster page loads.
 
 = 1.2.0 =
 Major Update: TableCrafter now renders tables server-side! This improves SEO and eliminates the "Loading" flicker.
