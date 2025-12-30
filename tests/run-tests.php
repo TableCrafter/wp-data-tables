@@ -16,6 +16,7 @@ class TableCrafterTests {
         $this->test_column_attributes();
         $this->test_security_escaping();
         $this->test_ssr_engine();
+        $this->test_json_root_path();
         $this->test_version_consistency();
         $this->test_directory_structure();
 
@@ -69,6 +70,16 @@ class TableCrafterTests {
             $this->pass($test_name);
         } else {
             $this->fail($test_name, "SSR Engine methods or data attributes missing.");
+        }
+    }
+
+    private function test_json_root_path() {
+        $test_name = "JSON Root Path Attribute Check";
+        $content = file_get_contents(__DIR__ . '/../tablecrafter.php');
+        if (strpos($content, "'root'") !== false && strpos($content, "['root']") !== false) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "Logic for 'root' attribute not found in shortcode handler.");
         }
     }
 

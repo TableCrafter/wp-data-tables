@@ -6,14 +6,14 @@ TableCrafter is not just another table plugin—it's a mission-critical bridge b
 
 ---
 
-### � Why TableCrafter?
+### 🔥 Why TableCrafter?
 
 | Feature | The TableCrafter Advantage |
 | :--- | :--- |
 | **🚀 Instant Performance** | Powered by **SSR (Server-Side Rendering)** and **SWR (Stale-While-Revalidate)** caching for sub-100ms load times. |
 | **🔍 SEO-Ready** | Data is rendered in PHP before the page loads, making every cell crawlable by Google. |
-| **�️ Bank-Grade Security** | Automated sanitization and XSS protection for all remote data sources. |
-| **� Zero Database Bloat** | Your data lives at the source. We provide the window without the overhead. |
+| **🛡️ Bank-Grade Security** | Automated sanitization and XSS protection for all remote data sources. |
+| **📦 Zero Database Bloat** | Your data lives at the source. We provide the window without the overhead. |
 
 ---
 
@@ -22,6 +22,7 @@ TableCrafter is not just another table plugin—it's a mission-critical bridge b
 *   **Universal JSON Connectivity:** Connect to any public API, crypto ticker, inventory feed, or `.json` file.
 *   **Smart Auto-Formatting:** Intelligent detection of **Images**, **Logos**, and **Links**—automatically rendered as visual elements.
 *   **Precision Data Curation:** Use `include` or `exclude` attributes to cherry-pick exactly what matters from messy API responses.
+*   **JSON Root Path Support:** Target nested data arrays (e.g., `root="data.items"`) to support complex enterprise APIs.
 *   **Built-in CORS Proxy:** Bypasses browser-level data restrictions automatically via server-side fetching.
 *   **Mobile-First Design:** Responsive tables that look stunning on any device, right out of the box.
 
@@ -43,18 +44,19 @@ TableCrafter is not just another table plugin—it's a mission-critical bridge b
 The `[tablecrafter]` shortcode is your control center:
 
 *   **`source`**: The JSON endpoint you want to visualize.
+*   **`root`**: The JSON path to the data array (e.g., `root="products"` or `root="data.items"`).
 *   **`include`**: Limit columns to a specific set (e.g., `include="name,price"`).
 *   **`exclude`**: Hide sensitive or redundant fields (e.g., `exclude="id,metadata"`).
 *   **`id`**: Apply a custom CSS ID for bespoke styling.
 
-**Example: A Curated Crypto Table**
+**Example: A Nested API Response**
 ```text
-[tablecrafter source="https://api.coingecko.com/..." include="symbol,current_price,price_change_24h"]
+[tablecrafter source="https://api.example.com/api" root="data.products" include="title,price"]
 ```
 
 ---
 
-### 📈 Technical Pedigree (v1.2.1)
+### 📈 Technical Pedigree (v1.2.2)
 
 *   **SSR Engine:** Server-side pre-rendering for instant TTFB.
 *   **SWR Caching:** Serves stale data while refreshing the cache in the background. No more waiting on slow 3rd-party APIs.
@@ -67,7 +69,7 @@ The `[tablecrafter]` shortcode is your control center:
 
 **Contributors:** @fahdi  
 **License:** GPLv2 or later  
-**Stable tag:** 1.2.1  
+**Stable tag:** 1.2.2  
 **Requires PHP:** 7.4+
 
 ---
