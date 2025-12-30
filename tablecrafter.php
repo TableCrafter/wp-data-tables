@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – JSON Data Tables & API Data Viewer
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 1.1.2
+ * Version: 1.2.0
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('TABLECRAFTER_VERSION', '1.1.2');
+define('TABLECRAFTER_VERSION', '1.2.0');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -242,8 +242,20 @@ class TableCrafter {
         if (empty($atts['source'])) {
             return '<p>' . esc_html__('Error: TableCrafter requires a "source" attribute.', 'tablecrafter-wp-data-tables') . '</p>';
         }
+
+        // --- SSR ENGINe START ---
+        $cache_key = 'tc_html_' . md5($atts['source'] . $atts['include'] . $atts['exclude']);
+        $html_content = get_transient($cache_key);
+
+        if ($html_content === false) {
+            $html_content = $this->fetch_and_render_php($atts);
+            if ($html_content) {
+                set_transient($cache_key, $html_content, HOUR_IN_SECONDS);
+            }
+        }
+        // --- SSR ENGINE END ---
         
-        // Enqueue assets only when shortcode is used
+        // Enqueue assets
         $this->register_assets();
         wp_enqueue_script('tablecrafter-frontend');
         wp_enqueue_style('tablecrafter-style');
@@ -255,11 +267,83 @@ class TableCrafter {
              class="tablecrafter-container" 
              data-source="<?php echo esc_url($atts['source']); ?>"
              data-include="<?php echo esc_attr($atts['include']); ?>"
-             data-exclude="<?php echo esc_attr($atts['exclude']); ?>">
-            <div class="tc-loading"><?php esc_html_e('Loading TableCrafter...', 'tablecrafter-wp-data-tables'); ?></div>
+             data-exclude="<?php echo esc_attr($atts['exclude']); ?>"
+             data-ssr="true">
+            <?php echo $html_content ? $html_content : '<div class="tc-loading">' . esc_html__('Loading TableCrafter...', 'tablecrafter-wp-data-tables') . '</div>'; ?>
         </div>
         <?php
         return ob_get_clean();
+    }
+
+    /**
+     * Server-Side Fetch and Render
+     */
+    private function fetch_and_render_php($atts) {
+        $response = wp_remote_get($atts['source'], array('timeout' => 15));
+        if (is_wp_error($response)) return false;
+
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if (!is_array($data) || empty($data)) return false;
+
+        // Handle Include/Exclude
+        $include = !empty($atts['include']) ? array_map('trim', explode(',', $atts['include'])) : array();
+        $exclude = !empty($atts['exclude']) ? array_map('trim', explode(',', $atts['exclude'])) : array();
+
+        $headers = array_keys(reset($data));
+        if (!empty($include)) {
+            $headers = array_intersect($headers, $include);
+        }
+        if (!empty($exclude)) {
+            $headers = array_diff($headers, $exclude);
+        }
+
+        if (empty($headers)) return false;
+
+        // Build HTML
+        $html = '<table class="tc-table">';
+        $html .= '<thead><tr>';
+        foreach ($headers as $header) {
+            $html .= '<th>' . esc_html($this->format_header_php($header)) . '</th>';
+        }
+        $html .= '</tr></thead>';
+        $html .= '<tbody>';
+        
+        foreach ($data as $row) {
+            $html .= '<tr>';
+            foreach ($headers as $header) {
+                $val = isset($row[$header]) ? $row[$header] : '';
+                $html .= '<td>' . $this->render_value_php($val) . '</td>';
+            }
+            $html .= '</tr>';
+        }
+        $html .= '</tbody></table>';
+
+        return $html;
+    }
+
+    private function format_header_php($str) {
+        return ucwords(str_replace('_', ' ', $str));
+    }
+
+    private function render_value_php($val) {
+        if (is_null($val) || is_bool($val)) return '';
+        if (is_array($val) || is_object($val)) return '[Data]';
+
+        $str = trim((string)$val);
+
+        // Detect Images
+        if (preg_match('/\.(jpeg|jpg|gif|png|webp|svg|bmp)$/i', $str) || strpos($str, 'data:image') === 0) {
+            return sprintf('<img src="%s" style="max-width: 100px; height: auto; display: block;">', esc_url($str));
+        }
+
+        // Detect Links
+        if (strpos($str, 'http://') === 0 || strpos($str, 'https://') === 0) {
+            return sprintf('<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>', esc_url($str), esc_html($str));
+        }
+
+        return esc_html($str);
     }
 
     /**

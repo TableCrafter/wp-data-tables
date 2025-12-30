@@ -4,13 +4,13 @@
 **Tags:** table, json, api, data table, datatables
 **Requires at least:** 5.0
 **Tested up to:** 6.9
-**Stable tag:** 1.1.2
+**Stable tag:** 1.2.0
 **Requires PHP:** 7.4
 **License:** GPLv2 or later
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html
 **Donate link:** https://www.paypal.me/fahadmurtaza
 
-Create dynamic, responsive HTML tables from any JSON API or file. A lightweight, no-code alternative to complex table plugins.
+Create dynamic, responsive HTML tables from any JSON API or file. A lightweight, no-code alternative to complex table plugins. Now with **Server-Side Rendering (SSR)** for maximum SEO and performance.
 
 ## Description
 
@@ -18,29 +18,24 @@ Create dynamic, responsive HTML tables from any JSON API or file. A lightweight,
 
 Unlike heavy table builders that bloat your database, TableCrafter acts as a direct window to your data. Connect to any external API or JSON file, and we'll render a beautiful, responsive table instantly. 
 
-We fill the gap between complex, expensive plugins like *wpDataTables/TablePress* and raw HTML tables. 
+### 🚀 Now with SSR Engine (v1.2.0)
+TableCrafter now renders your tables on the server before the page even loads. 
+*   **SEO Optimized:** Content is visible to search engine crawlers immediately.
+*   **Zero Loading Flicker:** No more "Loading..." spinners for your users.
+*   **Performance Caching:** Built-in transient caching reduces external API hits.
 
 **Why choose TableCrafter?**
-*   **🏎️ Blazing Fast:** Zero database bloat. Data is fetched on-the-fly via JavaScript.
-*   **🔗 Dynamic & Live:** Perfect for financial data, stock tickers, crypto prices, or live inventory that changes every minute.
+*   **🏎️ Blazing Fast:** Zero database bloat. Data is pre-rendered for instant viewing.
+*   **🔗 Dynamic & Live:** Perfect for financial data, stock tickers, crypto prices, or live inventory.
 *   **📱 Mobile Ready:** Automatically responsive tables that look great on phones.
-*   **🛠️ Zero Config:** Smart column detection means you just paste a URL, and we handle the rest.
+*   **🛠️ Zero Config:** Smart column detection handles headers and formatting intelligently.
 
-### 🚀 Key Features
+### 💡 Key Features
 
 *   **Universal JSON Support:** Instant connection to any public API or `.json` dataset.
-*   **Smart Auto-Formatting:** Beautiful tables out-of-the-box. We automatically detect logos, product images, and clickable links.
-*   **Precision Curated Tables:** Only show the data that matters. Easily pick which columns to include or hide from messy API feeds.
-*   **Bank-Grade Security:** Advanced protection built-in to safely handle data from third-party sources.
-*   **Live Admin Preview:** Test your layouts in real-time before going live.
-
-### 💡 Powerful Use Cases
-
-*   **Crypto & Finance Portals:** Display live Bitcoin/ETH prices from CoinGecko or Binance APIs.
-*   **Company Intranets:** Show employee directories fetched from your internal HR systems.
-*   **E-Commerce Stock:** Display real-time product availability from external suppliers.
-*   **Open Data Projects:** Visualize government datasets, weather data, or sports statistics.
-*   **Affiliate Marketers:** Create dynamic comparison tables that auto-update from a central JSON feed.
+*   **Smart Auto-Formatting:** Automatically detects logos, product images, and clickable links in PHP and JS.
+*   **Precision Curated Tables:** Only show the data that matters via `include`/`exclude` attributes.
+*   **Bank-Grade Security:** Strict HTML escaping and sanitization for safe remote data handling.
 
 ## Installation
 
@@ -55,7 +50,7 @@ We fill the gap between complex, expensive plugins like *wpDataTables/TablePress
 The `[tablecrafter]` shortcode is highly flexible. Use the following attributes to customize your data display:
 
 *   **source**: (Required) The URL to your JSON API or file.
-*   **include**: (Optional) A comma-separated list of keys you want to show. Perfect for limiting data from large APIs.
+*   **include**: (Optional) A comma-separated list of keys you want to show.
 *   **exclude**: (Optional) A comma-separated list of keys you want to hide.
 *   **id**: (Optional) A custom CSS ID for the table container.
 
@@ -73,70 +68,27 @@ Only show the name, price, and symbol:
 [tablecrafter source="..." include="name,current_price,symbol"]
 ```
 
-**3. Cleanup (Exclude Fields)**
-Hide internal IDs or long descriptions:
-```text
-[tablecrafter source="..." exclude="id,last_updated,roi"]
-```
-
-**4. Custom Styling**
-Target your table with specific CSS:
-```text
-[tablecrafter source="..." id="my-custom-table"]
-```
-
-## Frequently Asked Questions
-
-### Does this store data in my WordPress database?
-No! That's the beauty of TableCrafter. It's a lightweight *viewer*. Your data stays in the JSON source, keeping your WordPress site fast and your database clean.
-
-### My API has Cross-Origin (CORS) errors. What do I do?
-TableCrafter includes a built-in server-side proxy that automatically bypasses most CORS restrictions. If your browser blocks the request, the plugin will securely fetch the data via your WordPress server instead. This happens automatically—no configuration needed!
-
-### Can I use this for CSV files?
-TableCrafter is optimized for the modern web (JSON). However, we are exploring CSV support for future versions. For now, we recommend converting CSV to JSON for the best performance.
-
-## Screenshots
-
-### 1. Admin Dashboard Preview
-The TableCrafter settings panel with live preview functionality. Enter any JSON URL (or select from demo URLs) and see your data rendered instantly in the WordPress admin.
-
-![Admin Dashboard Preview](screenshot-1.png)
-
-### 2. Frontend Table Display
-A clean, responsive data table as it appears on your website. Automatically formatted and mobile-friendly.
-
-![Frontend Table Display](screenshot-2.png)
-
 ## Changelog
+
+### 1.2.0
+* Major: Implemented Server-Side Rendering (SSR) Engine for instant page loads and SEO optimization.
+* Feat: Added smart link and image detection in PHP to match frontend library.
+* Feat: Integrated transient-based caching (1-hour) for rendered HTML fragments.
+* Optimized: Balanced Hybrid loading - tables render on server, JS adds interactivity.
 
 ### 1.1.2
 * Docs: Significantly expanded shortcode documentation with detailed attribute descriptions and examples.
-* Docs: Improved copy-paste reliability for shortcode examples in the WordPress.org directory.
 
 ### 1.1.1
-* **Precision Curation:** Added the ability to include/exclude specific columns for cleaner tables.
+* **Precision Curation:** Added the ability to include/exclude specific columns.
 * **Visual Tables:** Added automatic rendering for images, logos, and links.
-* **Hardened Security:** Implemented advanced security filters for safer data handling.
-* **Performance Polish:** Optimized the core engine for faster, smoother table rendering.
+* **Hardened Security:** Implemented advanced security filters.
+* **Performance Polish:** Optimized the core engine.
 
 ### 1.1.0
 * Feat: Added Server-Side Proxy to bypass CORS restrictions.
 * Feat: Added Automated Background Cache Warming via WP-Cron.
 * Feat: Added WP-CLI support for cache management.
-* Fixed: Resolved shortcode rendering issues in various theme environments.
-* Fixed: Prevented "smart quote" conversion in documentation to ensure copy-paste reliability.
-* Fixed: Optimized frontend initialization to prevent race conditions.
-* Docs: Updated branding and donation links.
-* Docs: Removed comparison section.
-
-### 1.0.1
-* Refactored script handling for full WP.org directory compliance.
-* Moved all inline JavaScript to external files.
-* Implemented wp_localize_script for safer data handling in admin.
-* Optimized shortcode renderer to eliminate inline JS injection.
 
 ### 1.0.0
-*   Initial release.
-*   Added live admin previewer.
-*   Released smart column detection.
+* Initial release.

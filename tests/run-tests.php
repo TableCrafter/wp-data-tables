@@ -15,6 +15,7 @@ class TableCrafterTests {
         $this->test_data_sanitization();
         $this->test_column_attributes();
         $this->test_security_escaping();
+        $this->test_ssr_engine();
         $this->test_version_consistency();
         $this->test_directory_structure();
 
@@ -58,6 +59,16 @@ class TableCrafterTests {
             $this->pass($test_name);
         } else {
             $this->fail($test_name, "No escapeHTML function found in JS library.");
+        }
+    }
+
+    private function test_ssr_engine() {
+        $test_name = "SSR Engine Check (PHP)";
+        $content = file_get_contents(__DIR__ . '/../tablecrafter.php');
+        if (strpos($content, "fetch_and_render_php") !== false && strpos($content, "data-ssr=\"true\"") !== false) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "SSR Engine methods or data attributes missing.");
         }
     }
 

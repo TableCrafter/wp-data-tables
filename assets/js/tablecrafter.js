@@ -10,6 +10,14 @@ class TableCrafter {
             return;
         }
 
+        // --- HYBRID HYDRATION START ---
+        // If the table was pre-rendered on the server (SSR), skip the fetch/render cycle
+        if (this.container.dataset.ssr === "true" && this.container.querySelector('table')) {
+            this.container.dataset.tcInitialized = "true";
+            return;
+        }
+        // --- HYBRID HYDRATION END ---
+
         this.init();
     }
     async init() {
