@@ -28,10 +28,11 @@ We fill the gap between complex, expensive plugins like *wpDataTables/TablePress
 
 ### 🚀 Key Features
 
-*   **Universal JSON Support:** Works with any public API or `.json` file.
-*   **Smart Auto-Formatting:** Automatically detects headers and formats data intelligently.
-*   **Live Admin Preview:** Test your API endpoints directly in the customized dashboard.
-*   **Developer Friendly:** Vanilla JavaScript core with no jQuery dependencies.
+*   **Universal JSON Support:** Instant connection to any public API or `.json` dataset.
+*   **Smart Auto-Formatting:** Beautiful tables out-of-the-box. We automatically detect logos, product images, and clickable links.
+*   **Precision Curated Tables:** Only show the data that matters. Easily pick which columns to include or hide from messy API feeds.
+*   **Bank-Grade Security:** Advanced protection built-in to safely handle data from third-party sources.
+*   **Live Admin Preview:** Test your layouts in real-time before going live.
 
 ### 💡 Powerful Use Cases
 
@@ -55,8 +56,11 @@ We fill the gap between complex, expensive plugins like *wpDataTables/TablePress
 **Basic Shortcode:**
 `[tablecrafter source="https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"]`
 
-**With Custom ID:**
-`[tablecrafter source="..." id="my-crypto-table"]`
+**Curated Columns (Include only specific fields):**
+`[tablecrafter source="..." include="name,price,symbol"]`
+
+**Slim View (Hide specific fields):**
+`[tablecrafter source="..." exclude="description,id,meta"]`
 
 == Frequently Asked Questions ==
 
@@ -77,10 +81,10 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 == Changelog ==
 
 = 1.1.1 =
-* Feat: Added Column Filtering (include/exclude attributes).
-* Feat: Added Smart Rendering for Links and Images.
-* Security: Implemented XSS protection for all remote data output.
-* Optimized: Refactored JS library for better performance and safety.
+* **Precision Curation:** Added the ability to include/exclude specific columns for cleaner tables.
+* **Visual Tables:** Added automatic rendering for images, logos, and links.
+* **Hardened Security:** Implemented advanced security filters for safer data handling.
+* **Performance Polish:** Optimized the core engine for faster, smoother table rendering.
 
 = 1.1.0 =
 * Feat: Added Server-Side Proxy to bypass CORS restrictions.
