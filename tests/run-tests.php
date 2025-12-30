@@ -20,6 +20,7 @@ class TableCrafterTests {
         $this->test_block_registration();
         $this->test_live_search_logic();
         $this->test_pagination_logic();
+        $this->test_security_hardening();
         $this->test_version_consistency();
         $this->test_directory_structure();
 
@@ -113,6 +114,20 @@ class TableCrafterTests {
             $this->pass($test_name);
         } else {
             $this->fail($test_name, "Logic for 'per_page' attribute not found in shortcode handler.");
+        }
+    }
+
+    private function test_security_hardening() {
+        $test_name = "Security Hardening (SSRF & Auth)";
+        $content = file_get_contents(__DIR__ . '/../tablecrafter.php');
+        
+        $has_safe_url = strpos($content, "is_safe_url") !== false;
+        $has_cap_check = strpos($content, "current_user_can") !== false;
+        
+        if ($has_safe_url && $has_cap_check) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "Missing is_safe_url helper or current_user_can authorization checks.");
         }
     }
 
