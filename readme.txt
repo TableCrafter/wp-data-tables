@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -100,6 +100,11 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 
 == Changelog ==
 
+= 1.4.1 =
+* **Security Hardening:** Implemented SSRF (Server-Side Request Forgery) protection to block proxying of internal network IPs.
+* **Authorization:** Added explicit capability checks (`current_user_can`) to the AJAX data proxy.
+* **Code Quality:** Added PHP return types and improved method documentation across the codebase.
+
 = 1.4.0 =
 * **Pagination Support:** Added client-side pagination for smoother navigation of large datasets.
 * **Control UI:** New Pagination footer with Previous/Next controls.
@@ -163,6 +168,9 @@ TableCrafter is optimized for the modern web (JSON). However, we are exploring C
 *   Added live admin previewer.
 *   Released smart column detection.
 == Upgrade Notice ==
+
+= 1.4.1 =
+Security Update: Hardens the data proxy against SSRF and unauthorized access. Highly recommended for all users.
 
 = 1.4.0 =
 Major Update: Adds Pagination support for better handling of large datasets. Recommended for all users.

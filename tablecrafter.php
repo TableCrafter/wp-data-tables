@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – JSON Data Tables & API Data Viewer
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 1.4.0
+ * Version: 1.4.1
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('TABLECRAFTER_VERSION', '1.4.0');
+define('TABLECRAFTER_VERSION', '1.4.1');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -65,7 +65,7 @@ class TableCrafter {
     /**
      * Add admin menu page.
      */
-    public function add_admin_menu() {
+    public function add_admin_menu(): void {
         add_menu_page(
             __('TableCrafter', 'tablecrafter-wp-data-tables'),
             __('TableCrafter', 'tablecrafter-wp-data-tables'),
@@ -80,7 +80,7 @@ class TableCrafter {
     /**
      * Render the admin dashboard page.
      */
-    public function render_admin_page() {
+    public function render_admin_page(): void {
         // Enqueue assets for the preview
         wp_enqueue_script('tablecrafter-lib');
         wp_enqueue_style('tablecrafter-style');
@@ -157,7 +157,7 @@ class TableCrafter {
     /**
      * Register frontend assets.
      */
-    public function register_assets() {
+    public function register_assets(): void {
         wp_register_script(
             'tablecrafter-lib',
             TABLECRAFTER_URL . 'assets/js/tablecrafter.js',
@@ -190,7 +190,7 @@ class TableCrafter {
     /**
      * Enqueue admin assets.
      */
-    public function enqueue_admin_assets($hook) {
+    public function enqueue_admin_assets($hook): void {
         // Only load on our settings page
         if (strpos($hook, 'tablecrafter-wp-data-tables') === false) {
             return;
@@ -227,7 +227,7 @@ class TableCrafter {
     /**
      * Register Gutenberg Block
      */
-    public function register_block() {
+    public function register_block(): void {
         if (!function_exists('register_block_type')) {
             return;
         }
@@ -257,7 +257,7 @@ class TableCrafter {
     /**
      * Block Render Callback (Reuses Shortcode Logic)
      */
-    public function render_block_callback($attributes) {
+    public function render_block_callback($attributes): string {
         // Ensure ID is set
         if (empty($attributes['id'])) {
             $attributes['id'] = 'tc-block-' . uniqid();
@@ -272,7 +272,7 @@ class TableCrafter {
      * @param array $atts Shortcode attributes.
      * @return string HTML output.
      */
-    public function render_table($atts) {
+    public function render_table($atts): string {
         $atts = shortcode_atts(array(
             'source'  => '', // The single data source URL
             'id'      => 'tc-' . uniqid(),
@@ -432,13 +432,18 @@ class TableCrafter {
      * 
      * Fetches remote JSON data server-side to bypass CORS and implement caching.
      */
-    public function ajax_proxy_fetch() {
+    public function ajax_proxy_fetch(): void {
         check_ajax_referer('tc_proxy_nonce', 'nonce');
+
+        // Security: Ensure the user has permission to fetch data
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error(__('Unauthorized: You do not have permission to fetch remote data.', 'tablecrafter-wp-data-tables'));
+        }
 
         $url = isset($_POST['url']) ? esc_url_raw($_POST['url']) : '';
         
-        if (empty($url)) {
-            wp_send_json_error('Invalid URL');
+        if (empty($url) || !$this->is_safe_url($url)) {
+            wp_send_json_error(__('TableCrafter Error: Invalid or unsafe URL provided.', 'tablecrafter-wp-data-tables'));
         }
 
         // Cache parameters
@@ -535,6 +540,34 @@ class TableCrafter {
         } else {
             WP_CLI::error('Usage: wp tablecrafter [clear-cache|warm-cache]');
         }
+    }
+    /**
+     * SSRF Prevention: Checks if a URL is safe to fetch server-side.
+     * Blocks private IP ranges, localhost, and loopback addresses.
+     * 
+     * @param string $url The URL to validate.
+     * @return bool True if safe, false otherwise.
+     */
+    private function is_safe_url(string $url): bool {
+        $host = parse_url($url, PHP_URL_HOST);
+        if (!$host) return false;
+
+        // Block localhost and loopback
+        if (in_array(strtolower($host), array('localhost', '127.0.0.1', '[::1]'))) {
+            return false;
+        }
+
+        // Block internal network IPs (SSRF Protection)
+        if (filter_var($host, FILTER_VALIDATE_IP)) {
+            $is_private = !filter_var(
+                $host, 
+                FILTER_VALIDATE_IP, 
+                FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+            );
+            if ($is_private) return false;
+        }
+
+        return true;
     }
 }
 
