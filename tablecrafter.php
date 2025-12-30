@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – JSON Data Tables & API Data Viewer
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 1.2.2
+ * Version: 1.3.0
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('TABLECRAFTER_VERSION', '1.2.2');
+define('TABLECRAFTER_VERSION', '1.3.0');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -40,6 +40,7 @@ class TableCrafter {
     private function __construct() {
         add_action('wp_enqueue_scripts', array($this, 'register_assets'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
+        add_action('init', array($this, 'register_block'));
         add_shortcode('tablecrafter', array($this, 'render_table'));
         add_action('admin_menu', array($this, 'add_admin_menu'));
 
@@ -222,6 +223,45 @@ class TableCrafter {
     }
     
 
+
+    /**
+     * Register Gutenberg Block
+     */
+    public function register_block() {
+        if (!function_exists('register_block_type')) {
+            return;
+        }
+
+        wp_register_script(
+            'tablecrafter-block',
+            TABLECRAFTER_URL . 'assets/js/block.js',
+            array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-server-side-render'),
+            TABLECRAFTER_VERSION
+        );
+
+        register_block_type('tablecrafter/data-table', array(
+            'editor_script' => 'tablecrafter-block',
+            'render_callback' => array($this, 'render_block_callback'),
+            'attributes' => array(
+                'source'  => array('type' => 'string', 'default' => ''),
+                'root'    => array('type' => 'string', 'default' => ''),
+                'include' => array('type' => 'string', 'default' => ''),
+                'exclude' => array('type' => 'string', 'default' => ''),
+                'id'      => array('type' => 'string', 'default' => ''),
+            ),
+        ));
+    }
+
+    /**
+     * Block Render Callback (Reuses Shortcode Logic)
+     */
+    public function render_block_callback($attributes) {
+        // Ensure ID is set
+        if (empty($attributes['id'])) {
+            $attributes['id'] = 'tc-block-' . uniqid();
+        }
+        return $this->render_table($attributes);
+    }
 
     /**
      * Shortcode to render the table container.
