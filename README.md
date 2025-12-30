@@ -4,7 +4,7 @@
 **Tags:** table, json, api, data table, datatables
 **Requires at least:** 5.0
 **Tested up to:** 6.9
-**Stable tag:** 1.1.0
+**Stable tag:** 1.1.2
 **Requires PHP:** 7.4
 **License:** GPLv2 or later
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html
@@ -28,10 +28,11 @@ We fill the gap between complex, expensive plugins like *wpDataTables/TablePress
 
 ### 🚀 Key Features
 
-*   **Universal JSON Support:** Works with any public API or `.json` file.
-*   **Smart Auto-Formatting:** Automatically detects headers and formats data intelligently.
-*   **Live Admin Preview:** Test your API endpoints directly in the customized dashboard.
-*   **Developer Friendly:** Vanilla JavaScript core with no jQuery dependencies.
+*   **Universal JSON Support:** Instant connection to any public API or `.json` dataset.
+*   **Smart Auto-Formatting:** Beautiful tables out-of-the-box. We automatically detect logos, product images, and clickable links.
+*   **Precision Curated Tables:** Only show the data that matters. Easily pick which columns to include or hide from messy API feeds.
+*   **Bank-Grade Security:** Advanced protection built-in to safely handle data from third-party sources.
+*   **Live Admin Preview:** Test your layouts in real-time before going live.
 
 ### 💡 Powerful Use Cases
 
@@ -108,6 +109,16 @@ A clean, responsive data table as it appears on your website. Automatically form
 ![Frontend Table Display](screenshot-2.png)
 
 ## Changelog
+
+### 1.1.2
+* Docs: Significantly expanded shortcode documentation with detailed attribute descriptions and examples.
+* Docs: Improved copy-paste reliability for shortcode examples in the WordPress.org directory.
+
+### 1.1.1
+* **Precision Curation:** Added the ability to include/exclude specific columns for cleaner tables.
+* **Visual Tables:** Added automatic rendering for images, logos, and links.
+* **Hardened Security:** Implemented advanced security filters for safer data handling.
+* **Performance Polish:** Optimized the core engine for faster, smoother table rendering.
 
 ### 1.1.0
 * Feat: Added Server-Side Proxy to bypass CORS restrictions.
