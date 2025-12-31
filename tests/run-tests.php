@@ -21,6 +21,7 @@ class TableCrafterTests {
         $this->test_live_search_logic();
         $this->test_pagination_logic();
         $this->test_security_hardening();
+        $this->test_sorting_logic();
         $this->test_version_consistency();
         $this->test_directory_structure();
 
@@ -128,6 +129,16 @@ class TableCrafterTests {
             $this->pass($test_name);
         } else {
             $this->fail($test_name, "Missing is_safe_url helper or current_user_can authorization checks.");
+        }
+    }
+
+    private function test_sorting_logic() {
+        $test_name = "Column Sorting Logic Check";
+        $js_content = file_get_contents(__DIR__ . '/../assets/js/tablecrafter.js');
+        if (strpos($js_content, "sortDirection") !== false || strpos($js_content, "sortData") !== false) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "Interactive sorting logic not found in tablecrafter.js.");
         }
     }
 
