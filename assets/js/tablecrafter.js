@@ -1,11 +1,27 @@
+/**
+ * TableCrafter Library
+ * 
+ * High-performance, SEO-friendly JSON data table engine for WordPress.
+ * Supports SSR hydration, live search, and client-side pagination.
+ * 
+ * @version 1.4.1
+ */
 class TableCrafter {
+    /**
+     * Constructor
+     * 
+     * @param {Object} config Configuration object.
+     * @param {string} config.selector CSS selector for the table container.
+     * @param {string} config.source JSON data source URL.
+     * @param {Object} [config.proxy] Optional WP AJAX proxy configuration.
+     */
     constructor(config) {
         this.config = config;
         this.selector = config.selector;
         this.source = config.source;
         this.container = document.querySelector(this.selector);
 
-        // Pagination state
+        // Internal State
         this.currentPage = 1;
         this.perPage = parseInt(this.container.dataset.perPage) || 0;
         this.allData = [];
@@ -16,25 +32,27 @@ class TableCrafter {
             return;
         }
 
-        // --- HYBRID HYDRATION START ---
+        // --- Hybrid Hydration Strategy ---
+        // If SSR is present and no pagination is required, we skip the initial fetch.
         if (this.container.dataset.ssr === "true" && this.container.querySelector('table')) {
             this.container.dataset.tcInitialized = "true";
 
-            // For SSR tables, we can't easily paginate without the full data
-            // unless we've enabled hydration. 
-            // In v1.4.0, we always initialize fully if pagination or search is needed.
+            // Re-fetch only if interactive features like Pagination require the raw data object.
             if (this.perPage > 0) {
-                this.init(); // Re-fetch and re-render with pagination UI
+                this.init();
             } else {
                 this.initSearch();
                 return;
             }
         }
-        // --- HYBRID HYDRATION END ---
 
         this.init();
     }
 
+    /**
+     * Initialize the table.
+     * Fetches data, renders, and initializes interactive layers.
+     */
     async init() {
         try {
             this.container.innerHTML = '<div class="tc-loading">Fetching data...</div>';
@@ -48,6 +66,12 @@ class TableCrafter {
         }
     }
 
+    /**
+     * Data Fetcher.
+     * Supports direct fetch and WordPress Proxy (CORS bypass).
+     * 
+     * @returns {Promise<Array>} Data array.
+     */
     async fetchData() {
         let data;
         if (this.config.proxy && this.config.proxy.url) {
@@ -70,7 +94,7 @@ class TableCrafter {
             data = await response.json();
         }
 
-        // Handle root path
+        // Navigate nested JSON paths
         const rootPath = this.container.dataset.root ? this.container.dataset.root.split('.') : [];
         if (rootPath.length > 0) {
             rootPath.forEach(segment => {
@@ -83,6 +107,9 @@ class TableCrafter {
         return Array.isArray(data) ? data : [];
     }
 
+    /**
+     * Initialize Live Search layer.
+     */
     initSearch() {
         if (this.container.dataset.search !== "true") return;
         if (this.container.querySelector('.tc-search-container')) return;
@@ -106,11 +133,15 @@ class TableCrafter {
             this.filteredData = this.allData.filter(row => {
                 return Object.values(row).some(val => String(val).toLowerCase().includes(query));
             });
-            this.currentPage = 1;
+            this.currentPage = 1; // Reset to page 1 on search
             this.render();
         });
     }
 
+    /**
+     * Core Render Method.
+     * Handles column filtering, pagination slicing, and DOM updates.
+     */
     render() {
         let data = this.filteredData;
         const totalItems = data.length;
@@ -120,18 +151,17 @@ class TableCrafter {
             return;
         }
 
-        // Apply Pagination
+        // Apply Pagination Slice
         if (this.perPage > 0) {
             const start = (this.currentPage - 1) * this.perPage;
             const end = start + this.perPage;
             data = data.slice(start, end);
         }
 
-        // Configuration for columns
         const include = this.container.dataset.include ? this.container.dataset.include.split(',').map(s => s.trim()) : [];
         const exclude = this.container.dataset.exclude ? this.container.dataset.exclude.split(',').map(s => s.trim()) : [];
 
-        // Determine columns
+        // Header Logic
         let headers = Object.keys(this.filteredData[0]);
         if (include.length > 0) headers = headers.filter(h => include.includes(h));
         if (exclude.length > 0) headers = headers.filter(h => !exclude.includes(h));
@@ -159,6 +189,9 @@ class TableCrafter {
         this.bindEvents();
     }
 
+    /**
+     * Bind dynamic events (Pagination, etc).
+     */
     bindEvents() {
         const prevBtn = this.container.querySelector('.tc-page-prev');
         const nextBtn = this.container.querySelector('.tc-page-next');
@@ -177,6 +210,12 @@ class TableCrafter {
         }
     }
 
+    /**
+     * Clean HTML for security.
+     * 
+     * @param {string} str Raw string.
+     * @returns {string} Escaped string.
+     */
     escapeHTML(str) {
         if (typeof str !== 'string') return str;
         const div = document.createElement('div');
@@ -184,6 +223,13 @@ class TableCrafter {
         return div.innerHTML;
     }
 
+    /**
+     * Smart Value Rendering.
+     * Detects images and URLs automatically.
+     * 
+     * @param {mixed} val Raw data value.
+     * @returns {string} HTML or text.
+     */
     renderValue(val) {
         if (val === null || val === undefined) return '';
         const strVal = String(val).trim();
@@ -196,6 +242,12 @@ class TableCrafter {
         return this.escapeHTML(strVal);
     }
 
+    /**
+     * Key to Title Case formatter.
+     * 
+     * @param {string} str Key like "product_name".
+     * @returns {string} String like "Product Name".
+     */
     formatHeader(str) {
         return str.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     }

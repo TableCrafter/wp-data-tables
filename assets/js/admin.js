@@ -1,3 +1,9 @@
+/**
+ * TableCrafter Admin Dashboard Scripts
+ * 
+ * Handles the live-preview functionality, shortcode generator, 
+ * and clipboard operations on the TableCrafter settings page.
+ */
 document.addEventListener('DOMContentLoaded', function () {
     const urlInput = document.getElementById('tc-preview-url');
     const previewBtn = document.getElementById('tc-preview-btn');
@@ -8,25 +14,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!urlInput || !previewBtn || !copyBtn) return; // Exit if not on the settings page
 
-    // Update shortcode display on input
+    /**
+     * Update shortcode display element when the URL input changes.
+     */
     urlInput.addEventListener('input', function () {
         const url = this.value.trim() || 'URL';
-        // We use textContent for security instead of innerText
         shortcodeDisplay.textContent = `[tablecrafter source="${url}"]`;
     });
 
-    // Load demo URL on click
+    /**
+     * Handle Demo Link clicks.
+     * Populates the input and triggers a preview automatically.
+     */
     demoLinks.forEach(link => {
         link.addEventListener('click', function (e) {
             e.preventDefault();
             urlInput.value = this.dataset.url;
-            // Trigger input event to update shortcode
             urlInput.dispatchEvent(new Event('input'));
             previewBtn.click();
         });
     });
 
-    // Preview functionality
+    /**
+     * Trigger Table Preview.
+     * Uses the core TableCrafter library to render a live table in the admin area.
+     */
     previewBtn.addEventListener('click', function () {
         const url = urlInput.value.trim();
         if (!url) {
@@ -34,16 +46,14 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Reset container
         container.innerHTML = '';
         container.style.display = 'block';
 
         if (typeof TableCrafter !== 'undefined') {
-            // Create a unique ID for the inner container
             const tableId = 'tc-preview-' + Date.now();
             container.innerHTML = `<div id="${tableId}" class="tablecrafter-container">${tablecrafterAdmin.i18n.loading}</div>`;
 
-            // Init TableCrafter
+            // Initialize the TableCrafter instance with proxy support for admin preview
             new TableCrafter({
                 selector: '#' + tableId,
                 source: url,
@@ -57,11 +67,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Copy shortcode functionality
+    /**
+     * Copy Shortcode to Clipboard.
+     * Uses the modern Clipboard API with a robust fallback for legacy or non-secure contexts.
+     */
     copyBtn.addEventListener('click', function () {
         const text = shortcodeDisplay.textContent;
 
-        // Robust copy function with fallback
         const copyToClipboard = async (text) => {
             try {
                 if (navigator.clipboard && window.isSecureContext) {
@@ -70,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     throw new Error('Clipboard API unavailable');
                 }
             } catch (err) {
-                // Fallback for HTTP/non-secure contexts
+                // Fallback for non-HTTPS or legacy browsers
                 const textArea = document.createElement("textarea");
                 textArea.value = text;
                 textArea.style.position = "fixed";
@@ -89,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            // Success feedback
+            // Provide visual feedback
             const originalText = copyBtn.textContent;
             copyBtn.textContent = tablecrafterAdmin.i18n.copied;
             setTimeout(() => copyBtn.textContent = originalText, 2000);
