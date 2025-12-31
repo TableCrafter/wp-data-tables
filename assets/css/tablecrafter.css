@@ -164,6 +164,34 @@
     display: none;
 }
 
+/* Export Buttons */
+.tc-export-group {
+    display: flex;
+    gap: 8px;
+    margin-right: 15px;
+    align-items: center;
+}
+
+.tc-btn {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+    color: #50575e;
+}
+
+.tc-btn:hover {
+    border-color: #2271b1;
+    color: #2271b1;
+}
+
+.tc-btn:active {
+    background: #f0f0f1;
+}
+
 /* Mobile Reflow (Card View) */
 @media screen and (max-width: 600px) {
     .tc-table thead {

@@ -22,6 +22,7 @@
             include: { type: 'string', default: '' },
             exclude: { type: 'string', default: '' },
             search: { type: 'boolean', default: false },
+            export: { type: 'boolean', default: false },
             per_page: { type: 'number', default: 0 },
             id: { type: 'string', default: '' }
         },
@@ -62,6 +63,12 @@
                             checked: attributes.search,
                             onChange: updateSearch,
                             help: 'Adds a real-time search bar above the table.'
+                        }),
+                        el(ToggleControl, {
+                            label: 'Enable Export Tools',
+                            checked: attributes.export,
+                            onChange: (val) => setAttributes({ export: val }),
+                            help: 'Adds CSV export and Copy to Clipboard buttons.'
                         }),
                         el(TextControl, {
                             label: 'Rows Per Page',

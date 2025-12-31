@@ -2,7 +2,7 @@
 
 **Turn any JSON API or remote file into a high-performance, responsive table in seconds.** 
 
-TableCrafter is a mission-critical bridge between your dynamic external data and your WordPress site. Built for speed, hardened for security, and optimized for search engines. Now with **Mobile Reflow Layout**, **Interactive Column Sorting**, **Hardened Security**, **Pagination**, and **Live Search**.
+TableCrafter is a mission-critical bridge between your dynamic external data and your WordPress site. Built for speed, hardened for security, and optimized for search engines. Now with **CSV Export**, **Mobile Reflow**, **Pagination**, and **Live Search**.
 
 ---
 
@@ -11,6 +11,7 @@ TableCrafter is a mission-critical bridge between your dynamic external data and
 | Feature | The TableCrafter Advantage |
 | :--- | :--- |
 | **🚀 Instant Performance** | Powered by **SSR (Server-Side Rendering)** and **SWR (Stale-While-Revalidate)** caching for sub-100ms load times. |
+| **💾 Data Export** | One-click export to **CSV** or **Clipboard** for further analysis in Excel/Sheets. |
 | **🔍 SEO-Ready** | Data is rendered in PHP before the page loads, making every cell crawlable by Google. |
 | **📱 Mobile Reflow** | Automatically transforms wide tables into a responsive "Card View" for phones. |
 | **🛡️ Hardened Security** | Built-in SSRF protection and strict capability checks for all remote data operations. |
@@ -24,6 +25,7 @@ TableCrafter is a mission-critical bridge between your dynamic external data and
 ### ✨ Key Features
 
 *   **Native Gutenberg Block:** Add tables visually with a live preview directly in the WordPress editor.
+*   **Data Export Suite:** Enable CSV download and Copy-to-Clipboard buttons for your users.
 *   **Mobile-First Design:** Smart reflow layout makes data readable on any device.
 *   **Safe Data Proxy:** Securely fetch remote JSON to bypass CORS while protecting your server from SSRF.
 *   **Data Pagination:** Keep your pages clean and fast by showing 10, 25, or 50 rows at a time.
@@ -38,7 +40,7 @@ TableCrafter is a mission-critical bridge between your dynamic external data and
 
 1.  **Install & Activate:** Up and running in under 60 seconds.
 2.  **Add the Block:** In the Block Editor, search for "TableCrafter" and add it to your page.
-3.  **Configure Visually:** Enter your JSON URL and watch the table render instantly.
+3.  **Configure Visually:** Enter your JSON URL, toggle "Enable Export", and watch the table render instantly.
 4.  **Secure by Default:** All remote requests are validated and authorized automatically.
 
 ---
@@ -48,6 +50,7 @@ TableCrafter is a mission-critical bridge between your dynamic external data and
 The `[tablecrafter]` shortcode remains fully supported:
 
 *   **`source`**: The JSON endpoint you want to visualize.
+*   **`export`**: Enable export buttons (`true` or `false`).
 *   **`per_page`**: Number of rows to show per page (e.g., `per_page="10"`).
 *   **`search`**: Toggle the search bar (`true` or `false`).
 *   **`root`**: The JSON path to the data array (e.g., `root="products"`).
@@ -56,8 +59,9 @@ The `[tablecrafter]` shortcode remains fully supported:
 
 ---
 
-### 📈 Technical Pedigree (v1.5.1)
+### 📈 Technical Pedigree (v1.6.0)
 
+*   **Client-Side Export:** Generates CSV blobs in-browser, reducing server load.
 *   **Mobile Reflow:** CSS-driven layout transformation using semantic metadata.
 *   **Interactive Sorting:** Smart-type data sorting engine (Numeric/String/Alpha).
 *   **Security Architecture:** Implemented SSRF protection and WP capability-based authorization.
@@ -71,7 +75,7 @@ The `[tablecrafter]` shortcode remains fully supported:
 
 **Contributors:** @fahdi  
 **License:** GPLv2 or later  
-**Stable tag:** 1.5.1  
+**Stable tag:** 1.6.0  
 **Requires PHP:** 7.4+
 
 ---
