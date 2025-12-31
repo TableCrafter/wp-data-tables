@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.7.0
+Stable tag: 1.8.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -89,6 +89,11 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 1.8.0 =
+* **Custom Column Aliasing:** Rename headers directly in the shortcode using `include="key:My Label"` syntax.
+* **Smart Export:** CSV exports now respect your custom column aliases.
+* **Mobile Reflow:** Mobile card view now uses professional aliases for labels.
+
 = 1.7.0 =
 * **Smart Data Formatting:** Automatically detects and formats **Dates** (to locale string), **Booleans** (Yes/No badges), and **Emails** (mailto links).
 * **UI Polish:** Added professional styles for Boolean badges and links.
@@ -168,6 +173,9 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 *   Released smart column detection.
 
 == Upgrade Notice ==
+
+= 1.8.0 =
+Customize your table headers like a pro with new aliasing syntax: `include="id:Customer ID"`.
 
 = 1.7.0 =
 UX Update: Tables now look professional out-of-the-box with auto-formatting for Dates, Emails, and Statuses.

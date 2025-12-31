@@ -183,11 +183,14 @@ class TableCrafter {
     exportCSV() {
         if (!this.filteredData || this.filteredData.length === 0) return;
 
-        const headers = Object.keys(this.filteredData[0]);
+        // Re-derive Header Order from DOM or Filter logic
+        let headers = this.getAliasedHeaders();
+
         const csvRows = [];
 
-        // Add Header Row
-        csvRows.push(headers.join(','));
+        // Add Header Row (Aliased)
+        const headerLabels = headers.map(h => this.formatHeader(h));
+        csvRows.push(headerLabels.join(','));
 
         // Add Data Rows
         this.filteredData.forEach(row => {
@@ -218,9 +221,11 @@ class TableCrafter {
     copyTable() {
         if (!this.filteredData || this.filteredData.length === 0) return;
 
-        // Simple tab-separated format for pasting into Excel/Sheets
-        const headers = Object.keys(this.filteredData[0]);
-        let text = headers.join('\t') + '\n';
+        const headers = this.getAliasedHeaders();
+
+        // Aliased TSV
+        const headerLabels = headers.map(h => this.formatHeader(h));
+        let text = headerLabels.join('\t') + '\n';
 
         this.filteredData.forEach(row => {
             text += headers.map(h => row[h]).join('\t') + '\n';
@@ -234,6 +239,31 @@ class TableCrafter {
         }).catch(err => {
             console.error('Failed to copy', err);
         });
+    }
+
+    getAliasedHeaders() {
+        let headers = Object.keys(this.filteredData[0]);
+        let includeKeys = [];
+        if (this.container.dataset.include) {
+            const items = this.container.dataset.include.split(',');
+            items.forEach(i => {
+                if (i.includes(':')) {
+                    includeKeys.push(i.split(':')[0].trim());
+                } else {
+                    includeKeys.push(i.trim());
+                }
+            });
+        }
+
+        if (includeKeys.length > 0) {
+            headers = headers.filter(h => includeKeys.includes(h));
+            headers.sort((a, b) => includeKeys.indexOf(a) - includeKeys.indexOf(b));
+        }
+
+        const exclude = this.container.dataset.exclude ? this.container.dataset.exclude.split(',').map(s => s.trim()) : [];
+        if (exclude.length > 0) headers = headers.filter(h => !exclude.includes(h));
+
+        return headers;
     }
 
     /**
@@ -294,13 +324,38 @@ class TableCrafter {
             data = data.slice(start, end);
         }
 
-        const include = this.container.dataset.include ? this.container.dataset.include.split(',').map(s => s.trim()) : [];
+        // Parse Include/Exclude with Alias Support
+        let includeKeys = [];
+        this.headerMap = {}; // Reset map
+
+        if (this.container.dataset.include) {
+            const items = this.container.dataset.include.split(',');
+            items.forEach(i => {
+                if (i.includes(':')) {
+                    const parts = i.split(':');
+                    const key = parts[0].trim();
+                    const alias = parts.slice(1).join(':').trim();
+                    includeKeys.push(key);
+                    this.headerMap[key] = alias;
+                } else {
+                    includeKeys.push(i.trim());
+                }
+            });
+        }
+
         const exclude = this.container.dataset.exclude ? this.container.dataset.exclude.split(',').map(s => s.trim()) : [];
 
         // Header Logic
         let rawHeaders = Object.keys(this.filteredData[0]);
-        let headers = rawHeaders;
-        if (include.length > 0) headers = headers.filter(h => include.includes(h));
+        let headers = [...rawHeaders];
+
+        if (includeKeys.length > 0) {
+            // Filter
+            headers = headers.filter(h => includeKeys.includes(h));
+            // Sort by include order
+            headers.sort((a, b) => includeKeys.indexOf(a) - includeKeys.indexOf(b));
+        }
+
         if (exclude.length > 0) headers = headers.filter(h => !exclude.includes(h));
 
         let html = '<table class="tc-table">';
@@ -421,9 +476,12 @@ class TableCrafter {
     }
 
     /**
-     * Key to Title Case formatter.
+     * Key to Title Case formatter (with Alias support).
      */
     formatHeader(str) {
+        if (this.headerMap && this.headerMap[str]) {
+            return this.headerMap[str];
+        }
         return str.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     }
 }

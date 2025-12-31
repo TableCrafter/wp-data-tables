@@ -25,6 +25,7 @@ class TableCrafterTests {
         $this->test_mobile_reflow_logic();
         $this->test_export_logic();
         $this->test_formatting_logic();
+        $this->test_column_aliasing();
         $this->test_version_consistency();
         $this->test_directory_structure();
 
@@ -172,6 +173,24 @@ class TableCrafterTests {
             $this->pass($test_name);
         } else {
             $this->fail($test_name, "Smart formatting logic (Badges/Mailto) not found in tablecrafter.js.");
+        }
+    }
+
+    private function test_column_aliasing() {
+        $test_name = "Column Aliasing Logic Check";
+        
+        // Check PHP Implementation
+        $php_content = file_get_contents(__DIR__ . '/../tablecrafter.php');
+        $php_check = strpos($php_content, "explode(':', \$item, 2)") !== false;
+
+        // Check JS Implementation
+        $js_content = file_get_contents(__DIR__ . '/../assets/js/tablecrafter.js');
+        $js_check = strpos($js_content, "this.getAliasedHeaders()") !== false;
+
+        if ($php_check && $js_check) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "Aliasing logic missing in PHP or JS.");
         }
     }
 
