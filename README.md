@@ -2,7 +2,7 @@
 
 **Turn any JSON API or remote file into a high-performance, responsive table in seconds.** 
 
-TableCrafter is a mission-critical bridge between your dynamic external data and your WordPress site. Built for speed, hardened for security, and optimized for search engines. Now with **CSV Export**, **Mobile Reflow**, **Pagination**, and **Live Search**.
+TableCrafter is a mission-critical bridge between your dynamic external data and your WordPress site. Built for speed, hardened for security, and optimized for search engines. Now with **Smart Formatting**, **CSV Export**, **Mobile Reflow**, **Pagination**, and **Live Search**.
 
 ---
 
@@ -11,6 +11,7 @@ TableCrafter is a mission-critical bridge between your dynamic external data and
 | Feature | The TableCrafter Advantage |
 | :--- | :--- |
 | **🚀 Instant Performance** | Powered by **SSR (Server-Side Rendering)** and **SWR (Stale-While-Revalidate)** caching for sub-100ms load times. |
+| **✨ Smart Formatting** | Automatically turns **Dates**, **URLs**, **Emails**, and **Booleans** into professional UI elements. |
 | **💾 Data Export** | One-click export to **CSV** or **Clipboard** for further analysis in Excel/Sheets. |
 | **🔍 SEO-Ready** | Data is rendered in PHP before the page loads, making every cell crawlable by Google. |
 | **📱 Mobile Reflow** | Automatically transforms wide tables into a responsive "Card View" for phones. |
@@ -25,13 +26,13 @@ TableCrafter is a mission-critical bridge between your dynamic external data and
 ### ✨ Key Features
 
 *   **Native Gutenberg Block:** Add tables visually with a live preview directly in the WordPress editor.
+*   **Smart Auto-Formatting:** Intelligent detection of **Images**, **Emails**, **Dates**, and **Booleans**.
 *   **Data Export Suite:** Enable CSV download and Copy-to-Clipboard buttons for your users.
 *   **Mobile-First Design:** Smart reflow layout makes data readable on any device.
 *   **Safe Data Proxy:** Securely fetch remote JSON to bypass CORS while protecting your server from SSRF.
 *   **Data Pagination:** Keep your pages clean and fast by showing 10, 25, or 50 rows at a time.
 *   **Interactive Header Sorting:** Toggle between ASC/DESC for any column instantly.
 *   **Live Table Search:** Toggle a real-time search bar that filters data as you type.
-*   **Smart Auto-Formatting:** Intelligent detection of **Images**, **Logos**, and **Links**.
 *   **Precision Data Curation:** Use `include` or `exclude` attributes to cherry-pick exactly what matters.
 
 ---
@@ -59,8 +60,9 @@ The `[tablecrafter]` shortcode remains fully supported:
 
 ---
 
-### 📈 Technical Pedigree (v1.6.0)
+### 📈 Technical Pedigree (v1.7.0)
 
+*   **Smart Formatting Engine:** Regex-based type detection (ISO 8601/Email/Boolean) in both PHP and JS.
 *   **Client-Side Export:** Generates CSV blobs in-browser, reducing server load.
 *   **Mobile Reflow:** CSS-driven layout transformation using semantic metadata.
 *   **Interactive Sorting:** Smart-type data sorting engine (Numeric/String/Alpha).
@@ -75,7 +77,7 @@ The `[tablecrafter]` shortcode remains fully supported:
 
 **Contributors:** @fahdi  
 **License:** GPLv2 or later  
-**Stable tag:** 1.6.0  
+**Stable tag:** 1.7.0  
 **Requires PHP:** 7.4+
 
 ---

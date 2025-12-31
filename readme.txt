@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.6.0
+Stable tag: 1.7.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -89,6 +89,10 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 1.7.0 =
+* **Smart Data Formatting:** Automatically detects and formats **Dates** (to locale string), **Booleans** (Yes/No badges), and **Emails** (mailto links).
+* **UI Polish:** Added professional styles for Boolean badges and links.
+
 = 1.6.0 =
 * **Data Export:** Added toolbar with "Export to CSV" and "Copy to Clipboard" buttons.
 * **Context-Aware:** Export features respect current search filters and column settings.
@@ -164,6 +168,9 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 *   Released smart column detection.
 
 == Upgrade Notice ==
+
+= 1.7.0 =
+UX Update: Tables now look professional out-of-the-box with auto-formatting for Dates, Emails, and Statuses.
 
 = 1.6.0 =
 Feature Update: Adds Data Export tools (CSV/Clipboard) for users. Highly recommended.

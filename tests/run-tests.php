@@ -24,6 +24,7 @@ class TableCrafterTests {
         $this->test_sorting_logic();
         $this->test_mobile_reflow_logic();
         $this->test_export_logic();
+        $this->test_formatting_logic();
         $this->test_version_consistency();
         $this->test_directory_structure();
 
@@ -161,6 +162,16 @@ class TableCrafterTests {
             $this->pass($test_name);
         } else {
             $this->fail($test_name, "Export logic (exportCSV/tc-export-btn) not found in tablecrafter.js.");
+        }
+    }
+
+    private function test_formatting_logic() {
+        $test_name = "Smart Formatting Logic Check";
+        $js_content = file_get_contents(__DIR__ . '/../assets/js/tablecrafter.js');
+        if (strpos($js_content, "tc-badge tc-yes") !== false && strpos($js_content, "mailto:") !== false) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "Smart formatting logic (Badges/Mailto) not found in tablecrafter.js.");
         }
     }
 
