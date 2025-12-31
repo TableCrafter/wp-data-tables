@@ -1,39 +1,55 @@
+/**
+ * TableCrafter Gutenberg Block
+ * 
+ * Provides a native WordPress editing experience with a live preview 
+ * and a comprehensive sidebar for data configuration.
+ */
 (function (blocks, editor, components, serverSideRender, element) {
     const el = element.createElement;
     const { InspectorControls } = editor;
-    const { PanelBody, TextControl, ExternalLink } = components;
+    const { PanelBody, TextControl, ToggleControl, ExternalLink } = components;
 
     blocks.registerBlockType('tablecrafter/data-table', {
         title: 'TableCrafter',
+        description: 'Create dynamic, SEO-friendly data tables from any JSON source.',
         icon: 'table-viewport',
         category: 'widgets',
+
+        // Define block attributes to persist in database
         attributes: {
             source: { type: 'string', default: '' },
             root: { type: 'string', default: '' },
             include: { type: 'string', default: '' },
             exclude: { type: 'string', default: '' },
             search: { type: 'boolean', default: false },
+            per_page: { type: 'number', default: 0 },
             id: { type: 'string', default: '' }
         },
 
+        /**
+         * The edit function describes the structure of your block in the context of the editor.
+         * This represents what the editor will render when the block is used.
+         */
         edit: function (props) {
             const { attributes, setAttributes } = props;
-            const { PanelBody, TextControl, ToggleControl, ExternalLink } = components;
 
+            // Attribute update helpers
             const updateSource = (value) => setAttributes({ source: value });
             const updateRoot = (value) => setAttributes({ root: value });
             const updateInclude = (value) => setAttributes({ include: value });
             const updateExclude = (value) => setAttributes({ exclude: value });
             const updateSearch = (value) => setAttributes({ search: value });
+            const updatePerPage = (value) => setAttributes({ per_page: parseInt(value) || 0 });
 
             return [
+                // Sidebar controls (Inspector)
                 el(InspectorControls, { key: 'controls' },
                     el(PanelBody, { title: 'Data Settings', initialOpen: true },
                         el(TextControl, {
                             label: 'JSON Source URL',
                             value: attributes.source,
                             onChange: updateSource,
-                            help: 'The URL of your JSON data source.'
+                            help: 'The URL of your JSON data source (must be public).'
                         }),
                         el(TextControl, {
                             label: 'JSON Root Path (Optional)',
@@ -51,8 +67,8 @@
                             label: 'Rows Per Page',
                             value: attributes.per_page,
                             type: 'number',
-                            onChange: (val) => setAttributes({ per_page: parseInt(val) || 0 }),
-                            help: 'Number of rows to show per page (0 to show all).'
+                            onChange: updatePerPage,
+                            help: 'Number of rows to show per page (0 for all).'
                         }),
                         el(TextControl, {
                             label: 'Include Columns (Optional)',
@@ -66,12 +82,13 @@
                             onChange: updateExclude,
                             help: 'Comma-separated list of keys to hide.'
                         }),
-                        el('div', { className: 'tc-block-help' },
+                        el('div', { className: 'tc-block-help', style: { marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' } },
                             el('p', null, 'Need help? Check the '),
                             el(ExternalLink, { href: 'https://github.com/TableCrafter/wp-data-tables' }, 'Documentation')
                         )
                     )
                 ),
+                // Main visual editor view (Live Preview)
                 el('div', { className: props.className, key: 'preview' },
                     el(serverSideRender, {
                         block: 'tablecrafter/data-table',
@@ -81,8 +98,11 @@
             ];
         },
 
+        /**
+         * The save function defines the frontend markup.
+         * Since this is a dynamic block, we return null and handle rendering in PHP.
+         */
         save: function () {
-            // Block is dynamic and rendered via PHP render_callback
             return null;
         },
     });

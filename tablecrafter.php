@@ -8,26 +8,39 @@
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
  * Text Domain: tablecrafter-wp-data-tables
+ * Domain Path: /languages
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
+/**
+ * Global Constants
+ */
 define('TABLECRAFTER_VERSION', '1.4.1');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
+/**
+ * Main TableCrafter Class
+ * 
+ * Handles registration, rendering, security, and caching for the TableCrafter plugin.
+ */
 class TableCrafter {
     
+    /**
+     * Singleton instance.
+     * @var TableCrafter|null
+     */
     private static $instance = null;
     
     /**
      * Get singleton instance.
      * 
-     * @return TableCrafter
+     * @return TableCrafter The single instance of the class.
      */
-    public static function get_instance() {
+    public static function get_instance(): TableCrafter {
         if (self::$instance === null) {
             self::$instance = new self();
         }
@@ -36,6 +49,8 @@ class TableCrafter {
     
     /**
      * Constructor.
+     * 
+     * Initializes all WordPress hooks, shortcodes, and cron schedules.
      */
     private function __construct() {
         add_action('wp_enqueue_scripts', array($this, 'register_assets'));
@@ -44,11 +59,11 @@ class TableCrafter {
         add_shortcode('tablecrafter', array($this, 'render_table'));
         add_action('admin_menu', array($this, 'add_admin_menu'));
 
-        // AJAX Proxy Handlers
+        // AJAX Proxy Handlers for frontend and admin
         add_action('wp_ajax_tc_proxy_fetch', array($this, 'ajax_proxy_fetch'));
         add_action('wp_ajax_nopriv_tc_proxy_fetch', array($this, 'ajax_proxy_fetch'));
 
-        // Automated Cron
+        // Background Caching & Cron Logic
         add_action('tc_refresher_cron', array($this, 'automated_cache_refresh'));
         add_action('tc_refresh_single_source', array($this, 'refresh_source_cache'), 10, 1);
         
@@ -56,14 +71,16 @@ class TableCrafter {
             wp_schedule_event(time(), 'hourly', 'tc_refresher_cron');
         }
 
-        // WP-CLI Support
+        // WP-CLI Integration
         if (defined('WP_CLI') && WP_CLI) {
             WP_CLI::add_command('tablecrafter', array($this, 'cli_commands'));
         }
     }
 
     /**
-     * Add admin menu page.
+     * Add admin menu page under the 'Tools' or 'Settings' category.
+     * 
+     * @return void
      */
     public function add_admin_menu(): void {
         add_menu_page(
@@ -79,9 +96,13 @@ class TableCrafter {
 
     /**
      * Render the admin dashboard page.
+     * 
+     * Displays settings, shortcode generator, and live-preview playground.
+     * 
+     * @return void
      */
     public function render_admin_page(): void {
-        // Enqueue assets for the preview
+        // Enqueue preview assets
         wp_enqueue_script('tablecrafter-lib');
         wp_enqueue_style('tablecrafter-style');
         
@@ -96,9 +117,7 @@ class TableCrafter {
 
             <div class="tc-admin-layout" style="display: flex; gap: 20px; margin-top: 20px; align-items: flex-start;">
                 
-                <!-- Sidebar Controls -->
                 <div class="tc-sidebar" style="flex: 0 0 350px;">
-                    <!-- Configuration Card -->
                     <div class="card" style="margin: 0 0 20px 0; max-width: none;">
                         <h2><?php esc_html_e('Settings', 'tablecrafter-wp-data-tables'); ?></h2>
                         <div style="margin-bottom: 15px;">
@@ -112,7 +131,6 @@ class TableCrafter {
                         </div>
                     </div>
 
-                    <!-- Usage info -->
                      <div class="card" style="margin: 0 0 20px 0; max-width: none;">
                         <h2><?php esc_html_e('Usage', 'tablecrafter-wp-data-tables'); ?></h2>
                         <p><?php esc_html_e('Copy the shortcode below to use this table:', 'tablecrafter-wp-data-tables'); ?></p>
@@ -120,7 +138,6 @@ class TableCrafter {
                         <button id="tc-copy-shortcode" class="button button-secondary" style="width: 100%;"><?php esc_html_e('Copy Shortcode', 'tablecrafter-wp-data-tables'); ?></button>
                      </div>
 
-                    <!-- Demos -->
                     <div class="card" style="margin: 0; max-width: none;">
                         <h2><?php esc_html_e('Quick Demos', 'tablecrafter-wp-data-tables'); ?></h2>
                         <p><?php esc_html_e('Click a dataset to load:', 'tablecrafter-wp-data-tables'); ?></p>
@@ -132,7 +149,6 @@ class TableCrafter {
                     </div>
                 </div>
 
-                <!-- Main Preview Area -->
                 <div class="tc-preview-area" style="flex: 1; min-width: 0;">
                     <div class="card" style="margin: 0; max-width: none; min-height: 500px; display: flex; flex-direction: column;">
                         <h2 style="border-bottom: 1px solid #f0f0f1; padding-bottom: 15px; margin-bottom: 15px; margin-top: 0;"><?php esc_html_e('Live Preview', 'tablecrafter-wp-data-tables'); ?></h2>
@@ -148,20 +164,22 @@ class TableCrafter {
                     </div>
                 </div>
             </div>
-            
-            <!-- Admin JS is now enqueued via enqueue_admin_assets -->
         </div>
         <?php
     }
     
     /**
-     * Register frontend assets.
+     * Register frontend assets (JS/CSS).
+     * 
+     * Registers the core TableCrafter library and frontend initialization scripts.
+     * 
+     * @return void
      */
     public function register_assets(): void {
         wp_register_script(
             'tablecrafter-lib',
             TABLECRAFTER_URL . 'assets/js/tablecrafter.js',
-            array(), // Dependencies (none for now, purely native JS requested)
+            array(),
             TABLECRAFTER_VERSION,
             true
         );
@@ -189,9 +207,11 @@ class TableCrafter {
 
     /**
      * Enqueue admin assets.
+     * 
+     * @param string $hook The current admin page hook.
+     * @return void
      */
     public function enqueue_admin_assets($hook): void {
-        // Only load on our settings page
         if (strpos($hook, 'tablecrafter-wp-data-tables') === false) {
             return;
         }
@@ -199,7 +219,7 @@ class TableCrafter {
         wp_enqueue_script(
             'tablecrafter-admin',
             TABLECRAFTER_URL . 'assets/js/admin.js',
-            array('jquery'), // Basic dependency
+            array('jquery'),
             TABLECRAFTER_VERSION,
             true
         );
@@ -216,16 +236,17 @@ class TableCrafter {
             )
         ));
 
-        // We also need the frontend lib for the preview
         $this->register_assets();
         wp_enqueue_script('tablecrafter-lib');
         wp_enqueue_style('tablecrafter-style');
     }
     
-
-
     /**
-     * Register Gutenberg Block
+     * Register Gutenberg Native Block.
+     * 
+     * Registers 'tablecrafter/data-table' with native sidebar attributes.
+     * 
+     * @return void
      */
     public function register_block(): void {
         if (!function_exists('register_block_type')) {
@@ -255,10 +276,14 @@ class TableCrafter {
     }
 
     /**
-     * Block Render Callback (Reuses Shortcode Logic)
+     * Block Render Callback.
+     * 
+     * Bridge between Gutenberg block engine and PHP shortcode engine.
+     * 
+     * @param array $attributes Block attributes.
+     * @return string Rendered HTML.
      */
     public function render_block_callback($attributes): string {
-        // Ensure ID is set
         if (empty($attributes['id'])) {
             $attributes['id'] = 'tc-block-' . uniqid();
         }
@@ -266,48 +291,47 @@ class TableCrafter {
     }
 
     /**
-     * Shortcode to render the table container.
-     * Usage: [tablecrafter source="/path/to/data.json"]
+     * Shortcode: [tablecrafter]
      * 
-     * @param array $atts Shortcode attributes.
-     * @return string HTML output.
+     * Main entry point for frontend rendering. Handles SWR caching (Stale-While-Revalidate).
+     * 
+     * @param array $atts User-defined attributes.
+     * @return string HTML table container.
      */
     public function render_table($atts): string {
         $atts = shortcode_atts(array(
-            'source'  => '', // The single data source URL
+            'source'  => '',
             'id'      => 'tc-' . uniqid(),
-            'include' => '', // Comma-separated list of keys to include
-            'exclude' => '', // Comma-separated list of keys to exclude
-            'root'    => '', // Path to the data array in the JSON response
-            'search'  => 'false', // Whether to show the search bar
-            'per_page' => 0    // Rows per page (0 for all)
+            'include' => '',
+            'exclude' => '',
+            'root'    => '',
+            'search'  => 'false',
+            'per_page' => 0
         ), $atts, 'tablecrafter');
         
-        // Sanitize the source URL
         $atts['source'] = esc_url_raw($atts['source']);
         
         if (empty($atts['source'])) {
             return '<p>' . esc_html__('Error: TableCrafter requires a "source" attribute.', 'tablecrafter-wp-data-tables') . '</p>';
         }
 
-        // --- SSR ENGINE START (SWR Implementation) ---
+        // SWR (Stale-While-Revalidate) Logic
         $cache_key = 'tc_html_' . md5($atts['source'] . $atts['include'] . $atts['exclude']);
         $cache_data = get_transient($cache_key);
         $html_content = '';
 
         if ($cache_data !== false) {
-            // We have a cache! Extract HTML and check if it's "stale"
             $html_content = isset($cache_data['html']) ? $cache_data['html'] : '';
             $timestamp = isset($cache_data['time']) ? $cache_data['time'] : 0;
             
-            // If cache is older than 5 minutes, trigger a background refresh
+            // Trigger invisible refresh if cache is older than 5 mins
             if (time() - $timestamp > (5 * MINUTE_IN_SECONDS)) {
                 if (!wp_next_scheduled('tc_refresh_single_source', array($atts))) {
                     wp_schedule_single_event(time(), 'tc_refresh_single_source', array($atts));
                 }
             }
         } else {
-            // No cache at all - perform synchronous fetch for the first time
+            // First time render (Synch)
             $html_content = $this->fetch_and_render_php($atts);
             if ($html_content) {
                 set_transient($cache_key, array(
@@ -316,14 +340,11 @@ class TableCrafter {
                 ), HOUR_IN_SECONDS);
             }
         }
-        // --- SSR ENGINE END ---
         
-        // Enqueue assets
         $this->register_assets();
         wp_enqueue_script('tablecrafter-frontend');
         wp_enqueue_style('tablecrafter-style');
         
-        // Output container
         ob_start();
         ?>
         <div id="<?php echo esc_attr($atts['id']); ?>" 
@@ -342,7 +363,12 @@ class TableCrafter {
     }
 
     /**
-     * Server-Side Fetch and Render
+     * Server-Side Fetcher & Renderer.
+     * 
+     * Performs remote API hit and converts JSON into crawlable HTML table.
+     * 
+     * @param array $atts Configuration attributes.
+     * @return string|false HTML or false on failure.
      */
     private function fetch_and_render_php($atts) {
         $response = wp_remote_get($atts['source'], array('timeout' => 15));
@@ -353,22 +379,19 @@ class TableCrafter {
 
         if (!is_array($data) || empty($data)) return false;
 
-        // Navigate to the root path if provided
         if (!empty($atts['root'])) {
             $path = explode('.', $atts['root']);
             foreach ($path as $segment) {
                 if (isset($data[$segment])) {
                     $data = $data[$segment];
                 } else {
-                    return false; // Path not found
+                    return false;
                 }
             }
         }
 
-        // Ensure we ended up with an array of items
         if (!is_array($data) || empty($data) || !is_array(reset($data))) return false;
 
-        // Handle Include/Exclude
         $include = !empty($atts['include']) ? array_map('trim', explode(',', $atts['include'])) : array();
         $exclude = !empty($atts['exclude']) ? array_map('trim', explode(',', $atts['exclude'])) : array();
 
@@ -382,7 +405,6 @@ class TableCrafter {
 
         if (empty($headers)) return false;
 
-        // Build HTML
         $html = '<table class="tc-table">';
         $html .= '<thead><tr>';
         foreach ($headers as $header) {
@@ -404,22 +426,32 @@ class TableCrafter {
         return $html;
     }
 
-    private function format_header_php($str) {
+    /**
+     * Header Formatter.
+     * 
+     * @param string $str Raw key.
+     * @return string Title Case string.
+     */
+    private function format_header_php(string $str): string {
         return ucwords(str_replace('_', ' ', $str));
     }
 
-    private function render_value_php($val) {
+    /**
+     * Smart Value Renderer.
+     * 
+     * @param mixed $val Raw data.
+     * @return string Sanitized HTML/Value.
+     */
+    private function render_value_php($val): string {
         if (is_null($val) || is_bool($val)) return '';
         if (is_array($val) || is_object($val)) return '[Data]';
 
         $str = trim((string)$val);
 
-        // Detect Images
         if (preg_match('/\.(jpeg|jpg|gif|png|webp|svg|bmp)$/i', $str) || strpos($str, 'data:image') === 0) {
             return sprintf('<img src="%s" style="max-width: 100px; height: auto; display: block;">', esc_url($str));
         }
 
-        // Detect Links
         if (strpos($str, 'http://') === 0 || strpos($str, 'https://') === 0) {
             return sprintf('<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>', esc_url($str), esc_html($str));
         }
@@ -428,14 +460,15 @@ class TableCrafter {
     }
 
     /**
-     * AJAX Proxy Fetch Handler
+     * Secure AJAX Data Proxy.
      * 
-     * Fetches remote JSON data server-side to bypass CORS and implement caching.
+     * Bypasses CORS and provides caching for frontend requests.
+     * 
+     * @return void
      */
     public function ajax_proxy_fetch(): void {
         check_ajax_referer('tc_proxy_nonce', 'nonce');
 
-        // Security: Ensure the user has permission to fetch data
         if (!current_user_can('edit_posts')) {
             wp_send_json_error(__('Unauthorized: You do not have permission to fetch remote data.', 'tablecrafter-wp-data-tables'));
         }
@@ -446,7 +479,6 @@ class TableCrafter {
             wp_send_json_error(__('TableCrafter Error: Invalid or unsafe URL provided.', 'tablecrafter-wp-data-tables'));
         }
 
-        // Cache parameters
         $cache_key = 'tc_cache_' . md5($url);
         $cached_data = get_transient($cache_key);
 
@@ -454,11 +486,7 @@ class TableCrafter {
             wp_send_json_success($cached_data);
         }
 
-        // Fetch fresh data
-        $response = wp_remote_get($url, array(
-            'timeout' => 15,
-            'sslverify' => false // For compatibility with some older servers
-        ));
+        $response = wp_remote_get($url, array('timeout' => 15));
 
         if (is_wp_error($response)) {
             wp_send_json_error('TableCrafter Proxy Error: ' . $response->get_error_message());
@@ -471,32 +499,35 @@ class TableCrafter {
             wp_send_json_error('TableCrafter Proxy Error: Invalid JSON response from source.');
         }
 
-        // Cache for 1 hour
         set_transient($cache_key, $data, HOUR_IN_SECONDS);
-
-        // Automated Tracking: Keep track of used URLs for background warming
         $this->track_url($url);
 
         wp_send_json_success($data);
     }
 
     /**
-     * Automated URL Tracking
+     * URL Analytics & Tracking.
+     * 
+     * @param string $url URL to track for background warming.
+     * @return void
      */
-    private function track_url($url) {
+    private function track_url(string $url): void {
         $urls = get_option('tc_tracked_urls', array());
         if (!is_array($urls)) $urls = array();
         
         if (!in_array($url, $urls)) {
             $urls[] = $url;
-            update_option('tc_tracked_urls', array_slice($urls, -50)); // Keep last 50
+            update_option('tc_tracked_urls', array_slice($urls, -50));
         }
     }
 
     /**
-     * Refresh a specific source cache (Triggered by SWR)
+     * Background Source Refresher.
+     * 
+     * @param array $atts Configuration to refresh.
+     * @return void
      */
-    public function refresh_source_cache($atts) {
+    public function refresh_source_cache(array $atts): void {
         $html = $this->fetch_and_render_php($atts);
         if ($html) {
             $cache_key = 'tc_html_' . md5($atts['source'] . $atts['include'] . $atts['exclude']);
@@ -508,9 +539,11 @@ class TableCrafter {
     }
 
     /**
-     * Automated Cache Refresher (WP-Cron Task)
+     * Hourly Automated Cache Warming (Cron).
+     * 
+     * @return void
      */
-    public function automated_cache_refresh() {
+    public function automated_cache_refresh(): void {
         $urls = get_option('tc_tracked_urls', array());
         foreach ($urls as $url) {
             $response = wp_remote_get($url, array('timeout' => 10));
@@ -525,9 +558,15 @@ class TableCrafter {
     }
 
     /**
-     * WP-CLI Commands for Automation
+     * WP-CLI Utility Commands.
+     * 
+     * Usage: wp tablecrafter [clear-cache|warm-cache]
+     * 
+     * @param array $args Positional arguments.
+     * @param array $assoc_args Associative arguments.
+     * @return void
      */
-    public function cli_commands($args, $assoc_args) {
+    public function cli_commands(array $args, array $assoc_args): void {
         $action = isset($args[0]) ? $args[0] : '';
 
         if ($action === 'clear-cache') {
@@ -541,23 +580,23 @@ class TableCrafter {
             WP_CLI::error('Usage: wp tablecrafter [clear-cache|warm-cache]');
         }
     }
+
     /**
-     * SSRF Prevention: Checks if a URL is safe to fetch server-side.
-     * Blocks private IP ranges, localhost, and loopback addresses.
+     * SSRF (Server Side Request Forgery) Prevention Helper.
+     * 
+     * Blocks private ranges and localhost to secure the proxy.
      * 
      * @param string $url The URL to validate.
-     * @return bool True if safe, false otherwise.
+     * @return bool True if safe, false if blocked.
      */
     private function is_safe_url(string $url): bool {
         $host = parse_url($url, PHP_URL_HOST);
         if (!$host) return false;
 
-        // Block localhost and loopback
         if (in_array(strtolower($host), array('localhost', '127.0.0.1', '[::1]'))) {
             return false;
         }
 
-        // Block internal network IPs (SSRF Protection)
         if (filter_var($host, FILTER_VALIDATE_IP)) {
             $is_private = !filter_var(
                 $host, 
@@ -571,5 +610,7 @@ class TableCrafter {
     }
 }
 
-// Initialize
+/**
+ * Initialize TableCrafter.
+ */
 TableCrafter::get_instance();
