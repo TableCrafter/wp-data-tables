@@ -2,7 +2,7 @@
 
 **Turn any JSON API or remote file into a high-performance, responsive table in seconds.** 
 
-TableCrafter is a mission-critical bridge between your dynamic external data and your WordPress site. Built for speed, hardened for security, and optimized for search engines. Now with **Interactive Column Sorting**, **Hardened Security**, **Pagination**, and **Live Search**.
+TableCrafter is a mission-critical bridge between your dynamic external data and your WordPress site. Built for speed, hardened for security, and optimized for search engines. Now with **Mobile Reflow Layout**, **Interactive Column Sorting**, **Hardened Security**, **Pagination**, and **Live Search**.
 
 ---
 
@@ -12,6 +12,7 @@ TableCrafter is a mission-critical bridge between your dynamic external data and
 | :--- | :--- |
 | **🚀 Instant Performance** | Powered by **SSR (Server-Side Rendering)** and **SWR (Stale-While-Revalidate)** caching for sub-100ms load times. |
 | **🔍 SEO-Ready** | Data is rendered in PHP before the page loads, making every cell crawlable by Google. |
+| **📱 Mobile Reflow** | Automatically transforms wide tables into a responsive "Card View" for phones. |
 | **🛡️ Hardened Security** | Built-in SSRF protection and strict capability checks for all remote data operations. |
 | **📄 Smart Pagination** | Effortlessly navigate huge datasets with built-in client-side pagination. |
 | **⚡ Live Search** | Filter thousands of rows instantly with ultra-fast client-side search. |
@@ -23,6 +24,7 @@ TableCrafter is a mission-critical bridge between your dynamic external data and
 ### ✨ Key Features
 
 *   **Native Gutenberg Block:** Add tables visually with a live preview directly in the WordPress editor.
+*   **Mobile-First Design:** Smart reflow layout makes data readable on any device.
 *   **Safe Data Proxy:** Securely fetch remote JSON to bypass CORS while protecting your server from SSRF.
 *   **Data Pagination:** Keep your pages clean and fast by showing 10, 25, or 50 rows at a time.
 *   **Interactive Header Sorting:** Toggle between ASC/DESC for any column instantly.
@@ -54,8 +56,9 @@ The `[tablecrafter]` shortcode remains fully supported:
 
 ---
 
-### 📈 Technical Pedigree (v1.5.0)
+### 📈 Technical Pedigree (v1.5.1)
 
+*   **Mobile Reflow:** CSS-driven layout transformation using semantic metadata.
 *   **Interactive Sorting:** Smart-type data sorting engine (Numeric/String/Alpha).
 *   **Security Architecture:** Implemented SSRF protection and WP capability-based authorization.
 *   **Code Quality:** Modern PHP type-hinting and optimized method structures for long-term stability.
@@ -68,7 +71,7 @@ The `[tablecrafter]` shortcode remains fully supported:
 
 **Contributors:** @fahdi  
 **License:** GPLv2 or later  
-**Stable tag:** 1.5.0  
+**Stable tag:** 1.5.1  
 **Requires PHP:** 7.4+
 
 ---

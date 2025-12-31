@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – JSON Data Tables & API Data Viewer
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 1.5.0
+ * Version: 1.5.1
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '1.5.0');
+define('TABLECRAFTER_VERSION', '1.5.1');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -417,7 +417,7 @@ class TableCrafter {
             $html .= '<tr>';
             foreach ($headers as $header) {
                 $val = isset($row[$header]) ? $row[$header] : '';
-                $html .= '<td>' . $this->render_value_php($val) . '</td>';
+                $html .= '<td data-tc-label="' . esc_attr($this->format_header_php($header)) . '">' . $this->render_value_php($val) . '</td>';
             }
             $html .= '</tr>';
         }

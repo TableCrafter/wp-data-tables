@@ -221,7 +221,7 @@ class TableCrafter {
 
         html += '<tbody>';
         data.forEach(row => {
-            html += '<tr>' + headers.map(h => `<td>${this.renderValue(row[h])}</td>`).join('') + '</tr>';
+            html += '<tr>' + headers.map(h => `<td data-tc-label="${this.escapeHTML(this.formatHeader(h))}">${this.renderValue(row[h])}</td>`).join('') + '</tr>';
         });
         html += '</tbody></table>';
 
