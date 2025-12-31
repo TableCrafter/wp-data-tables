@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – JSON Data Tables & API Data Viewer
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 1.6.0
+ * Version: 1.7.0
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '1.6.0');
+define('TABLECRAFTER_VERSION', '1.7.0');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -446,15 +446,38 @@ class TableCrafter {
      * @return string Sanitized HTML/Value.
      */
     private function render_value_php($val): string {
-        if (is_null($val) || is_bool($val)) return '';
-        if (is_array($val) || is_object($val)) return '[Data]';
-
         $str = trim((string)$val);
+        $lower = strtolower($str);
 
+        // 1. Boolean
+        if ($val === true || $lower === 'true') {
+            return '<span class="tc-badge tc-yes">Yes</span>';
+        }
+        if ($val === false || $lower === 'false') {
+            return '<span class="tc-badge tc-no">No</span>';
+        }
+
+        // 2. Images
         if (preg_match('/\.(jpeg|jpg|gif|png|webp|svg|bmp)$/i', $str) || strpos($str, 'data:image') === 0) {
             return sprintf('<img src="%s" style="max-width: 100px; height: auto; display: block;">', esc_url($str));
         }
 
+        // 3. Email Addresses
+        if (filter_var($str, FILTER_VALIDATE_EMAIL)) {
+            return sprintf('<a href="mailto:%s">%s</a>', esc_attr($str), esc_html($str));
+        }
+
+        // 4. ISO Dates (YYYY-MM-DD)
+        if (preg_match('/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2})?/', $str) && strtotime($str)) {
+             try {
+                 $date = new DateTime($str);
+                 return $date->format('M j, Y');
+             } catch (Exception $e) {
+                 // Fallback
+             }
+        }
+
+        // 5. URLs
         if (strpos($str, 'http://') === 0 || strpos($str, 'https://') === 0) {
             return sprintf('<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>', esc_url($str), esc_html($str));
         }

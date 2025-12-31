@@ -381,12 +381,42 @@ class TableCrafter {
     renderValue(val) {
         if (val === null || val === undefined) return '';
         const strVal = String(val).trim();
+
+        // 1. Boolean (True/False)
+        if (val === true || strVal.toLowerCase() === 'true') {
+            return '<span class="tc-badge tc-yes">Yes</span>';
+        }
+        if (val === false || strVal.toLowerCase() === 'false') {
+            return '<span class="tc-badge tc-no">No</span>';
+        }
+
+        // 2. Images
         if (strVal.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i) || strVal.startsWith('data:image')) {
             return `<img src="${encodeURI(strVal)}" style="max-width: 100px; height: auto; display: block;">`;
         }
+
+        // 3. Email Addresses
+        // Regex: Simple email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailRegex.test(strVal)) {
+            return `<a href="mailto:${this.escapeHTML(strVal)}">${this.escapeHTML(strVal)}</a>`;
+        }
+
+        // 4. URLs
         if (strVal.startsWith('http://') || strVal.startsWith('https://')) {
             return `<a href="${encodeURI(strVal)}" target="_blank" rel="noopener noreferrer">${this.escapeHTML(strVal)}</a>`;
         }
+
+        // 5. ISO Dates (YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS)
+        // Regex: matches 2023-01-01 or 2023-01-01T12:00:00Z
+        const dateRegex = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(.\d+)?(Z|[\+-]\d{2}:?\d{2})?)?$/;
+        if (dateRegex.test(strVal)) {
+            const date = new Date(strVal);
+            if (!isNaN(date.getTime())) {
+                return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+            }
+        }
+
         return this.escapeHTML(strVal);
     }
 
