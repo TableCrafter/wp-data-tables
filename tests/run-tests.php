@@ -22,6 +22,7 @@ class TableCrafterTests {
         $this->test_pagination_logic();
         $this->test_security_hardening();
         $this->test_sorting_logic();
+        $this->test_mobile_reflow_logic();
         $this->test_version_consistency();
         $this->test_directory_structure();
 
@@ -139,6 +140,16 @@ class TableCrafterTests {
             $this->pass($test_name);
         } else {
             $this->fail($test_name, "Interactive sorting logic not found in tablecrafter.js.");
+        }
+    }
+
+    private function test_mobile_reflow_logic() {
+        $test_name = "Mobile Reflow Attribute Check";
+        $js_content = file_get_contents(__DIR__ . '/../assets/js/tablecrafter.js');
+        if (strpos($js_content, "data-tc-label") !== false) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "Mobile reflow labels (data-tc-label) not found in tablecrafter.js.");
         }
     }
 

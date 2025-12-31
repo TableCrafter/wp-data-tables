@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -89,6 +89,10 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 1.5.1 =
+* **Mobile-First Reflow:** Tables now intelligently transform into a "Card View" on small screens, eliminating the need for horizontal scrolling.
+* **Semantic Accessibility:** Added `data-tc-label` attributes to ensure mobile views stay readable and data-heavy pages remain user-friendly.
+
 = 1.5.0 =
 * **Interactive Sorting:** Users can now click any column header to sort data in ascending or descending order.
 * **Smart Sorting:** Logic automatically handles numeric, string, and alpha-numeric data types.
@@ -155,6 +159,9 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 *   Released smart column detection.
 
 == Upgrade Notice ==
+
+= 1.5.1 =
+Performance Update: Significantly improves mobile readability with a new Reflow layout. Highly recommended.
 
 = 1.5.0 =
 Major Update: Adds Interactive Column Sorting for better data analysis. Highly recommended.
