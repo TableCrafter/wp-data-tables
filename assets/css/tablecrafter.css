@@ -105,3 +105,61 @@
     color: #666;
     font-weight: 500;
 }
+
+/* Sorting Styles */
+.tc-table th.tc-sortable {
+    cursor: pointer;
+    position: relative;
+    padding-right: 25px !important;
+    user-select: none;
+}
+
+.tc-table th.tc-sortable:hover {
+    background: #f0f0f1;
+}
+
+.tc-sort-icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    opacity: 0.3;
+}
+
+.tc-sort-icon::before,
+.tc-sort-icon::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+}
+
+.tc-sort-icon::before {
+    border-bottom: 4px solid #333;
+    top: 0;
+}
+
+.tc-sort-icon::after {
+    border-top: 4px solid #333;
+    bottom: 0;
+}
+
+.tc-sort-asc .tc-sort-icon {
+    opacity: 1;
+}
+
+.tc-sort-asc .tc-sort-icon::after {
+    display: none;
+}
+
+.tc-sort-desc .tc-sort-icon {
+    opacity: 1;
+}
+
+.tc-sort-desc .tc-sort-icon::before {
+    display: none;
+}

@@ -2,7 +2,7 @@
 
 **Turn any JSON API or remote file into a high-performance, responsive table in seconds.** 
 
-TableCrafter is a mission-critical bridge between your dynamic external data and your WordPress site. Built for speed, hardened for security, and optimized for search engines. Now with **Hardened Security**, **Pagination**, and **Live Search**.
+TableCrafter is a mission-critical bridge between your dynamic external data and your WordPress site. Built for speed, hardened for security, and optimized for search engines. Now with **Interactive Column Sorting**, **Hardened Security**, **Pagination**, and **Live Search**.
 
 ---
 
@@ -15,6 +15,7 @@ TableCrafter is a mission-critical bridge between your dynamic external data and
 | **🛡️ Hardened Security** | Built-in SSRF protection and strict capability checks for all remote data operations. |
 | **📄 Smart Pagination** | Effortlessly navigate huge datasets with built-in client-side pagination. |
 | **⚡ Live Search** | Filter thousands of rows instantly with ultra-fast client-side search. |
+| **↕️ Interactive Sorting** | Click any header to sort numerically or alphabetically with smart type detection. |
 | **🧱 Block Editor First** | Native Gutenberg support. Build and preview your tables visually in seconds. |
 
 ---
@@ -24,6 +25,7 @@ TableCrafter is a mission-critical bridge between your dynamic external data and
 *   **Native Gutenberg Block:** Add tables visually with a live preview directly in the WordPress editor.
 *   **Safe Data Proxy:** Securely fetch remote JSON to bypass CORS while protecting your server from SSRF.
 *   **Data Pagination:** Keep your pages clean and fast by showing 10, 25, or 50 rows at a time.
+*   **Interactive Header Sorting:** Toggle between ASC/DESC for any column instantly.
 *   **Live Table Search:** Toggle a real-time search bar that filters data as you type.
 *   **Smart Auto-Formatting:** Intelligent detection of **Images**, **Logos**, and **Links**.
 *   **Precision Data Curation:** Use `include` or `exclude` attributes to cherry-pick exactly what matters.
@@ -52,8 +54,9 @@ The `[tablecrafter]` shortcode remains fully supported:
 
 ---
 
-### 📈 Technical Pedigree (v1.4.1)
+### 📈 Technical Pedigree (v1.5.0)
 
+*   **Interactive Sorting:** Smart-type data sorting engine (Numeric/String/Alpha).
 *   **Security Architecture:** Implemented SSRF protection and WP capability-based authorization.
 *   **Code Quality:** Modern PHP type-hinting and optimized method structures for long-term stability.
 *   **Pagination Engine:** Client-side state management for fast page switching.
@@ -65,7 +68,7 @@ The `[tablecrafter]` shortcode remains fully supported:
 
 **Contributors:** @fahdi  
 **License:** GPLv2 or later  
-**Stable tag:** 1.4.1  
+**Stable tag:** 1.5.0  
 **Requires PHP:** 7.4+
 
 ---
