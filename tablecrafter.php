@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – JSON Data Tables & API Data Viewer
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 1.5.1
+ * Version: 1.6.0
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '1.5.1');
+define('TABLECRAFTER_VERSION', '1.6.0');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -270,6 +270,7 @@ class TableCrafter {
                 'exclude' => array('type' => 'string', 'default' => ''),
                 'search'  => array('type' => 'boolean', 'default' => false),
                 'per_page'=> array('type' => 'number', 'default' => 0),
+                'export'  => array('type' => 'boolean', 'default' => false),
                 'id'      => array('type' => 'string', 'default' => ''),
             ),
         ));
@@ -306,6 +307,7 @@ class TableCrafter {
             'exclude' => '',
             'root'    => '',
             'search'  => 'false',
+            'export'  => 'false',
             'per_page' => 0
         ), $atts, 'tablecrafter');
         
@@ -354,6 +356,7 @@ class TableCrafter {
              data-exclude="<?php echo esc_attr($atts['exclude']); ?>"
              data-root="<?php echo esc_attr($atts['root']); ?>"
              data-search="<?php echo esc_attr($atts['search']); ?>"
+             data-export="<?php echo esc_attr($atts['export']); ?>"
              data-per-page="<?php echo esc_attr($atts['per_page']); ?>"
              data-ssr="true">
             <?php echo $html_content ? $html_content : '<div class="tc-loading">' . esc_html__('Loading TableCrafter...', 'tablecrafter-wp-data-tables') . '</div>'; ?>

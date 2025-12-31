@@ -23,6 +23,7 @@ class TableCrafterTests {
         $this->test_security_hardening();
         $this->test_sorting_logic();
         $this->test_mobile_reflow_logic();
+        $this->test_export_logic();
         $this->test_version_consistency();
         $this->test_directory_structure();
 
@@ -150,6 +151,16 @@ class TableCrafterTests {
             $this->pass($test_name);
         } else {
             $this->fail($test_name, "Mobile reflow labels (data-tc-label) not found in tablecrafter.js.");
+        }
+    }
+
+    private function test_export_logic() {
+        $test_name = "Export Logic Check";
+        $js_content = file_get_contents(__DIR__ . '/../assets/js/tablecrafter.js');
+        if (strpos($js_content, "exportCSV") !== false || strpos($js_content, "tc-export-btn") !== false) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "Export logic (exportCSV/tc-export-btn) not found in tablecrafter.js.");
         }
     }
 

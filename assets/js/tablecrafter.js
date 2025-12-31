@@ -127,6 +127,11 @@ class TableCrafter {
         searchContainer.appendChild(searchInput);
         this.container.insertBefore(searchContainer, table);
 
+        // Export Buttons integration
+        if (this.container.dataset.export === "true") {
+            this.initExport(searchContainer);
+        }
+
         searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
             this.filteredData = this.allData.filter(row => {
@@ -140,6 +145,94 @@ class TableCrafter {
 
             this.currentPage = 1;
             this.render();
+        });
+    }
+
+    /**
+     * Initialize Export Toolbar.
+     * 
+     * @param {HTMLElement} container The container to append buttons to.
+     */
+    initExport(container) {
+        // Create Export Group
+        const exportGroup = document.createElement('div');
+        exportGroup.className = 'tc-export-group';
+
+        // CSV Button
+        const csvBtn = document.createElement('button');
+        csvBtn.textContent = 'CSV';
+        csvBtn.className = 'tc-btn tc-export-btn';
+        csvBtn.title = 'Export to CSV';
+        csvBtn.onclick = () => this.exportCSV();
+
+        // Copy Button
+        const copyBtn = document.createElement('button');
+        copyBtn.textContent = 'Copy';
+        copyBtn.className = 'tc-btn tc-export-btn';
+        copyBtn.title = 'Copy to Clipboard';
+        copyBtn.onclick = () => this.copyTable();
+
+        exportGroup.appendChild(csvBtn);
+        exportGroup.appendChild(copyBtn);
+        container.appendChild(exportGroup);
+    }
+
+    /**
+     * Export Visible Data to CSV.
+     */
+    exportCSV() {
+        if (!this.filteredData || this.filteredData.length === 0) return;
+
+        const headers = Object.keys(this.filteredData[0]);
+        const csvRows = [];
+
+        // Add Header Row
+        csvRows.push(headers.join(','));
+
+        // Add Data Rows
+        this.filteredData.forEach(row => {
+            const values = headers.map(header => {
+                let val = row[header] === null || row[header] === undefined ? '' : row[header];
+                val = String(val).replace(/"/g, '""'); // Escape double quotes
+                return `"${val}"`; // Wrap in quotes
+            });
+            csvRows.push(values.join(','));
+        });
+
+        const csvString = csvRows.join('\n');
+        const blob = new Blob([csvString], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'data-export.csv');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    /**
+     * Copy Visible Data to Clipboard.
+     */
+    copyTable() {
+        if (!this.filteredData || this.filteredData.length === 0) return;
+
+        // Simple tab-separated format for pasting into Excel/Sheets
+        const headers = Object.keys(this.filteredData[0]);
+        let text = headers.join('\t') + '\n';
+
+        this.filteredData.forEach(row => {
+            text += headers.map(h => row[h]).join('\t') + '\n';
+        });
+
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = this.container.querySelector('button.tc-export-btn:nth-child(2)');
+            const originalText = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = originalText, 2000);
+        }).catch(err => {
+            console.error('Failed to copy', err);
         });
     }
 
