@@ -3,7 +3,7 @@
 **Turn any JSON API or remote file into a high-performance, responsive table in seconds.** 
 
 ## 🚀 Upgrade to Pro: Gravity Tables
-Looking for more power? Check out our premium form data solution: **[Advanced Data Tables for Gravity Forms](https://github.com/ajstrucking/gravity-tables)**.
+Looking for more power? Check out our premium form data solution: **[Advanced Data Tables for Gravity Forms](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**.
 - **Frontend Editing:** Click-to-edit interface.
 - **Bulk Actions:** Manage multiple entries instantly.
 - **Advanced Export:** CSV, Excel, PDF.

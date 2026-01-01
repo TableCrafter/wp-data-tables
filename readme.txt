@@ -91,7 +91,7 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 Need more power? Check out our premium form data solution:
 
-**[Advanced Data Tables for Gravity Forms](https://github.com/ajstrucking/gravity-tables)**
+**[Advanced Data Tables for Gravity Forms](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**
 *   ✅ **Frontend Editing:** Click any cell to edit data instantly.
 *   ✅ **Bulk Operations:** Delete or edit multiple entries at once.
 *   ✅ **Advanced Filtering:** Date ranges, multi-select, and complex search.
