@@ -25,6 +25,8 @@ class TableCrafterTests {
         $this->test_mobile_reflow_logic();
         $this->test_export_logic();
         $this->test_formatting_logic();
+        $this->test_column_aliasing();
+        $this->test_nested_data_logic();
         $this->test_version_consistency();
         $this->test_directory_structure();
 
@@ -175,6 +177,24 @@ class TableCrafterTests {
         }
     }
 
+    private function test_column_aliasing() {
+        $test_name = "Column Aliasing Logic Check";
+        
+        // Check PHP Implementation
+        $php_content = file_get_contents(__DIR__ . '/../tablecrafter.php');
+        $php_check = strpos($php_content, "explode(':', \$item, 2)") !== false;
+
+        // Check JS Implementation
+        $js_content = file_get_contents(__DIR__ . '/../assets/js/tablecrafter.js');
+        $js_check = strpos($js_content, "this.getAliasedHeaders()") !== false;
+
+        if ($php_check && $js_check) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "Aliasing logic missing in PHP or JS.");
+        }
+    }
+
     private function test_version_consistency() {
         $test_name = "Version Number Sync";
         $php = file_get_contents(__DIR__ . '/../tablecrafter.php');
@@ -187,6 +207,22 @@ class TableCrafterTests {
             $this->pass($test_name . " (" . $php_v[1] . ")");
         } else {
             $this->fail($test_name, "Version mismatch: PHP({$php_v[1]}) vs Readme({$txt_v[1]})");
+        }
+    }
+
+    private function test_nested_data_logic() {
+        $test_name = "Nested Data (Array/Object) Rendering Logic";
+        
+        $php_content = file_get_contents(__DIR__ . '/../tablecrafter.php');
+        $js_content = file_get_contents(__DIR__ . '/../assets/js/tablecrafter.js');
+
+        $check_php = strpos($php_content, "tc-tag-list") !== false && strpos($php_content, "is_array(\$val)") !== false;
+        $check_js = strpos($js_content, "tc-tag-list") !== false && strpos($js_content, "Array.isArray(val)") !== false;
+
+        if ($check_php && $check_js) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "Nested data (Array/Object) logic not found in PHP or JS engine.");
         }
     }
 

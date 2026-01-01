@@ -185,6 +185,25 @@
     color: #991b1b;
 }
 
+/* Nested Data / Tags */
+.tc-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.tc-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #f0f0f1;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    font-size: 11px;
+    line-height: normal;
+    color: #3c434a;
+    white-space: nowrap;
+}
+
 .tc-table a[href^="mailto:"] {
     color: #2563eb;
     text-decoration: none;

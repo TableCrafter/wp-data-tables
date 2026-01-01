@@ -1,4 +1,4 @@
-# 🚀 TableCrafter: The SEO-First JSON Table Engine for WordPress
+# 🚀 TableCrafter: WordPress Data Tables & Dynamic Content Plugin
 
 **Turn any JSON API or remote file into a high-performance, responsive table in seconds.** 
 
@@ -55,13 +55,16 @@ The `[tablecrafter]` shortcode remains fully supported:
 *   **`per_page`**: Number of rows to show per page (e.g., `per_page="10"`).
 *   **`search`**: Toggle the search bar (`true` or `false`).
 *   **`root`**: The JSON path to the data array (e.g., `root="products"`).
-*   **`include`**: Limit columns to a specific set.
+*   **`include`**: Limit columns and rename them (e.g., `include="id:ID, name:Full Name"`).
 *   **`exclude`**: Hide fields (e.g., `exclude="id,metadata"`).
 
 ---
 
-### 📈 Technical Pedigree (v1.7.0)
+### 📈 Technical Pedigree (v1.9.0)
 
+*   **Smart Nested Rendering:** Auto-detection and Tag/Badge rendering for Arrays and Objects.
+*   **Custom Column Aliasing:** Advanced parsing logic for `key:Alias` headers in PHP and JS.
+*   **Smart Export:** CSV exports respect custom aliases and current sort/filter state.
 *   **Smart Formatting Engine:** Regex-based type detection (ISO 8601/Email/Boolean) in both PHP and JS.
 *   **Client-Side Export:** Generates CSV blobs in-browser, reducing server load.
 *   **Mobile Reflow:** CSS-driven layout transformation using semantic metadata.
@@ -77,7 +80,7 @@ The `[tablecrafter]` shortcode remains fully supported:
 
 **Contributors:** @fahdi  
 **License:** GPLv2 or later  
-**Stable tag:** 1.7.0  
+**Stable tag:** 1.9.0  
 **Requires PHP:** 7.4+
 
 ---
