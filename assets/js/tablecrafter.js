@@ -4,7 +4,7 @@
  * High-performance, SEO-friendly JSON data table engine for WordPress.
  * Supports SSR hydration, live search, client-side pagination, and interactive sorting.
  * 
- * @version 1.9.0
+ * @version 1.9.1
  */
 class TableCrafter {
     /**

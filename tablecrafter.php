@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – WordPress Data Tables & Dynamic Content Plugin
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 1.9.0
+ * Version: 1.9.1
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '1.9.0');
+define('TABLECRAFTER_VERSION', '1.9.1');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -374,11 +374,29 @@ class TableCrafter {
      * @return string|false HTML or false on failure.
      */
     private function fetch_and_render_php($atts) {
-        $response = wp_remote_get($atts['source'], array('timeout' => 15));
-        if (is_wp_error($response)) return false;
+        // 1. Try Cache First
+        $cache_key = 'tc_cache_' . md5($atts['source']);
+        $cached_data = get_transient($cache_key);
 
-        $body = wp_remote_retrieve_body($response);
-        $data = json_decode($body, true);
+        if ($cached_data !== false) {
+            $data = $cached_data;
+        } else {
+            // 2. Cache Miss: Fetch from Source
+            $response = wp_remote_get($atts['source'], array('timeout' => 15));
+            if (is_wp_error($response)) return false;
+
+            $body = wp_remote_retrieve_body($response);
+            $data = json_decode($body, true);
+
+            // 3. Set Cache for Next Time (Read-Through)
+            if ($data) {
+                set_transient($cache_key, $data, HOUR_IN_SECONDS);
+            }
+        }
+        
+        // $data is already decoded array here
+        // $body line is removed since we have $data from cache or decode
+
 
         if (!is_array($data) || empty($data)) return false;
 

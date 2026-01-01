@@ -2,6 +2,12 @@
 
 **Turn any JSON API or remote file into a high-performance, responsive table in seconds.** 
 
+## 🚀 Upgrade to Pro: Gravity Tables
+Looking for more power? Check out our premium form data solution: **[Advanced Data Tables for Gravity Forms](https://github.com/ajstrucking/gravity-tables)**.
+- **Frontend Editing:** Click-to-edit interface.
+- **Bulk Actions:** Manage multiple entries instantly.
+- **Advanced Export:** CSV, Excel, PDF.
+
 TableCrafter is a mission-critical bridge between your dynamic external data and your WordPress site. Built for speed, hardened for security, and optimized for search engines. Now with **Smart Formatting**, **CSV Export**, **Mobile Reflow**, **Pagination**, and **Live Search**.
 
 ---

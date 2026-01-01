@@ -2,6 +2,12 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [1.9.1] - 2026-01-01
+### Fixed
+- Fixed API caching issue where the renderer ignored pre-warmed data. Now uses read-through caching for instant loads.
+### Added
+- Added documentation for premium Gravity Tables addon.
+
 ## [1.9.0] - 2026-01-01
 ### Added
 - **Smart Nested Data Rendering:** Automatically handles Arrays and Objects. Nested items are now rendered as elegant tags or badges instead of `[object Object]`.

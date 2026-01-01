@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.9.0
+Stable tag: 1.9.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -87,7 +87,22 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 2. **Interactive Frontend** - A live table showing the search bar and pagination footer.
 3. **Admin Dashboard** - The shortcode generator and preview playground.
 
+== Premium Offering ==
+
+Need more power? Check out our premium form data solution:
+
+**[Advanced Data Tables for Gravity Forms](https://github.com/ajstrucking/gravity-tables)**
+*   ✅ **Frontend Editing:** Click any cell to edit data instantly.
+*   ✅ **Bulk Operations:** Delete or edit multiple entries at once.
+*   ✅ **Advanced Filtering:** Date ranges, multi-select, and complex search.
+*   ✅ **Export:** Download your data to CSV, Excel, or PDF.
+*   ✅ **Unlimited:** No limits on the number of tables or entries.
+
 == Changelog ==
+
+= 1.9.1 =
+*   **Performance:** Fixed API caching issue where the renderer ignored pre-warmed data. Now uses read-through caching for instant loads.
+*   **Docs:** Added information about premium Gravity Tables addon.
 
 = 1.9.0 =
 * **Smart Nested Data Rendering:** Automatically handles Arrays and Objects. Nested items are now rendered as elegant tags or badges instead of `[object Object]`.
