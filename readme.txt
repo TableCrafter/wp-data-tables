@@ -73,14 +73,18 @@ Limit data from heavy APIs:
 
 ### 🚀 Upgrade to Pro: Gravity Tables
 
-Need more power? Check out our premium form data solution:
+Unlock the full potential of your data with **[Advanced Data Tables for Gravity Forms](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)** — the ultimate solution for managing Gravity Forms entries.
 
-**[Advanced Data Tables for Gravity Forms](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**
-*   ✅ **Frontend Editing:** Click any cell to edit data instantly.
-*   ✅ **Bulk Operations:** Delete or edit multiple entries at once.
-*   ✅ **Advanced Filtering:** Date ranges, multi-select, and complex search.
-*   ✅ **Export:** Download your data to CSV, Excel, or PDF.
-*   ✅ **Unlimited:** No limits on the number of tables or entries.
+**Why Upgrade?**
+*   ✏️ **Frontend Editing:** Let users update their own entries directly from the table.
+*   🛡️ **Role-Based Permissions:** Control exactly who can view, edit, or delete data.
+*   ⚡ **Bulk Actions:** Delete, approve, or modify hundreds of entries in one click.
+*   🔍 **Advanced Filtering:** Logic-based filters, date ranges, and multi-select dropdowns.
+*   🎨 **Conditional Formatting:** Highlight rows or cells based on their values (e.g., "Status = Overdue").
+*   📥 **Pro Export:** Export filtered views to Excel, CSV, or PDF.
+*   ♾️ **Unlimited Freedom:** No limits on tables, columns, or rows.
+
+**[Start your 7-day free trial today!](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**
 
 == Frequently Asked Questions ==
 

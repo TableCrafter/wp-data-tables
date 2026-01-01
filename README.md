@@ -2,11 +2,20 @@
 
 **Turn any JSON API or remote file into a high-performance, responsive table in seconds.** 
 
-## 🚀 Upgrade to Pro: Gravity Tables
-Looking for more power? Check out our premium form data solution: **[Advanced Data Tables for Gravity Forms](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**.
-- **Frontend Editing:** Click-to-edit interface.
-- **Bulk Actions:** Manage multiple entries instantly.
-- **Advanced Export:** CSV, Excel, PDF.
+### 🚀 Upgrade to Pro: Gravity Tables
+
+Unlock the full potential of your data with **[Advanced Data Tables for Gravity Forms](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)** — the ultimate solution for managing Gravity Forms entries.
+
+**Why Upgrade?**
+*   ✏️ **Frontend Editing:** Let users update their own entries directly from the table.
+*   🛡️ **Role-Based Permissions:** Control exactly who can view, edit, or delete data.
+*   ⚡ **Bulk Actions:** Delete, approve, or modify hundreds of entries in one click.
+*   🔍 **Advanced Filtering:** Logic-based filters, date ranges, and multi-select dropdowns.
+*   🎨 **Conditional Formatting:** Highlight rows or cells based on their values (e.g., "Status = Overdue").
+*   📥 **Pro Export:** Export filtered views to Excel, CSV, or PDF.
+*   ♾️ **Unlimited Freedom:** No limits on tables, columns, or rows.
+
+**[Start your 7-day free trial today!](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**
 
 TableCrafter is a mission-critical bridge between your dynamic external data and your WordPress site. Built for speed, hardened for security, and optimized for search engines. Now with **Smart Formatting**, **CSV Export**, **Mobile Reflow**, **Pagination**, and **Live Search**.
 
