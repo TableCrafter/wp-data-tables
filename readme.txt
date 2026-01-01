@@ -70,6 +70,18 @@ Limit data from heavy APIs:
 
     [tablecrafter source="..." include="name,price,symbol"]
 
+
+### 🚀 Upgrade to Pro: Gravity Tables
+
+Need more power? Check out our premium form data solution:
+
+**[Advanced Data Tables for Gravity Forms](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**
+*   ✅ **Frontend Editing:** Click any cell to edit data instantly.
+*   ✅ **Bulk Operations:** Delete or edit multiple entries at once.
+*   ✅ **Advanced Filtering:** Date ranges, multi-select, and complex search.
+*   ✅ **Export:** Download your data to CSV, Excel, or PDF.
+*   ✅ **Unlimited:** No limits on the number of tables or entries.
+
 == Frequently Asked Questions ==
 
 = Does this store data in my WordPress database? =
@@ -87,16 +99,6 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 2. **Interactive Frontend** - A live table showing the search bar and pagination footer.
 3. **Admin Dashboard** - The shortcode generator and preview playground.
 
-== Premium Offering ==
-
-Need more power? Check out our premium form data solution:
-
-**[Advanced Data Tables for Gravity Forms](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**
-*   ✅ **Frontend Editing:** Click any cell to edit data instantly.
-*   ✅ **Bulk Operations:** Delete or edit multiple entries at once.
-*   ✅ **Advanced Filtering:** Date ranges, multi-select, and complex search.
-*   ✅ **Export:** Download your data to CSV, Excel, or PDF.
-*   ✅ **Unlimited:** No limits on the number of tables or entries.
 
 == Changelog ==
 
