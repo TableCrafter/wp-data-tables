@@ -1,9 +1,9 @@
-=== TableCrafter – JSON Data Tables & API Data Viewer ===
+=== TableCrafter – WordPress Data Tables & Dynamic Content Plugin ===
 Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.8.0
+Stable tag: 1.9.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -89,6 +89,10 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 1.9.0 =
+* **Smart Nested Data Rendering:** Automatically handles Arrays and Objects. Nested items are now rendered as elegant tags or badges instead of `[object Object]`.
+* **Plugin Rebranding:** Officially renamed to "TableCrafter – WordPress Data Tables & Dynamic Content Plugin" for better alignment with feature scope.
+
 = 1.8.0 =
 * **Custom Column Aliasing:** Rename headers directly in the shortcode using `include="key:My Label"` syntax.
 * **Smart Export:** CSV exports now respect your custom column aliases.
@@ -173,6 +177,9 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 *   Released smart column detection.
 
 == Upgrade Notice ==
+
+= 1.9.0 =
+New Feature: You can now display tags and categories from nested JSON arrays! Plugin has been renamed for clarity.
 
 = 1.8.0 =
 Customize your table headers like a pro with new aliasing syntax: `include="id:Customer ID"`.

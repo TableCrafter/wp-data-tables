@@ -26,6 +26,7 @@ class TableCrafterTests {
         $this->test_export_logic();
         $this->test_formatting_logic();
         $this->test_column_aliasing();
+        $this->test_nested_data_logic();
         $this->test_version_consistency();
         $this->test_directory_structure();
 
@@ -206,6 +207,22 @@ class TableCrafterTests {
             $this->pass($test_name . " (" . $php_v[1] . ")");
         } else {
             $this->fail($test_name, "Version mismatch: PHP({$php_v[1]}) vs Readme({$txt_v[1]})");
+        }
+    }
+
+    private function test_nested_data_logic() {
+        $test_name = "Nested Data (Array/Object) Rendering Logic";
+        
+        $php_content = file_get_contents(__DIR__ . '/../tablecrafter.php');
+        $js_content = file_get_contents(__DIR__ . '/../assets/js/tablecrafter.js');
+
+        $check_php = strpos($php_content, "tc-tag-list") !== false && strpos($php_content, "is_array(\$val)") !== false;
+        $check_js = strpos($js_content, "tc-tag-list") !== false && strpos($js_content, "Array.isArray(val)") !== false;
+
+        if ($check_php && $check_js) {
+            $this->pass($test_name);
+        } else {
+            $this->fail($test_name, "Nested data (Array/Object) logic not found in PHP or JS engine.");
         }
     }
 

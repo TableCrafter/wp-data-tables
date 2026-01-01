@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: TableCrafter – JSON Data Tables & API Data Viewer
+ * Plugin Name: TableCrafter – WordPress Data Tables & Dynamic Content Plugin
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 1.8.0
+ * Version: 1.9.0
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '1.8.0');
+define('TABLECRAFTER_VERSION', '1.9.0');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -509,6 +509,27 @@ class TableCrafter {
         // 5. URLs
         if (strpos($str, 'http://') === 0 || strpos($str, 'https://') === 0) {
             return sprintf('<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>', esc_url($str), esc_html($str));
+        }
+
+        // 6. Arrays (Tags UI)
+        if (is_array($val)) {
+            if (empty($val)) return '';
+            
+            // Check if it's an associative array (Object-like)
+            if (array_keys($val) !== range(0, count($val) - 1)) {
+                $display = isset($val['name']) ? $val['name'] : (isset($val['title']) ? $val['title'] : (isset($val['label']) ? $val['label'] : json_encode($val)));
+                return sprintf('<span class="tc-tag">%s</span>', esc_html((string)$display));
+            }
+
+            $tags = array_map(function($item) {
+                $display = $item;
+                if (is_array($item)) {
+                    $display = isset($item['name']) ? $item['name'] : (isset($item['title']) ? $item['title'] : (isset($item['label']) ? $item['label'] : json_encode($item)));
+                }
+                return sprintf('<span class="tc-tag">%s</span>', esc_html((string)$display));
+            }, $val);
+            
+            return '<div class="tc-tag-list">' . implode('', $tags) . '</div>';
         }
 
         return esc_html($str);

@@ -4,7 +4,7 @@
  * High-performance, SEO-friendly JSON data table engine for WordPress.
  * Supports SSR hydration, live search, client-side pagination, and interactive sorting.
  * 
- * @version 1.5.0
+ * @version 1.8.0
  */
 class TableCrafter {
     /**
@@ -465,11 +465,30 @@ class TableCrafter {
         // 5. ISO Dates (YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS)
         // Regex: matches 2023-01-01 or 2023-01-01T12:00:00Z
         const dateRegex = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(.\d+)?(Z|[\+-]\d{2}:?\d{2})?)?$/;
-        if (dateRegex.test(strVal)) {
+        if (typeof val === 'string' && dateRegex.test(strVal)) {
             const date = new Date(strVal);
             if (!isNaN(date.getTime())) {
                 return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
             }
+        }
+
+        // 6. Arrays (Tags UI)
+        if (Array.isArray(val)) {
+            if (val.length === 0) return '';
+            const tags = val.map(item => {
+                let display = item;
+                if (typeof item === 'object' && item !== null) {
+                    display = item.name || item.title || item.label || JSON.stringify(item);
+                }
+                return `<span class="tc-tag">${this.escapeHTML(String(display))}</span>`;
+            });
+            return `<div class="tc-tag-list">${tags.join('')}</div>`;
+        }
+
+        // 7. Objects (Fallback to property search)
+        if (typeof val === 'object' && val !== null) {
+            const display = val.name || val.title || val.label || val.text || JSON.stringify(val);
+            return `<span class="tc-tag">${this.escapeHTML(String(display))}</span>`;
         }
 
         return this.escapeHTML(strVal);

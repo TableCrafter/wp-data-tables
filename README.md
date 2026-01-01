@@ -1,4 +1,4 @@
-# 🚀 TableCrafter: The SEO-First JSON Table Engine for WordPress
+# 🚀 TableCrafter: WordPress Data Tables & Dynamic Content Plugin
 
 **Turn any JSON API or remote file into a high-performance, responsive table in seconds.** 
 
@@ -60,8 +60,9 @@ The `[tablecrafter]` shortcode remains fully supported:
 
 ---
 
-### 📈 Technical Pedigree (v1.8.0)
+### 📈 Technical Pedigree (v1.9.0)
 
+*   **Smart Nested Rendering:** Auto-detection and Tag/Badge rendering for Arrays and Objects.
 *   **Custom Column Aliasing:** Advanced parsing logic for `key:Alias` headers in PHP and JS.
 *   **Smart Export:** CSV exports respect custom aliases and current sort/filter state.
 *   **Smart Formatting Engine:** Regex-based type detection (ISO 8601/Email/Boolean) in both PHP and JS.
@@ -79,7 +80,7 @@ The `[tablecrafter]` shortcode remains fully supported:
 
 **Contributors:** @fahdi  
 **License:** GPLv2 or later  
-**Stable tag:** 1.8.0  
+**Stable tag:** 1.9.0  
 **Requires PHP:** 7.4+
 
 ---
