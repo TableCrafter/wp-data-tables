@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.9.1
+Stable tag: 1.9.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -105,6 +105,9 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 
 == Changelog ==
+
+= 1.9.2 =
+*   **Performance:** Added intelligent debouncing to Live Search (300ms). Prevents UI freezing when typing rapidly, especially on large datasets.
 
 = 1.9.1 =
 *   **Performance:** Fixed API caching issue where the renderer ignored pre-warmed data. Now uses read-through caching for instant loads.

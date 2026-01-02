@@ -2,6 +2,10 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [1.9.2] - 2026-01-02
+### Changed
+- **Performance:** Added intelligent debouncing (300ms) to Live Search. Prevents UI freezing when typing rapidly in large datasets.
+
 ## [1.9.1] - 2026-01-01
 ### Fixed
 - Fixed API caching issue where the renderer ignored pre-warmed data. Now uses read-through caching for instant loads.

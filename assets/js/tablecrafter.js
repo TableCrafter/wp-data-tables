@@ -4,7 +4,7 @@
  * High-performance, SEO-friendly JSON data table engine for WordPress.
  * Supports SSR hydration, live search, client-side pagination, and interactive sorting.
  * 
- * @version 1.9.1
+ * @version 1.9.2
  */
 class TableCrafter {
     /**
@@ -132,7 +132,7 @@ class TableCrafter {
             this.initExport(searchContainer);
         }
 
-        searchInput.addEventListener('input', (e) => {
+        searchInput.addEventListener('input', this.debounce((e) => {
             const query = e.target.value.toLowerCase();
             this.filteredData = this.allData.filter(row => {
                 return Object.values(row).some(val => String(val).toLowerCase().includes(query));
@@ -145,7 +145,23 @@ class TableCrafter {
 
             this.currentPage = 1;
             this.render();
-        });
+        }, 300));
+    }
+
+    /**
+     * Debounce Utility.
+     * Prevents rapid firing of expensive operations.
+     * 
+     * @param {Function} func The function to debounce.
+     * @param {number} wait Delay in milliseconds.
+     */
+    debounce(func, wait) {
+        let timeout;
+        return function (...args) {
+            const context = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), wait);
+        };
     }
 
     /**
