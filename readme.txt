@@ -109,6 +109,11 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 2.1.0 =
+*   **UI:** Refined dropdown filter styling to perfectly match standard text inputs. 
+*   **Consistency:** Standardized height and focus states for all filter types.
+*   **Core:** Updated `tablecrafter-core` to v1.2.0.
+
 = 2.0.9 =
 *   **Fix:** Improved Date detection heuristic to prevent SKUs and common ID patterns from being incorrectly identified as Dates.
 *   **Core:** Updated `tablecrafter-core` to v1.1.9.
