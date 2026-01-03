@@ -22,12 +22,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Only initialize if both ID and source are present
                 if (source && id) {
-                    new TableCrafter({
-                        selector: '#' + id,
-                        source: source,
-                        proxy: {
-                            url: tablecrafterData.ajaxUrl,
-                            nonce: tablecrafterData.nonce
+                    new TableCrafter('#' + id, {
+                        data: source,
+                        responsive: true,
+                        pagination: true,
+                        pageSize: container.dataset.perPage ? parseInt(container.dataset.perPage) : 10,
+                        api: {
+                            proxy: {
+                                url: tablecrafterData.ajaxUrl,
+                                nonce: tablecrafterData.nonce
+                            }
                         }
                     });
                     container.dataset.tcInitialized = "true";

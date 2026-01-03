@@ -106,6 +106,14 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+
+== Changelog ==
+
+= 2.0.0 =
+*   **Engine Upgrade:** Unified plugin with `tablecrafter-core` 1.1.0 for improved stability and feature parity.
+*   **New Feature:** Added Smart Hydration to prevent "loading flickers" on Server-Side Rendered (SSR) tables.
+*   **Performance:** Background data fetching for smoother interactions.
+
 = 1.9.2 =
 *   **Performance:** Added intelligent debouncing to Live Search (300ms). Prevents UI freezing when typing rapidly, especially on large datasets.
 
