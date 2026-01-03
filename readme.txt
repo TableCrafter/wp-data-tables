@@ -109,6 +109,10 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 2.1.6 =
+*   **Hotfix:** Resolved a ReferenceError (container is not defined) in the multiselect filter logic.
+*   **Core:** Updated `tablecrafter-core` to v1.2.5.
+
 = 2.1.5 =
 *   **Hotfix:** Fixed a critical RangeError (Maximum call stack size exceeded) that occurred when initializing multiselect filters due to an infinite recursion loop.
 *   **Core:** Updated `tablecrafter-core` to v1.2.4.
