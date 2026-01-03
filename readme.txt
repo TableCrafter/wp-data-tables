@@ -109,6 +109,10 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 2.1.2 =
+*   **UI:** Removed unnecessary container from Multiselect dropdowns for perfect DOM consistency with other filters.
+*   **Core:** Updated `tablecrafter-core` to v1.2.2.
+
 = 2.1.1 =
 *   **UI:** Perfected filter alignment and shadow behavior across all types.
 *   **Consistency:** Removed redundant styles and unified height, padding, and focus effects.
