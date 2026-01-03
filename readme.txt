@@ -104,7 +104,7 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 3. **Admin Dashboard** - The shortcode generator and preview playground.
 
 
-== Changelog ==
+
 
 
 == Changelog ==

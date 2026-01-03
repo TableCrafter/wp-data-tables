@@ -54,12 +54,15 @@ document.addEventListener('DOMContentLoaded', function () {
             container.innerHTML = `<div id="${tableId}" class="tablecrafter-container">${tablecrafterAdmin.i18n.loading}</div>`;
 
             // Initialize the TableCrafter instance with proxy support for admin preview
-            new TableCrafter({
-                selector: '#' + tableId,
-                source: url,
-                proxy: {
-                    url: tablecrafterAdmin.ajaxUrl,
-                    nonce: tablecrafterAdmin.nonce
+            new TableCrafter('#' + tableId, {
+                data: url,
+                pagination: true,
+                responsive: true,
+                api: {
+                    proxy: {
+                        url: tablecrafterAdmin.ajaxUrl,
+                        nonce: tablecrafterAdmin.nonce
+                    }
                 }
             });
         } else {
