@@ -109,6 +109,10 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 2.0.5 =
+*   **Improvement:** Enhanced filter type detection to prevent Names/Emails from becoming dropdowns on small datasets.
+*   **Core:** Updated `tablecrafter-core` to v1.1.5.
+
 = 2.0.4 =
 *   **Fix:** Resolved filter type detection where numeric IDs were incorrectly treated as dates.
 *   **Core:** Updated `tablecrafter-core` to v1.1.4.

@@ -1112,7 +1112,10 @@ class TableCrafter {
           this.filterTypes[field] = 'numberrange';
         }
         // Check if it should be a multiselect (limited unique values)
-        else if (this.uniqueValues[field].length <= 20 && this.uniqueValues[field].length > 1) {
+        // Skip common text fields (name, email, etc)
+        else if (this.uniqueValues[field].length <= 20 &&
+          this.uniqueValues[field].length > 1 &&
+          !/name|email|title|desc|phone|address|subject/i.test(field)) {
           this.filterTypes[field] = 'multiselect';
         }
         // Default to text
