@@ -109,6 +109,10 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 2.0.9 =
+*   **Fix:** Improved Date detection heuristic to prevent SKUs and common ID patterns from being incorrectly identified as Dates.
+*   **Core:** Updated `tablecrafter-core` to v1.1.9.
+
 = 2.0.8 =
 *   **UI:** Balanced 50/50 split for Range Filters (Min/Max) to utilize full field width.
 *   **Core:** Updated `tablecrafter-core` to v1.1.8.

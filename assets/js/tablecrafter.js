@@ -1,6 +1,6 @@
 /**
  * TableCrafter - A lightweight, mobile-responsive data table library
- * @version 1.1.8
+ * @version 1.1.9
  * @author Fahad Murtaza
  * @license MIT
  */
@@ -1104,7 +1104,7 @@ class TableCrafter {
         const sampleValue = values[0];
 
         // Check if it's a date
-        if (this.isDateField(values)) {
+        if (this.isDateField(values) && !/sku|id|ref|code|serial|part/i.test(field)) {
           this.filterTypes[field] = 'daterange';
         }
         // Check if it's numeric
@@ -1133,14 +1133,19 @@ class TableCrafter {
    */
   isDateField(values) {
     const datePatterns = [
-      /^\d{4}-\d{2}-\d{2}/, // YYYY-MM-DD
-      /^\d{2}\/\d{2}\/\d{4}/, // MM/DD/YYYY
-      /^\d{2}-\d{2}-\d{4}/ // MM-DD-YYYY
+      /^\d{4}-\d{2}-\d{2}$/, // YYYY-MM-DD
+      /^\d{2}\/\d{2}\/\d{4}$/, // MM/DD/YYYY
+      /^\d{2}-\d{2}-\d{4}$/, // MM-DD-YYYY
+      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/ // ISO
     ];
 
-    return values.slice(0, 5).every(val => {
+    return values.length > 0 && values.slice(0, 5).every(val => {
+      if (!val) return false;
       const str = val.toString();
-      return datePatterns.some(pattern => pattern.test(str)) || (!isNaN(Date.parse(str)) && isNaN(Number(str)));
+      // Must match strict pattern OR be a valid date parse that is NOT a number
+      // Also ensure it's not too short (Date.parse is very aggressive)
+      return datePatterns.some(pattern => pattern.test(str)) ||
+        (str.length > 6 && !isNaN(Date.parse(str)) && isNaN(Number(str)));
     });
   }
 
