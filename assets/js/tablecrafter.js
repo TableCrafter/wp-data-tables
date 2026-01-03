@@ -1,6 +1,6 @@
 /**
  * TableCrafter - A lightweight, mobile-responsive data table library
- * @version 1.1.6
+ * @version 1.1.7
  * @author Fahad Murtaza
  * @license MIT
  */
@@ -1288,14 +1288,14 @@ class TableCrafter {
 
         // Add global listeners
         document.addEventListener('click', closeDropdown);
-        window.addEventListener('scroll', closeDropdown, { capture: true, once: true });
+        window.addEventListener('scroll', closeDropdown, { capture: true });
       } else {
         closeDropdown();
       }
     };
 
     const closeDropdown = (e) => {
-      if (e && dropdown.contains(e.target)) return; // Don't close if clicking inside
+      if (e && (dropdown.contains(e.target) || e.target === button)) return;
       dropdown.style.display = 'none';
       document.removeEventListener('click', closeDropdown);
       window.removeEventListener('scroll', closeDropdown, { capture: true });
@@ -1307,11 +1307,14 @@ class TableCrafter {
     this.updateMultiselectButton(button, currentFilter);
 
     container.appendChild(button);
-    // Append dropdown to body to avoid clipping? 
-    // Actually, fixed position works even inside container, but z-index context might ideally be body.
-    // However, moving to body requires managing destroy() cleanup.
-    // Let's keep it in container for now, assuming fixed breaks out of overflow.
-    container.appendChild(dropdown);
+
+    // Append dropdown to body to absolute breakout of any container clipping
+    document.body.appendChild(dropdown);
+
+    // Track for cleanup
+    if (!this.dropdowns) this.dropdowns = [];
+    this.dropdowns.push(dropdown);
+
     return container;
   }
 
@@ -3017,6 +3020,12 @@ class TableCrafter {
     this.editingCell = null;
     this.selectedRows.clear();
     this.lookupCache.clear();
+
+    // Cleanup dropdowns appended to body
+    if (this.dropdowns) {
+      this.dropdowns.forEach(dropdown => dropdown.remove());
+      this.dropdowns = [];
+    }
   }
 }
 

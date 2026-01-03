@@ -109,6 +109,11 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 2.0.7 =
+*   **UI:** Compact horizontal layout for Range Filters (Min/Max/Date).
+*   **Fix:** More robust dropdown interaction and cleanup.
+*   **Core:** Updated `tablecrafter-core` to v1.1.7.
+
 = 2.0.6 =
 *   **Fix:** Resolved issue where Dropdown Filters would not open or be clicked on small tables (Fixed Positioning).
 *   **Core:** Updated `tablecrafter-core` to v1.1.6.
