@@ -109,6 +109,10 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 2.0.2 =
+*   **Bug Fix:** Resolved "Invisible Table" issue by auto-discovering columns when none are provided.
+*   **Core:** Updated `tablecrafter-core` to v1.1.2.
+
 = 2.0.1 =
 *   **Bug Fix:** Resolved "Loading..." issue where data was not fetched automatically for URL sources.
 *   **Fix:** Updated Admin Preview to use correct API initialization.

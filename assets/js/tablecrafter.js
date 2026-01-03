@@ -1,6 +1,6 @@
 /**
  * TableCrafter - A lightweight, mobile-responsive data table library
- * @version 1.1.1
+ * @version 1.1.2
  * @author Fahad Murtaza
  * @license MIT
  */
@@ -244,6 +244,9 @@ class TableCrafter {
       this.data = data;
       this.isLoading = false;
 
+      // Auto-discover columns if not provided
+      this.autoDiscoverColumns();
+
       if (this.container.querySelector('.tc-wrapper') || this.container.innerHTML !== '') {
         this.render();
       }
@@ -344,6 +347,20 @@ class TableCrafter {
       if (bulkInfo) {
         bulkInfo.textContent = `${selectedCount} item${selectedCount === 1 ? '' : 's'} selected`;
       }
+    }
+  }
+
+  /**
+   * Auto-discover columns from data
+   */
+  autoDiscoverColumns() {
+    if (this.data.length > 0 && this.config.columns.length === 0) {
+      const firstItem = this.data[0];
+      this.config.columns = Object.keys(firstItem).map(key => ({
+        field: key,
+        label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '),
+        sortable: true
+      }));
     }
   }
 
