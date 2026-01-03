@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.1.7
+Stable tag: 2.1.8
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -108,6 +108,10 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 
 == Changelog ==
+
+= 2.1.8 =
+*   **Fix:** Forced SVN refresh and updated Stable Tag to resolve WordPress.org display issues.
+*   **Core:** Updated `tablecrafter-core` to v1.2.7.
 
 = 2.1.7 =
 *   **Fix:** Updated Stable Tag to ensure changelog and updates are visible on WordPress.org.
