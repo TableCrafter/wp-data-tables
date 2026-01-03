@@ -109,6 +109,11 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 2.0.1 =
+*   **Bug Fix:** Resolved "Loading..." issue where data was not fetched automatically for URL sources.
+*   **Fix:** Updated Admin Preview to use correct API initialization.
+*   **Core:** Updated `tablecrafter-core` to v1.1.1.
+
 = 2.0.0 =
 *   **Engine Upgrade:** Unified plugin with `tablecrafter-core` 1.1.0 for improved stability and feature parity.
 *   **New Feature:** Added Smart Hydration to prevent "loading flickers" on Server-Side Rendered (SSR) tables.

@@ -1,6 +1,6 @@
 /**
  * TableCrafter - A lightweight, mobile-responsive data table library
- * @version 1.1.0
+ * @version 1.1.1
  * @author Fahad Murtaza
  * @license MIT
  */
@@ -157,6 +157,7 @@ class TableCrafter {
       } else if (typeof this.config.data === 'string') {
         // URL provided, will load asynchronously
         this.dataUrl = this.config.data;
+        this.loadData();
       }
     }
 
