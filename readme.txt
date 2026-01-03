@@ -109,6 +109,11 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 2.1.1 =
+*   **UI:** Perfected filter alignment and shadow behavior across all types.
+*   **Consistency:** Removed redundant styles and unified height, padding, and focus effects.
+*   **Core:** Updated `tablecrafter-core` to v1.2.1.
+
 = 2.1.0 =
 *   **UI:** Refined dropdown filter styling to perfectly match standard text inputs. 
 *   **Consistency:** Standardized height and focus states for all filter types.
