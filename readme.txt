@@ -109,6 +109,11 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 2.0.3 =
+*   **CRITICAL UPDATE:** Fixed missing styles for filters (CSS was not deploying) and resolved "Invisible Table" bug on all platforms.
+*   **Hotfix:** Added auto-discovery for inline array validation to prevent invisible tables in all contexts.
+*   **Core:** Updated `tablecrafter-core` to v1.1.3.
+
 = 2.0.2 =
 *   **Bug Fix:** Resolved "Invisible Table" issue by auto-discovering columns when none are provided.
 *   **Core:** Updated `tablecrafter-core` to v1.1.2.

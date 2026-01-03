@@ -1,6 +1,6 @@
 /**
  * TableCrafter - A lightweight, mobile-responsive data table library
- * @version 1.1.2
+ * @version 1.1.3
  * @author Fahad Murtaza
  * @license MIT
  */
@@ -154,6 +154,7 @@ class TableCrafter {
     if (this.config.data) {
       if (Array.isArray(this.config.data)) {
         this.data = [...this.config.data];
+        this.autoDiscoverColumns();
       } else if (typeof this.config.data === 'string') {
         // URL provided, will load asynchronously
         this.dataUrl = this.config.data;
