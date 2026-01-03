@@ -109,6 +109,10 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 2.0.6 =
+*   **Fix:** Resolved issue where Dropdown Filters would not open or be clicked on small tables (Fixed Positioning).
+*   **Core:** Updated `tablecrafter-core` to v1.1.6.
+
 = 2.0.5 =
 *   **Improvement:** Enhanced filter type detection to prevent Names/Emails from becoming dropdowns on small datasets.
 *   **Core:** Updated `tablecrafter-core` to v1.1.5.

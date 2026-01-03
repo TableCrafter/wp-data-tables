@@ -1,6 +1,6 @@
 /**
  * TableCrafter - A lightweight, mobile-responsive data table library
- * @version 1.1.5
+ * @version 1.1.6
  * @author Fahad Murtaza
  * @license MIT
  */
@@ -1267,14 +1267,50 @@ class TableCrafter {
       dropdown.appendChild(option);
     });
 
-    button.addEventListener('click', () => {
-      dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-    });
+    // Toggle logic with Fixed Positioning (Popover)
+    const toggleDropdown = (e) => {
+      e.stopPropagation();
+      const isHidden = dropdown.style.display === 'none';
 
-    // Update button text based on selection
+      // Close all other dropdowns
+      document.querySelectorAll('.tc-multiselect-dropdown').forEach(d => d.style.display = 'none');
+
+      if (isHidden) {
+        dropdown.style.display = 'block';
+        dropdown.style.position = 'fixed';
+        dropdown.style.zIndex = '10000'; // High z-index
+
+        const rect = button.getBoundingClientRect();
+        dropdown.style.top = (rect.bottom) + 'px';
+        dropdown.style.left = rect.left + 'px';
+        dropdown.style.width = rect.width + 'px';
+        dropdown.style.maxHeight = '300px'; // Ensure visibility
+
+        // Add global listeners
+        document.addEventListener('click', closeDropdown);
+        window.addEventListener('scroll', closeDropdown, { capture: true, once: true });
+      } else {
+        closeDropdown();
+      }
+    };
+
+    const closeDropdown = (e) => {
+      if (e && dropdown.contains(e.target)) return; // Don't close if clicking inside
+      dropdown.style.display = 'none';
+      document.removeEventListener('click', closeDropdown);
+      window.removeEventListener('scroll', closeDropdown, { capture: true });
+    };
+
+    button.addEventListener('click', toggleDropdown);
+
+    // Initial state
     this.updateMultiselectButton(button, currentFilter);
 
     container.appendChild(button);
+    // Append dropdown to body to avoid clipping? 
+    // Actually, fixed position works even inside container, but z-index context might ideally be body.
+    // However, moving to body requires managing destroy() cleanup.
+    // Let's keep it in container for now, assuming fixed breaks out of overflow.
     container.appendChild(dropdown);
     return container;
   }
