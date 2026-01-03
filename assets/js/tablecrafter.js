@@ -1,6 +1,6 @@
 /**
  * TableCrafter - A lightweight, mobile-responsive data table library
- * @version 1.1.3
+ * @version 1.1.5
  * @author Fahad Murtaza
  * @license MIT
  */
@@ -1137,7 +1137,7 @@ class TableCrafter {
 
     return values.slice(0, 5).every(val => {
       const str = val.toString();
-      return datePatterns.some(pattern => pattern.test(str)) || !isNaN(Date.parse(str));
+      return datePatterns.some(pattern => pattern.test(str)) || (!isNaN(Date.parse(str)) && isNaN(Number(str)));
     });
   }
 

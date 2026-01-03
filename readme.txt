@@ -109,6 +109,10 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 2.0.4 =
+*   **Fix:** Resolved filter type detection where numeric IDs were incorrectly treated as dates.
+*   **Core:** Updated `tablecrafter-core` to v1.1.4.
+
 = 2.0.3 =
 *   **CRITICAL UPDATE:** Fixed missing styles for filters (CSS was not deploying) and resolved "Invisible Table" bug on all platforms.
 *   **Hotfix:** Added auto-discovery for inline array validation to prevent invisible tables in all contexts.
