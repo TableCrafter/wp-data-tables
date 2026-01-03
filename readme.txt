@@ -109,6 +109,10 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 == Changelog ==
 
+= 2.0.8 =
+*   **UI:** Balanced 50/50 split for Range Filters (Min/Max) to utilize full field width.
+*   **Core:** Updated `tablecrafter-core` to v1.1.8.
+
 = 2.0.7 =
 *   **UI:** Compact horizontal layout for Range Filters (Min/Max/Date).
 *   **Fix:** More robust dropdown interaction and cleanup.

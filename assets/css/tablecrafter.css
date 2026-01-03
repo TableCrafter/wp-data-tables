@@ -241,7 +241,8 @@
 
 .tc-number-min,
 .tc-number-max {
-  width: 70px;
+  flex: 1;
+  min-width: 0;
   padding: 8px 4px;
   text-align: center;
   border: 1px solid #ced4da;
