@@ -2,6 +2,112 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.0] - 2026-01-04
+### Added
+- **Docs:** Expanded the FAQ section with more common technical questions.
+- **Docs:** Converted contact email to a mailto link.
+- **Core:** Updated `tablecrafter-core` to v1.3.0.
+
+## [2.1.9] - 2026-01-04
+### Added
+- **Docs:** Added contact information for custom plugin customization requests.
+
+## [2.1.8] - 2026-01-04
+### Fixed
+- **Deployment:** Forced SVN refresh and updated Stable Tag to resolve WordPress.org display issues.
+- **Core:** Updated `tablecrafter-core` to v1.2.7.
+
+## [2.1.7] - 2026-01-04
+### Fixed
+- **Deployment:** Updated Stable Tag to ensure changelog and updates are visible on WordPress.org.
+- **Core:** Updated `tablecrafter-core` to v1.2.6.
+
+## [2.1.6] - 2026-01-04
+### Fixed
+- **Hotfix:** Resolved a ReferenceError (container is not defined) in the multiselect filter logic.
+- **Core:** Updated `tablecrafter-core` to v1.2.5.
+
+## [2.1.5] - 2026-01-04
+### Fixed
+- **Hotfix:** Fixed a critical RangeError (Maximum call stack size exceeded) during multiselect initialization.
+- **Core:** Updated `tablecrafter-core` to v1.2.4.
+
+## [2.1.4] - 2026-01-04
+### Changed
+- **Demo Data:** Updated Sales Metrics year to 2026 for a better filtering experience.
+
+## [2.1.3] - 2026-01-04
+### Fixed
+- **UI:** Nuked legacy multiselect container styles that were causing inconsistent shadows and borders.
+- **Core:** Updated `tablecrafter-core` to v1.2.3.
+
+## [2.1.2] - 2026-01-04
+### Fixed
+- **UI:** Removed unnecessary container from Multiselect dropdowns for perfect DOM consistency.
+- **Core:** Updated `tablecrafter-core` to v1.2.2.
+
+## [2.1.1] - 2026-01-04
+### Fixed
+- **UI:** Perfected filter alignment and shadow behavior across all types.
+- **Consistency:** Unified height, padding, and focus effects for all inputs.
+- **Core:** Updated `tablecrafter-core` to v1.2.1.
+
+## [2.1.0] - 2026-01-04
+### Fixed
+- **UI:** Refined dropdown filter styling to perfectly match standard text inputs.
+- **Core:** Updated `tablecrafter-core` to v1.2.0.
+
+## [2.0.9] - 2026-01-04
+### Fixed
+- **Logic:** Improved Date detection heuristic to prevent SKUs/IDs from being identified as Dates.
+- **Core:** Updated `tablecrafter-core` to v1.1.9.
+
+## [2.0.8] - 2026-01-04
+### Fixed
+- **UI:** Balanced 50/50 split for Range Filters.
+- **Core:** Updated `tablecrafter-core` to v1.1.8.
+
+## [2.0.7] - 2026-01-04
+### Fixed
+- **UI:** Compact horizontal layout for Range Filters.
+- **Core:** Updated `tablecrafter-core` to v1.1.7.
+
+## [2.0.6] - 2026-01-04
+### Fixed
+- **Logic:** Resolved dropdown clipping issue via Fixed Positioning.
+- **Core:** Updated `tablecrafter-core` to v1.1.6.
+
+## [2.0.5] - 2026-01-04
+### Fixed
+- **Logic:** Enhanced filter type detection to prevent false positives on small datasets.
+- **Core:** Updated `tablecrafter-core` to v1.1.5.
+
+## [2.0.4] - 2026-01-04
+### Fixed
+- **Logic:** Numeric IDs no longer incorrectly treated as dates.
+- **Core:** Updated `tablecrafter-core` to v1.1.4.
+
+## [2.0.3] - 2026-01-03
+### Fixed
+- **CRITICAL:** Fixed missing CSS deployment and "Invisible Table" bug.
+- **Core:** Updated `tablecrafter-core` to v1.1.3.
+
+## [2.0.2] - 2026-01-03
+### Fixed
+- **Bug:** Resolved "Invisible Table" issue via column auto-discovery.
+- **Core:** Updated `tablecrafter-core` to v1.1.2.
+
+## [2.0.1] - 2026-01-03
+### Fixed
+- **Bug:** Resolved "Loading..." issue for remote sources.
+- **Admin:** Updated Admin Preview API initialization.
+- **Core:** Updated `tablecrafter-core` to v1.1.1.
+
+## [2.0.0] - 2026-01-03
+### Added
+- **Engine Upgrade:** Unified with `tablecrafter-core` 1.1.0.
+- **Hydration:** Added Smart Hydration for SSR tables.
+
 ## [1.9.2] - 2026-01-02
 ### Changed
 - **Performance:** Added intelligent debouncing (300ms) to Live Search. Prevents UI freezing when typing rapidly in large datasets.

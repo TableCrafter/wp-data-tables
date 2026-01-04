@@ -17,6 +17,10 @@ Unlock the full potential of your data with **[Advanced Data Tables for Gravity 
 
 **[Start your 7-day free trial today!](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**
 
+### 🛠️ Custom Customization
+Need a specific feature, a custom API integration, or a unique table layout? Contact me at **[info@fahdmurtaza.com](mailto:info@fahdmurtaza.com)** if you need to customise the plugin in any way for a fee. 
+
+
 TableCrafter is a mission-critical bridge between your dynamic external data and your WordPress site. Built for speed, hardened for security, and optimized for search engines. Now with **Smart Formatting**, **CSV Export**, **Mobile Reflow**, **Pagination**, and **Live Search**.
 
 ---
@@ -75,7 +79,8 @@ The `[tablecrafter]` shortcode remains fully supported:
 
 ---
 
-### 📈 Technical Pedigree (v1.9.0)
+### 📈 Technical Pedigree (v2.2.0)
+
 
 *   **Smart Nested Rendering:** Auto-detection and Tag/Badge rendering for Arrays and Objects.
 *   **Custom Column Aliasing:** Advanced parsing logic for `key:Alias` headers in PHP and JS.
@@ -95,8 +100,9 @@ The `[tablecrafter]` shortcode remains fully supported:
 
 **Contributors:** @fahdi  
 **License:** GPLv2 or later  
-**Stable tag:** 1.9.0  
+**Stable tag:** 2.2.1  
 **Requires PHP:** 7.4+
+
 
 ---
 

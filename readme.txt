@@ -123,10 +123,10 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 3. **Admin Dashboard** - The shortcode generator and preview playground.
 
 
-
-
-
 == Changelog ==
+
+= 2.2.1 =
+*   **Docs:** Synchronized README.md and CHANGELOG.md with all recent engine upgrades and fixes.
 
 = 2.2.0 =
 *   **Docs:** Expanded the FAQ section with more common technical questions.
