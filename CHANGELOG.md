@@ -2,6 +2,16 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.3] - 2026-01-05
+### Added
+- **Block:** New "Demo URL" selector in Gutenberg block settings for quick testing with sample datasets.
+- **Block:** Integrated TableCrafter CSS into the block editor for a true "What You See Is What You Get" experience.
+
+### Fixed
+- **Block:** Resolved issue where "Enable Live Search" and "Enable Export Tools" toggles in the Gutenberg block were not correctly passing settings to the frontend.
+- **Frontend:** Improved attribute parsing in `frontend.js` to ensure boolean settings are correctly interpreted.
+- **Security:** Standardized data passing to the block script via `wp_localize_script`.
+
 ## [2.2.0] - 2026-01-04
 ### Added
 - **Docs:** Expanded the FAQ section with more common technical questions.
