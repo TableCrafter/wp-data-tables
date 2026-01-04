@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.2.2');
+define('TABLECRAFTER_VERSION', '2.2.4');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -328,6 +328,16 @@ class TableCrafter {
             'per_page' => 0
         ), $atts, 'tablecrafter');
         
+        // Normalize boolean-ish attributes
+        foreach (array('search', 'export') as $bool_att) {
+            if (is_string($atts[$bool_att])) {
+                $lower = strtolower($atts[$bool_att]);
+                $atts[$bool_att] = ($lower === 'true' || $lower === '1' || $lower === 'yes');
+            } else {
+                $atts[$bool_att] = (bool)$atts[$bool_att];
+            }
+        }
+        
         $atts['source'] = esc_url_raw($atts['source']);
         
         if (empty($atts['source'])) {
@@ -335,7 +345,15 @@ class TableCrafter {
         }
 
         // SWR (Stale-While-Revalidate) Logic
-        $cache_key = 'tc_html_' . md5($atts['source'] . $atts['include'] . $atts['exclude']);
+        // Include search, export, and per_page in the cache key to prevent collision
+        $cache_key = 'tc_html_' . md5(
+            $atts['source'] . 
+            $atts['include'] . 
+            $atts['exclude'] . 
+            ($atts['search'] ? '1' : '0') . 
+            ($atts['export'] ? '1' : '0') . 
+            $atts['per_page']
+        );
         $cache_data = get_transient($cache_key);
         $html_content = '';
 

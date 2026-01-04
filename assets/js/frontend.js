@@ -14,8 +14,9 @@ document.addEventListener('DOMContentLoaded', function () {
         // Check if the TableCrafter library is loaded
         if (typeof TableCrafter !== 'undefined') {
             containers.forEach(container => {
-                // If already initialized, skip
-                if (container.dataset.tcInitialized) return;
+                // If already initialized OR hydrating, skip redundant checks
+                // but ensure we call the library. The library now handles SSR detection.
+                if (container.dataset.tcInitialized === "true" && !container.dataset.ssr) return;
 
                 const source = container.getAttribute('data-source');
                 const id = container.getAttribute('id');

@@ -2,6 +2,12 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.4] - 2026-01-05
+### Fixed
+- **Core:** Implemented "Hydration Mode" to support injecting filters and export tools into server-side rendered (SSR) tables without flickering.
+- **WP Plugin:** Fixed cache key collision bug where toggling Search/Export settings in Gutenberg was not updating the table output.
+- **WP Plugin:** Improved attribute normalization for robust boolean parsing.
+
 ## [2.2.3] - 2026-01-05
 ### Added
 - **Block:** New "Demo URL" selector in Gutenberg block settings for quick testing with sample datasets.
