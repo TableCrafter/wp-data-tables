@@ -84,7 +84,7 @@ Unlock the full potential of your data with **[Advanced Data Tables for Gravity 
 *   📥 **Pro Export:** Export filtered views to Excel, CSV, or PDF.
 *   ♾️ **Unlimited Freedom:** No limits on tables, columns, or rows.
 
-**[Start your 7-day free trial today!](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**
+**[Start your 10-day free trial today!](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**
 
 ### 🛠️ Custom Customization
 Need a specific feature, a custom API integration, or a unique table layout? Contact me at **[info@fahdmurtaza.com](mailto:info@fahdmurtaza.com)** if you need to customise the plugin in any way for a fee. 
