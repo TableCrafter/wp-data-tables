@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.1.8
+Stable tag: 2.1.9
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -86,6 +86,10 @@ Unlock the full potential of your data with **[Advanced Data Tables for Gravity 
 
 **[Start your 7-day free trial today!](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**
 
+### 🛠️ Custom Customization
+Need a specific feature, a custom API integration, or a unique table layout? Contact me at **info@fahdmurtaza.com** if you need to customise the plugin in any way for a fee. 
+
+
 == Frequently Asked Questions ==
 
 = Does this store data in my WordPress database? =
@@ -108,6 +112,9 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 
 == Changelog ==
+
+= 2.1.9 =
+*   **Docs:** Added contact information for custom plugin customization requests.
 
 = 2.1.8 =
 *   **Fix:** Forced SVN refresh and updated Stable Tag to resolve WordPress.org display issues.
