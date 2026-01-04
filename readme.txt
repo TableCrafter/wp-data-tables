@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.1.9
+Stable tag: 2.2.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -87,7 +87,7 @@ Unlock the full potential of your data with **[Advanced Data Tables for Gravity 
 **[Start your 7-day free trial today!](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**
 
 ### 🛠️ Custom Customization
-Need a specific feature, a custom API integration, or a unique table layout? Contact me at **info@fahdmurtaza.com** if you need to customise the plugin in any way for a fee. 
+Need a specific feature, a custom API integration, or a unique table layout? Contact me at **[info@fahdmurtaza.com](mailto:info@fahdmurtaza.com)** if you need to customise the plugin in any way for a fee. 
 
 
 == Frequently Asked Questions ==
@@ -101,6 +101,21 @@ TableCrafter serves "stale" (cached) data instantly while refreshing the source 
 = Is it secure? =
 Yes. We implement SSRF protection to prevent access to internal networks and use strict WordPress capability checks for all proxy operations.
 
+= Can I use this for password-protected APIs? =
+The free version is designed for public or key-based APIs (where the key is in the URL). For advanced OAuth or header-based authentication, please check out the Pro version or contact us for a custom solution.
+
+= How often does the data refresh? =
+By default, TableCrafter uses Stale-While-Revalidate (SWR) caching. It serves cached data instantly and refreshes from the source in the background. You can control the cache duration via filters or wait for the Pro version which includes a visual cache manager.
+
+= Is it possible to customize the table styling? =
+Absolutely! TableCrafter uses standard HTML table structures. You can add your own CSS to your theme to override any styles. We also use CSS variables for many common properties like colors and padding.
+
+= What if my API has CORS issues? =
+TableCrafter includes a built-in Server-Side Proxy. When you use a remote URL as a source, the data is fetched by your server first, which completely bypasses any browser-based CORS restrictions.
+
+= Do you offer custom development? =
+Yes! If you need specific features, deep integrations, or custom designs, I am available for hire. Please contact me at **[info@fahdmurtaza.com](mailto:info@fahdmurtaza.com)** to discuss your project.
+
 == Screenshots ==
 
 1. **Gutenberg Block** - The native TableCrafter block with visual sidebar controls.
@@ -112,6 +127,11 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 
 
 == Changelog ==
+
+= 2.2.0 =
+*   **Docs:** Expanded the FAQ section with more common technical questions.
+*   **Docs:** Converted contact email to a mailto link.
+*   **Core:** Updated `tablecrafter-core` to v1.3.0.
 
 = 2.1.9 =
 *   **Docs:** Added contact information for custom plugin customization requests.
