@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – WordPress Data Tables & Dynamic Content Plugin
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 2.2.2
+ * Version: 2.2.3
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -253,6 +253,13 @@ class TableCrafter {
             return;
         }
 
+        wp_register_style(
+            'tablecrafter-style',
+            TABLECRAFTER_URL . 'assets/css/tablecrafter.css',
+            array(),
+            TABLECRAFTER_VERSION
+        );
+
         wp_register_script(
             'tablecrafter-block',
             TABLECRAFTER_URL . 'assets/js/block.js',
@@ -260,8 +267,18 @@ class TableCrafter {
             TABLECRAFTER_VERSION
         );
 
+        wp_localize_script('tablecrafter-block', 'tablecrafterData', array(
+            'demoUrls' => array(
+                array('label' => __('Select a demo...', 'tablecrafter-wp-data-tables'), 'value' => ''),
+                array('label' => __('User Directory', 'tablecrafter-wp-data-tables'), 'value' => TABLECRAFTER_URL . 'demo-data/users.json'),
+                array('label' => __('Product Inventory', 'tablecrafter-wp-data-tables'), 'value' => TABLECRAFTER_URL . 'demo-data/products.json'),
+                array('label' => __('Sales Metrics', 'tablecrafter-wp-data-tables'), 'value' => TABLECRAFTER_URL . 'demo-data/metrics.json'),
+            )
+        ));
+
         register_block_type('tablecrafter/data-table', array(
             'editor_script' => 'tablecrafter-block',
+            'style'         => 'tablecrafter-style',
             'render_callback' => array($this, 'render_block_callback'),
             'attributes' => array(
                 'source'  => array('type' => 'string', 'default' => ''),
@@ -306,8 +323,8 @@ class TableCrafter {
             'include' => '',
             'exclude' => '',
             'root'    => '',
-            'search'  => 'false',
-            'export'  => 'false',
+            'search'  => false,
+            'export'  => false,
             'per_page' => 0
         ), $atts, 'tablecrafter');
         
@@ -355,8 +372,8 @@ class TableCrafter {
              data-include="<?php echo esc_attr($atts['include']); ?>"
              data-exclude="<?php echo esc_attr($atts['exclude']); ?>"
              data-root="<?php echo esc_attr($atts['root']); ?>"
-             data-search="<?php echo esc_attr($atts['search']); ?>"
-             data-export="<?php echo esc_attr($atts['export']); ?>"
+             data-search="<?php echo $atts['search'] ? 'true' : 'false'; ?>"
+             data-export="<?php echo $atts['export'] ? 'true' : 'false'; ?>"
              data-per-page="<?php echo esc_attr($atts['per_page']); ?>"
              data-ssr="true">
             <?php echo $html_content ? $html_content : '<div class="tc-loading">' . esc_html__('Loading TableCrafter...', 'tablecrafter-wp-data-tables') . '</div>'; ?>

@@ -19,14 +19,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const source = container.getAttribute('data-source');
                 const id = container.getAttribute('id');
+                const search = container.getAttribute('data-search') === 'true' || container.getAttribute('data-search') === '1';
+                const exportable = container.getAttribute('data-export') === 'true' || container.getAttribute('data-export') === '1';
+                const perPage = container.getAttribute('data-per-page') ? parseInt(container.getAttribute('data-per-page')) : 0;
 
                 // Only initialize if both ID and source are present
                 if (source && id) {
                     new TableCrafter('#' + id, {
                         data: source,
                         responsive: true,
-                        pagination: true,
-                        pageSize: container.dataset.perPage ? parseInt(container.dataset.perPage) : 10,
+                        pagination: perPage > 0,
+                        pageSize: perPage > 0 ? perPage : 25,
+                        filterable: search,
+                        exportable: exportable,
                         api: {
                             proxy: {
                                 url: tablecrafterData.ajaxUrl,

@@ -7,7 +7,7 @@
 (function (blocks, editor, components, serverSideRender, element) {
     const el = element.createElement;
     const { InspectorControls } = editor;
-    const { PanelBody, TextControl, ToggleControl, ExternalLink } = components;
+    const { PanelBody, TextControl, ToggleControl, ExternalLink, SelectControl } = components;
 
     blocks.registerBlockType('tablecrafter/data-table', {
         title: 'TableCrafter',
@@ -51,6 +51,13 @@
                             value: attributes.source,
                             onChange: updateSource,
                             help: 'The URL of your JSON data source (must be public).'
+                        }),
+                        el(SelectControl, {
+                            label: 'Quick Demo',
+                            value: attributes.source,
+                            options: window.tablecrafterData ? window.tablecrafterData.demoUrls : [],
+                            onChange: updateSource,
+                            help: 'Select a demo dataset to quickly see how TableCrafter works.'
                         }),
                         el(TextControl, {
                             label: 'JSON Root Path (Optional)',

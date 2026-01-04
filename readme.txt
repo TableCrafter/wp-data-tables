@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.0
+Stable tag: 2.2.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -351,3 +351,8 @@ Performance Update: Adds Stale-While-Revalidate caching for even faster page loa
 
 = 1.2.0 =
 Major Update: TableCrafter now renders tables server-side! This improves SEO and eliminates the "Loading" flicker.
+= 2.2.3 =
+* Fix: Enable Live Search and Export Tools toggles in Gutenberg block.
+* Fix: Block Editor styles not loading correctly in some environments.
+* New: Added Demo URL selector to the block settings for easier testing.
+* Enhancement: Improved attribute parsing for better reliability.
