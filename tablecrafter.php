@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – WordPress Data Tables & Dynamic Content Plugin
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 2.2.5
+ * Version: 2.2.6
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.2.5');
+define('TABLECRAFTER_VERSION', '2.2.6');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -355,6 +355,7 @@ class TableCrafter {
 
         if ($cache_data !== false) {
             $html_content = isset($cache_data['html']) ? $cache_data['html'] : '';
+            $initial_data = isset($cache_data['data']) ? $cache_data['data'] : array();
             $timestamp = isset($cache_data['time']) ? $cache_data['time'] : 0;
             
             // Trigger invisible refresh if cache is older than 5 mins
@@ -365,10 +366,13 @@ class TableCrafter {
             }
         } else {
             // First time render (Synch)
-            $html_content = $this->fetch_and_render_php($atts);
-            if ($html_content) {
+            $render_result = $this->fetch_and_render_php($atts);
+            if ($render_result && is_array($render_result)) {
+                $html_content = $render_result['html'];
+                $initial_data = $render_result['data'];
                 set_transient($cache_key, array(
                     'html' => $html_content,
+                    'data' => $initial_data,
                     'time' => time()
                 ), HOUR_IN_SECONDS);
             }
@@ -391,6 +395,9 @@ class TableCrafter {
              data-per-page="<?php echo esc_attr($atts['per_page']); ?>"
              data-ssr="true">
             <?php echo $html_content ? $html_content : '<div class="tc-loading">' . esc_html__('Loading TableCrafter...', 'tablecrafter-wp-data-tables') . '</div>'; ?>
+            <?php if (!empty($initial_data)) : ?>
+                <script type="application/json" class="tc-initial-data"><?php echo wp_json_encode($initial_data); ?></script>
+            <?php endif; ?>
         </div>
         <?php
         return ob_get_clean();
@@ -402,7 +409,7 @@ class TableCrafter {
      * Performs remote API hit and converts JSON into crawlable HTML table.
      * 
      * @param array $atts Configuration attributes.
-     * @return string|false HTML or false on failure.
+     * @return array|false array('html' => string, 'data' => array) or false on failure.
      */
     private function fetch_and_render_php($atts) {
         // 1. Try Cache First
@@ -504,7 +511,10 @@ class TableCrafter {
         }
         $html .= '</tbody></table>';
 
-        return $html;
+        return array(
+            'html' => $html,
+            'data' => $data
+        );
     }
 
     /**

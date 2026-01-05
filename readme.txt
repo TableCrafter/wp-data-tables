@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.5
+Stable tag: 2.2.6
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -351,6 +351,12 @@ Performance Update: Adds Stale-While-Revalidate caching for even faster page loa
 
 = 1.2.0 =
 Major Update: TableCrafter now renders tables server-side! This improves SEO and eliminates the "Loading" flicker.
+= 2.2.6 =
+* Performance: Implemented "Zero-Latency Hydration" to eliminate redundant network requests.
+* Optimization: Tables now become interactive instantly upon page load by utilizing embedded data payloads.
+* Fix: Resolved a critical "Double Fetch" bug that wasted user bandwidth and server resources.
+* Maintenance: Updated core TableCrafter library to v1.4.1.
+
 = 2.2.5 =
 * Feature: Added "Copy to Clipboard" export tool for quick spreadsheet integration.
 * UX: Integrated Global Search directly into a unified filters area for a cleaner interface.
