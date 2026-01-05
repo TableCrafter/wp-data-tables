@@ -4,6 +4,7 @@ All notable changes to TableCrafter will be documented in this file.
 
 ## [2.2.6] - 2026-01-06
 ### Added
+- **Preview:** Integrated **WordPress Playground Blueprint** to enable the "Live Preview" feature on WordPress.org. Users can now test TableCrafter instantly in their browser!
 - **Performance:** Implemented "Zero-Latency Hydration" to eliminate redundant network requests.
 - **Optimization:** Tables now become interactive instantly upon page load by utilizing embedded data payloads.
 

@@ -1,0 +1,20 @@
+{
+    "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+    "steps": [
+        {
+            "step": "login",
+            "username": "admin",
+            "password": "password"
+        },
+        {
+            "step": "installPlugin",
+            "pluginData": {
+                "resource": "wordpress.org/plugins",
+                "slug": "tablecrafter-wp-data-tables"
+            },
+            "options": {
+                "activate": true
+            }
+        }
+    ]
+}

@@ -125,232 +125,6 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 
 == Changelog ==
 
-= 2.2.1 =
-*   **Docs:** Synchronized README.md and CHANGELOG.md with all recent engine upgrades and fixes.
-
-= 2.2.0 =
-*   **Docs:** Expanded the FAQ section with more common technical questions.
-*   **Docs:** Converted contact email to a mailto link.
-*   **Core:** Updated `tablecrafter-core` to v1.3.0.
-
-= 2.1.9 =
-*   **Docs:** Added contact information for custom plugin customization requests.
-
-= 2.1.8 =
-*   **Fix:** Forced SVN refresh and updated Stable Tag to resolve WordPress.org display issues.
-*   **Core:** Updated `tablecrafter-core` to v1.2.7.
-
-= 2.1.7 =
-*   **Fix:** Updated Stable Tag to ensure changelog and updates are visible on WordPress.org.
-*   **Core:** Updated `tablecrafter-core` to v1.2.6.
-
-= 2.1.6 =
-*   **Hotfix:** Resolved a ReferenceError (container is not defined) in the multiselect filter logic.
-*   **Core:** Updated `tablecrafter-core` to v1.2.5.
-
-= 2.1.5 =
-*   **Hotfix:** Fixed a critical RangeError (Maximum call stack size exceeded) that occurred when initializing multiselect filters due to an infinite recursion loop.
-*   **Core:** Updated `tablecrafter-core` to v1.2.4.
-
-= 2.1.4 =
-*   **Demo Data:** Updated Sales Metrics year to 2026 for a better filtering experience.
-
-= 2.1.3 =
-*   **Fix:** Nuked legacy multiselect container styles that were causing inconsistent shadows and borders.
-*   **Core:** Updated `tablecrafter-core` to v1.2.3.
-
-= 2.1.2 =
-*   **UI:** Removed unnecessary container from Multiselect dropdowns for perfect DOM consistency with other filters.
-*   **Core:** Updated `tablecrafter-core` to v1.2.2.
-
-= 2.1.1 =
-*   **UI:** Perfected filter alignment and shadow behavior across all types.
-*   **Consistency:** Removed redundant styles and unified height, padding, and focus effects.
-*   **Core:** Updated `tablecrafter-core` to v1.2.1.
-
-= 2.1.0 =
-*   **UI:** Refined dropdown filter styling to perfectly match standard text inputs. 
-*   **Consistency:** Standardized height and focus states for all filter types.
-*   **Core:** Updated `tablecrafter-core` to v1.2.0.
-
-= 2.0.9 =
-*   **Fix:** Improved Date detection heuristic to prevent SKUs and common ID patterns from being incorrectly identified as Dates.
-*   **Core:** Updated `tablecrafter-core` to v1.1.9.
-
-= 2.0.8 =
-*   **UI:** Balanced 50/50 split for Range Filters (Min/Max) to utilize full field width.
-*   **Core:** Updated `tablecrafter-core` to v1.1.8.
-
-= 2.0.7 =
-*   **UI:** Compact horizontal layout for Range Filters (Min/Max/Date).
-*   **Fix:** More robust dropdown interaction and cleanup.
-*   **Core:** Updated `tablecrafter-core` to v1.1.7.
-
-= 2.0.6 =
-*   **Fix:** Resolved issue where Dropdown Filters would not open or be clicked on small tables (Fixed Positioning).
-*   **Core:** Updated `tablecrafter-core` to v1.1.6.
-
-= 2.0.5 =
-*   **Improvement:** Enhanced filter type detection to prevent Names/Emails from becoming dropdowns on small datasets.
-*   **Core:** Updated `tablecrafter-core` to v1.1.5.
-
-= 2.0.4 =
-*   **Fix:** Resolved filter type detection where numeric IDs were incorrectly treated as dates.
-*   **Core:** Updated `tablecrafter-core` to v1.1.4.
-
-= 2.0.3 =
-*   **CRITICAL UPDATE:** Fixed missing styles for filters (CSS was not deploying) and resolved "Invisible Table" bug on all platforms.
-*   **Hotfix:** Added auto-discovery for inline array validation to prevent invisible tables in all contexts.
-*   **Core:** Updated `tablecrafter-core` to v1.1.3.
-
-= 2.0.2 =
-*   **Bug Fix:** Resolved "Invisible Table" issue by auto-discovering columns when none are provided.
-*   **Core:** Updated `tablecrafter-core` to v1.1.2.
-
-= 2.0.1 =
-*   **Bug Fix:** Resolved "Loading..." issue where data was not fetched automatically for URL sources.
-*   **Fix:** Updated Admin Preview to use correct API initialization.
-*   **Core:** Updated `tablecrafter-core` to v1.1.1.
-
-= 2.0.0 =
-*   **Engine Upgrade:** Unified plugin with `tablecrafter-core` 1.1.0 for improved stability and feature parity.
-*   **New Feature:** Added Smart Hydration to prevent "loading flickers" on Server-Side Rendered (SSR) tables.
-*   **Performance:** Background data fetching for smoother interactions.
-
-= 1.9.2 =
-*   **Performance:** Added intelligent debouncing to Live Search (300ms). Prevents UI freezing when typing rapidly, especially on large datasets.
-
-= 1.9.1 =
-*   **Performance:** Fixed API caching issue where the renderer ignored pre-warmed data. Now uses read-through caching for instant loads.
-*   **Docs:** Added information about premium Gravity Tables addon.
-
-= 1.9.0 =
-* **Smart Nested Data Rendering:** Automatically handles Arrays and Objects. Nested items are now rendered as elegant tags or badges instead of `[object Object]`.
-* **Plugin Rebranding:** Officially renamed to "TableCrafter – WordPress Data Tables & Dynamic Content Plugin" for better alignment with feature scope.
-
-= 1.8.0 =
-* **Custom Column Aliasing:** Rename headers directly in the shortcode using `include="key:My Label"` syntax.
-* **Smart Export:** CSV exports now respect your custom column aliases.
-* **Mobile Reflow:** Mobile card view now uses professional aliases for labels.
-
-= 1.7.0 =
-* **Smart Data Formatting:** Automatically detects and formats **Dates** (to locale string), **Booleans** (Yes/No badges), and **Emails** (mailto links).
-* **UI Polish:** Added professional styles for Boolean badges and links.
-
-= 1.6.0 =
-* **Data Export:** Added toolbar with "Export to CSV" and "Copy to Clipboard" buttons.
-* **Context-Aware:** Export features respect current search filters and column settings.
-* **Settings:** New `export="true"` attribute for shortcode and Gutenberg block toggle.
-
-= 1.5.1 =
-* **Mobile-First Reflow:** Tables now intelligently transform into a "Card View" on small screens, eliminating the need for horizontal scrolling.
-* **Semantic Accessibility:** Added `data-tc-label` attributes to ensure mobile views stay readable and data-heavy pages remain user-friendly.
-
-= 1.5.0 =
-* **Interactive Sorting:** Users can now click any column header to sort data in ascending or descending order.
-* **Smart Sorting:** Logic automatically handles numeric, string, and alpha-numeric data types.
-* **Visual Cues:** Added sort indicators (arrows) to table headers.
-* **UX:** Sorting intelligently integrates with Pagination (resets to page 1) and Live Search (sorts filtered results).
-
-= 1.4.1 =
-* **Security Hardening:** Implemented SSRF (Server-Side Request Forgery) protection to block proxying of internal network IPs.
-* **Authorization:** Added explicit capability checks (`current_user_can`) to the AJAX data proxy.
-* **Code Quality:** Added PHP return types and improved method documentation across the codebase.
-
-= 1.4.0 =
-* **Pagination Support:** Added client-side pagination for smoother navigation of large datasets.
-* **Control UI:** New Pagination footer with Previous/Next controls.
-* **Smart Search Integration:** Live Search now intelligently resets and works across paginated result sets.
-* **Data Settings:** Added 'per_page' attribute to both shortcode and block sidebar.
-
-= 1.3.1 =
-* **Instant Filtering:** Added Live Search support for real-time dataset filtering.
-* **UX:** Added search bar toggle in Gutenberg block and shortcode attribute.
-* **Architecture:** Enhanced hybrid hydration to support interactive features immediately.
-
-= 1.3.0 =
-* **Gutenberg Ready:** Added native WordPress Block support with live preview.
-* **UX:** New TableCrafter block includes a sidebar with all configuration options (Source, Root, Include/Exclude).
-* **SSR Integration:** Blocks use the high-performance SSR engine and SWR caching for instant previews.
-
-= 1.2.2 =
-* **Deep Connectivity:** Added 'root' attribute to support nested JSON structures. 
-* **Compatibility:** Now supports APIs that wrap data (e.g., WordPress REST, Shopify, etc.).
-* **Hybrid Sync:** Updated JS library to handle nested roots in preview and manual fetch modes.
-
-= 1.2.1 =
-* **Instant TTFB:** Implemented Stale-While-Revalidate (SWR) caching logic.
-* **Resilience:** Systems now serve stale data while refreshing in the background, ensuring tables load instantly even if APIs are slow.
-* **Smart Refresh:** Added non-blocking background refresh via WP-Cron/WP-Events.
-
-= 1.2.0 =
-* Major: Implemented Server-Side Rendering (SSR) Engine for instant page loads and SEO optimization.
-* Feat: Added smart link and image detection in PHP to match frontend library.
-* Feat: Integrated transient-based caching (1-hour) for rendered HTML fragments.
-* Optimized: Balanced Hybrid loading - tables render on server, JS adds interactivity.
-
-= 1.1.2 =
-* Docs: Significantly expanded shortcode documentation with detailed attribute descriptions and examples.
-
-= 1.1.1 =
-* **Precision Curation:** Added the ability to include/exclude specific columns for cleaner tables.
-* **Visual Tables:** Added automatic rendering for images, logos, and links.
-* **Hardened Security:** Implemented advanced security filters for safer data handling.
-
-= 1.1.0 =
-* Feat: Added Server-Side Proxy to bypass CORS restrictions.
-* Feat: Added Automated Background Cache Warming via WP-Cron.
-* Feat: Added WP-CLI support for cache management.
-
-= 1.0.1 =
-* Refactored script handling for full WP.org directory compliance.
-* Moved all inline JavaScript to external files.
-
-= 1.0.0 =
-*   Initial release.
-*   Added live admin previewer.
-*   Released smart column detection.
-
-== Upgrade Notice ==
-
-= 1.9.0 =
-New Feature: You can now display tags and categories from nested JSON arrays! Plugin has been renamed for clarity.
-
-= 1.8.0 =
-Customize your table headers like a pro with new aliasing syntax: `include="id:Customer ID"`.
-
-= 1.7.0 =
-UX Update: Tables now look professional out-of-the-box with auto-formatting for Dates, Emails, and Statuses.
-
-= 1.6.0 =
-Feature Update: Adds Data Export tools (CSV/Clipboard) for users. Highly recommended.
-
-= 1.5.1 =
-Performance Update: Significantly improves mobile readability with a new Reflow layout. Highly recommended.
-
-= 1.5.0 =
-Major Update: Adds Interactive Column Sorting for better data analysis. Highly recommended.
-
-= 1.4.1 =
-Security Update: Hardens the data proxy against SSRF and unauthorized access. Highly recommended for all users.
-
-= 1.4.0 =
-Major Update: Adds Pagination support for better handling of large datasets. Recommended for all users.
-
-= 1.3.1 =
-Performance Update: Now includes Live Search for instant table filtering.
-
-= 1.3.0 =
-Gutenberg Update: tablecrafter is now a native WordPress block! You can now add and configure tables directly in the Block Editor.
-
-= 1.2.2 =
-Feature Update: Adds JSON root path support for better API compatibility.
-
-= 1.2.1 =
-Performance Update: Adds Stale-While-Revalidate caching for even faster page loads.
-
-= 1.2.0 =
-Major Update: TableCrafter now renders tables server-side! This improves SEO and eliminates the "Loading" flicker.
 = 2.2.6 =
 * Performance: Implemented "Zero-Latency Hydration" to eliminate redundant network requests.
 * Optimization: Tables now become interactive instantly upon page load by utilizing embedded data payloads.
@@ -375,13 +149,163 @@ Major Update: TableCrafter now renders tables server-side! This improves SEO and
 * UI: Improved block editor styles to match the frontend table appearance.
 * Enhancement: Standardized attribute handling for better reliability across different table configurations.
 
+= 2.2.1 =
+*   **Docs:** Synchronized README.md and CHANGELOG.md with all recent engine upgrades and fixes.
+
 = 2.2.0 =
-* Docs: Expanded the FAQ section with more common technical questions.
-* Docs: Converted contact email to a mailto link.
-* Core: Updated `tablecrafter-core` library to the latest stable version.
+*   **Docs:** Expanded the FAQ section with more common technical questions.
+*   **Docs:** Converted contact email to a mailto link.
+*   **Core:** Updated `tablecrafter-core` to v1.3.0.
 
 = 2.1.9 =
-* Docs: Added contact information for custom plugin customization requests.
+*   **Docs:** Added contact information for custom plugin customization requests.
 
 = 2.1.8 =
-* Deployment: Fixed WordPress.org stable tag sync issues.
+*   **Fix:** Forced SVN refresh and updated Stable Tag to resolve WordPress.org display issues.
+*   **Core:** Updated `tablecrafter-core` to v1.2.7.
+
+= 2.1.7 =
+*   **Fix:** Updated Stable Tag to ensure changelog and updates are visible on WordPress.org.
+*   **Core:** Updated `tablecrafter-core` to v1.2.6.
+
+= 2.1.6 =
+*   **Hotfix:** Resolved a ReferenceError (container is not defined) in the multiselect filter logic.
+*   **Core:** Updated `tablecrafter-core` to v1.2.5.
+
+= 2.1.5 =
+*   **Hotfix:** Fixed a critical RangeError (Maximum call stack size exceeded) that occurred when initializing multiselect filters.
+*   **Core:** Updated `tablecrafter-core` to v1.2.4.
+
+= 2.1.4 =
+*   **Demo Data:** Updated Sales Metrics year to 2026 for a better filtering experience.
+
+= 2.1.3 =
+*   **Fix:** Nuked legacy multiselect container styles that were causing inconsistent shadows and borders.
+*   **Core:** Updated `tablecrafter-core` to v1.2.3.
+
+= 2.1.2 =
+*   **UI:** Removed unnecessary container from Multiselect dropdowns for perfect DOM consistency.
+*   **Core:** Updated `tablecrafter-core` to v1.2.2.
+
+= 2.1.1 =
+*   **UI:** Perfected filter alignment and shadow behavior across all types.
+*   **Consistency:** Removed redundant styles and unified height, padding, and focus effects.
+*   **Core:** Updated `tablecrafter-core` to v1.2.1.
+
+= 2.1.0 =
+*   **UI:** Refined dropdown filter styling to perfectly match standard text inputs. 
+*   **Core:** Updated `tablecrafter-core` to v1.2.0.
+
+= 2.0.9 =
+*   **Fix:** Improved Date detection heuristic to prevent SKUs and common ID patterns from being incorrectly identified as Dates.
+*   **Core:** Updated `tablecrafter-core` to v1.1.9.
+
+= 2.0.8 =
+*   **UI:** Balanced 50/50 split for Range Filters (Min/Max).
+*   **Core:** Updated `tablecrafter-core` to v1.1.8.
+
+= 2.0.7 =
+*   **UI:** Compact horizontal layout for Range Filters.
+*   **Core:** Updated `tablecrafter-core` to v1.1.7.
+
+= 2.0.6 =
+*   **Fix:** Resolved issue where Dropdown Filters would not open on small tables.
+*   **Core:** Updated `tablecrafter-core` to v1.1.6.
+
+= 2.0.5 =
+*   **Improvement:** Enhanced filter type detection to prevent Names/Emails from becoming dropdowns.
+*   **Core:** Updated `tablecrafter-core` to v1.1.5.
+
+= 2.0.4 =
+*   **Fix:** Resolved numeric ID date mismatch bug.
+*   **Core:** Updated `tablecrafter-core` to v1.1.4.
+
+= 2.0.3 =
+*   **CRITICAL UPDATE:** Fixed missing styles for filters and resolved "Invisible Table" bug.
+*   **Core:** Updated `tablecrafter-core` to v1.1.3.
+
+= 2.0.2 =
+*   **Bug Fix:** Resolved "Invisible Table" issue via column auto-discovery.
+*   **Core:** Updated `tablecrafter-core` to v1.1.2.
+
+= 2.0.1 =
+*   **Bug Fix:** Resolved URL data fetching issue.
+*   **Core:** Updated `tablecrafter-core` to v1.1.1.
+
+= 2.0.0 =
+*   **Engine Upgrade:** Unified with `tablecrafter-core` 1.1.0.
+*   **New Feature:** Added Smart Hydration for SSR tables.
+
+= 1.9.2 =
+*   **Performance:** Added intelligent debouncing to Live Search (300ms).
+
+= 1.9.1 =
+*   **Performance:** Fixed API caching issue.
+
+= 1.9.0 =
+* **Smart Nested Data Rendering:** Automatically handles Arrays and Objects. 
+
+= 1.8.0 =
+* **Custom Column Aliasing:** Rename headers directly via `include` attribute.
+
+= 1.7.0 =
+* **Smart Data Formatting:** Dates, Booleans, and Emails.
+
+= 1.6.0 =
+* **Data Export:** Added CSV and Clipboard export tools.
+
+= 1.5.1 =
+* **Mobile-First Reflow:** Tables transform into Card View on small screens.
+
+= 1.5.0 =
+* **Interactive Sorting:** Numerical and alphabetical sorting.
+
+= 1.4.1 =
+* **Security Hardening:** SSRF protection for data proxy.
+
+= 1.4.0 =
+* **Pagination Support:** Client-side pagination for large datasets.
+
+= 1.3.1 =
+* **Instant Filtering:** Added Live Search support.
+
+= 1.3.0 =
+* **Gutenberg Ready:** Added native WordPress Block support.
+
+= 1.2.2 =
+* **Deep Connectivity:** Added 'root' attribute for nested JSON.
+
+= 1.2.1 =
+* **Instant TTFB:** Implemented SWR caching logic.
+
+= 1.2.0 =
+* **Major:** Implemented Server-Side Rendering (SSR) Engine.
+
+= 1.1.2 =
+* Docs: Expanded shortcode documentation.
+
+= 1.1.1 =
+* Feat: Added column filtering (include/exclude).
+
+= 1.1.0 =
+* Feat: Added Server-Side Proxy to bypass CORS.
+
+= 1.0.1 =
+* Refactored script handling for WP.org compliance.
+
+= 1.0.0 =
+* Initial release.
+
+== Upgrade Notice ==
+
+= 2.2.6 =
+Performance: Implemented "Zero-Latency Hydration" to eliminate redundant network requests.
+
+= 2.2.1 =
+Docs: Synchronized README.md and CHANGELOG.md.
+
+= 1.9.0 =
+New Feature: Display tags from nested JSON arrays! 
+
+= 1.2.0 =
+Major Update: TableCrafter now renders tables server-side! 
