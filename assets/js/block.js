@@ -12,7 +12,13 @@
     blocks.registerBlockType('tablecrafter/data-table', {
         title: 'TableCrafter',
         description: 'Create dynamic, SEO-friendly data tables from any JSON source.',
-        icon: 'table-viewport',
+        icon: el('svg', { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
+            el('rect', { x: 3, y: 3, width: 18, height: 18, rx: 2, stroke: 'currentColor', strokeWidth: 2, strokeLinejoin: 'round' }),
+            el('path', { d: 'M3 8.5H21', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round' }),
+            el('path', { d: 'M9 8.5V21', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round' }),
+            el('path', { d: 'M15 8.5V21', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round' }),
+            el('circle', { cx: 18, cy: 5.5, r: 1.5, fill: '#3498db' })
+        ),
         category: 'widgets',
 
         // Define block attributes to persist in database
@@ -120,6 +126,155 @@
             return null;
         },
     });
+
+    /**
+     * Editor Preview Initialization
+     * 
+     * Since the block preview is rendered on the server (SSR), we need to 
+     * initialize the TableCrafter tools (search, export, etc.) client-side 
+     * once the HTML is injected into the editor.
+     */
+    const initPreview = (container) => {
+        if (!container) return;
+
+        const source = container.getAttribute('data-source');
+        const search = container.getAttribute('data-search') === 'true';
+        const exportable = container.getAttribute('data-export') === 'true';
+        const perPage = parseInt(container.getAttribute('data-per-page')) || 0;
+
+        console.log('TableCrafter Block: Checking container', {
+            id: container.id,
+            search,
+            initialized: container.dataset.tcInitialized
+        });
+
+        // Aggressive re-initialization check
+        const libLoaded = typeof window.TableCrafter !== 'undefined' || (container.ownerDocument.defaultView && container.ownerDocument.defaultView.TableCrafter);
+
+        if (source && libLoaded) {
+            const TC = window.TableCrafter || container.ownerDocument.defaultView.TableCrafter;
+
+            // Force re-init if settings changed
+            if (container.dataset.tcSearch !== search.toString() || container.dataset.tcInitialized !== 'true') {
+                console.log('TableCrafter Block: (Re)Initializing instance');
+
+                container.removeAttribute('data-tc-initialized');
+                container.removeAttribute('data-tc-loaded');
+
+                new TC(container, {
+                    data: source,
+                    responsive: true,
+                    pagination: perPage > 0,
+                    pageSize: perPage > 0 ? perPage : 25,
+                    globalSearch: search,
+                    filterable: search,
+                    exportable: exportable
+                });
+
+                container.dataset.tcInitialized = 'true';
+                container.dataset.tcSearch = search.toString();
+            }
+        } else if (source) {
+            console.warn('TableCrafter Block: Library not found, retrying in 1s...');
+            setTimeout(() => initPreview(container), 1000);
+        }
+    };
+
+    // Initial scan for blocks already in the DOM (including iframes)
+    const scanForBlocks = (root = document) => {
+        // Find in current document
+        const containers = root.querySelectorAll('.tablecrafter-container');
+        containers.forEach(initPreview);
+
+        // Find in iframes (Gutenberg often uses iframes for the editor content)
+        const iframes = root.querySelectorAll('iframe');
+        iframes.forEach(iframe => {
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                if (iframeDoc) {
+                    scanForBlocks(iframeDoc);
+                }
+            } catch (e) {
+                // Ignore cross-origin iframe errors
+            }
+        });
+    };
+
+    // Track observed documents to avoid duplicates
+    const observedDocs = new Set();
+
+    // Use MutationObserver to detect when SSR content is added, replaced, or changed
+    const createObserver = () => {
+        return new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList') {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === 1) { // Element
+                            if (node.classList.contains('tablecrafter-container')) {
+                                initPreview(node);
+                            } else if (node.tagName === 'IFRAME') {
+                                watchDocument(node.contentDocument);
+                            } else {
+                                const containers = node.querySelectorAll('.tablecrafter-container');
+                                containers.forEach(initPreview);
+
+                                // Also scan for nested iframes
+                                const iframes = node.querySelectorAll('iframe');
+                                iframes.forEach(iframe => watchDocument(iframe.contentDocument));
+                            }
+                        }
+                    });
+                } else if (mutation.type === 'attributes') {
+                    const node = mutation.target;
+                    if (node.classList.contains('tablecrafter-container')) {
+                        initPreview(node);
+                    }
+                }
+            });
+        });
+    };
+
+    const watchDocument = (doc) => {
+        if (!doc || observedDocs.has(doc)) return;
+
+        try {
+            const observer = createObserver();
+            observer.observe(doc.body || doc, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['data-search', 'data-source', 'data-export', 'data-per-page']
+            });
+            observedDocs.add(doc);
+
+            // Initial scan of this document
+            const containers = doc.querySelectorAll('.tablecrafter-container');
+            containers.forEach(initPreview);
+
+            // Also search for existing iframes in this document
+            const iframes = doc.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                if (iframe.contentDocument) {
+                    watchDocument(iframe.contentDocument);
+                } else {
+                    iframe.addEventListener('load', () => watchDocument(iframe.contentDocument));
+                }
+            });
+        } catch (e) {
+            // Ignore cross-origin errors
+        }
+    };
+
+    // Start watching the main document
+    watchDocument(document);
+
+    // Periodic safety scan (Gutenberg can be tricky)
+    setInterval(() => {
+        const doc = document.querySelector('iframe.edit-site-visual-editor__editor-canvas')?.contentDocument || document;
+        const containers = doc.querySelectorAll('.tablecrafter-container');
+        containers.forEach(initPreview);
+    }, 3000);
+
 })(
     window.wp.blocks,
     window.wp.blockEditor || window.wp.editor,

@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         responsive: true,
                         pagination: perPage > 0,
                         pageSize: perPage > 0 ? perPage : 25,
+                        globalSearch: search,
                         filterable: search,
                         exportable: exportable,
                         api: {

@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – WordPress Data Tables & Dynamic Content Plugin
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 2.2.3
+ * Version: 2.2.5
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.2.4');
+define('TABLECRAFTER_VERSION', '2.2.5');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -53,7 +53,7 @@ class TableCrafter {
      * Initializes all WordPress hooks, shortcodes, and cron schedules.
      */
     private function __construct() {
-        add_action('wp_enqueue_scripts', array($this, 'register_assets'));
+        add_action('init', array($this, 'register_assets'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
         add_action('init', array($this, 'register_block'));
         add_shortcode('tablecrafter', array($this, 'render_table'));
@@ -253,17 +253,13 @@ class TableCrafter {
             return;
         }
 
-        wp_register_style(
-            'tablecrafter-style',
-            TABLECRAFTER_URL . 'assets/css/tablecrafter.css',
-            array(),
-            TABLECRAFTER_VERSION
-        );
+        // Ensure assets are registered before the block
+        $this->register_assets();
 
         wp_register_script(
             'tablecrafter-block',
             TABLECRAFTER_URL . 'assets/js/block.js',
-            array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-server-side-render'),
+            array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-server-side-render', 'tablecrafter-lib'),
             TABLECRAFTER_VERSION
         );
 

@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.3
+Stable tag: 2.2.5
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -351,6 +351,13 @@ Performance Update: Adds Stale-While-Revalidate caching for even faster page loa
 
 = 1.2.0 =
 Major Update: TableCrafter now renders tables server-side! This improves SEO and eliminates the "Loading" flicker.
+= 2.2.5 =
+* Feature: Added "Copy to Clipboard" export tool for quick spreadsheet integration.
+* UX: Integrated Global Search directly into a unified filters area for a cleaner interface.
+* Fix: Resolved an "Iframe Blindness" bug where TableCrafter couldn't initialize inside Gutenberg's iframes.
+* Fix: Improved hydration logic to ensure all interactive tools (Search, Export, Filters) are fully functional on SSR-rendered tables.
+* Maintenance: Updated the core TableCrafter library to v1.4.0.
+
 = 2.2.4 =
 * Fix: Resolved critical issue where Live Search and Export tools were hidden on SSR tables.
 * Fix: Prevented cache collision when toggling block settings.
