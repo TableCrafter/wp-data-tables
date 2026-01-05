@@ -2,6 +2,13 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.7] - 2026-01-06
+### Added
+- **Resilience:** Introduced "Data Resilience" diagnostics. The engine now returns descriptive error codes instead of silent failures.
+- **Onboarding:** Added an "Admin Error Helper" UI that appears when a data source is misconfigured, providing troubleshooting tips.
+- **UX:** Implemented a "Retry" button on the frontend for resilient data fetching in unstable network environments.
+- **Core:** Core library updated to v1.4.2 with enhanced error states.
+
 ## [2.2.6] - 2026-01-06
 ### Added
 - **Preview:** Integrated **WordPress Playground Blueprint** to enable the "Live Preview" feature on WordPress.org. Users can now test TableCrafter instantly in their browser!

@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – WordPress Data Tables & Dynamic Content Plugin
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 2.2.6
+ * Version: 2.2.7
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.2.6');
+define('TABLECRAFTER_VERSION', '2.2.7');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -367,14 +367,19 @@ class TableCrafter {
         } else {
             // First time render (Synch)
             $render_result = $this->fetch_and_render_php($atts);
-            if ($render_result && is_array($render_result)) {
+            if (isset($render_result['html']) && !empty($render_result['html'])) {
                 $html_content = $render_result['html'];
-                $initial_data = $render_result['data'];
+                $initial_data = isset($render_result['data']) ? $render_result['data'] : array();
                 set_transient($cache_key, array(
                     'html' => $html_content,
                     'data' => $initial_data,
                     'time' => time()
                 ), HOUR_IN_SECONDS);
+            } elseif (isset($render_result['error'])) {
+                // Return Error UI for Admins
+                if (current_user_can('manage_options')) {
+                    return $this->render_admin_error_helper($render_result['error'], $atts);
+                }
             }
         }
         
@@ -419,12 +424,28 @@ class TableCrafter {
         if ($cached_data !== false) {
             $data = $cached_data;
         } else {
+            // Check security before remote request
+            if (!$this->is_safe_url($atts['source'])) {
+                return array('error' => 'Security Block: The URL provided is not allowed.');
+            }
+
             // 2. Cache Miss: Fetch from Source
             $response = wp_remote_get($atts['source'], array('timeout' => 15));
-            if (is_wp_error($response)) return false;
+            if (is_wp_error($response)) {
+                return array('error' => 'Connection Failed: ' . $response->get_error_message());
+            }
+
+            $code = wp_remote_retrieve_response_code($response);
+            if ($code !== 200) {
+                return array('error' => 'API Error: Source returned HTTP ' . $code);
+            }
 
             $body = wp_remote_retrieve_body($response);
             $data = json_decode($body, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return array('error' => 'Malformed JSON: The source did not return a valid data structure.');
+            }
 
             // 3. Set Cache for Next Time (Read-Through)
             if ($data) {
@@ -432,11 +453,9 @@ class TableCrafter {
             }
         }
         
-        // $data is already decoded array here
-        // $body line is removed since we have $data from cache or decode
-
-
-        if (!is_array($data) || empty($data)) return false;
+        if (empty($data)) {
+            return array('error' => 'Empty Source: The data received is empty.');
+        }
 
         if (!empty($atts['root'])) {
             $path = explode('.', $atts['root']);
@@ -444,12 +463,24 @@ class TableCrafter {
                 if (isset($data[$segment])) {
                     $data = $data[$segment];
                 } else {
-                    return false;
+                    return array('error' => "Path Error: Key '$segment' not found in data structure.");
                 }
             }
         }
 
-        if (!is_array($data) || empty($data) || !is_array(reset($data))) return false;
+        if (!is_array($data)) {
+            return array('error' => 'Structure Error: The target data is not a list/array.');
+        }
+        
+        if (empty($data)) {
+            return array('error' => 'Empty Dataset: No rows found at this path.');
+        }
+
+        // Check if the first row is an object/array (Standard table expected)
+        $first_row = reset($data);
+        if (!is_array($first_row)) {
+             return array('error' => 'Rendering Error: The data structure at this level is a simple list, not a table (list of objects).');
+        }
 
         $include_raw = !empty($atts['include']) ? array_map('trim', explode(',', $atts['include'])) : array();
         $exclude = !empty($atts['exclude']) ? array_map('trim', explode(',', $atts['exclude'])) : array();
@@ -525,6 +556,43 @@ class TableCrafter {
      */
     private function format_header_php(string $str): string {
         return ucwords(str_replace('_', ' ', $str));
+    }
+
+    /**
+     * Admin Error Helper UI.
+     * 
+     * @param string $error The error message.
+     * @param array $atts Configuration attributes.
+     * @return string HTML helper block.
+     */
+    private function render_admin_error_helper(string $error, array $atts): string {
+        ob_start();
+        ?>
+        <div class="tc-admin-error-helper" style="border: 2px dashed #d63638; background: #fff; padding: 20px; border-radius: 8px; margin: 10px 0;">
+             <div style="display: flex; align-items: center; margin-bottom: 10px; color: #d63638;">
+                 <span class="dashicons dashicons-warning" style="margin-right: 10px; font-size: 24px; width: 24px; height: 24px;"></span>
+                 <strong style="font-size: 16px;"><?php esc_html_e('TableCrafter Setup Guide', 'tablecrafter-wp-data-tables'); ?></strong>
+             </div>
+             <p style="margin: 0 0 10px 0; color: #1d2327;">
+                 <?php echo sprintf(
+                     esc_html__('We encountered an issue with your data source: %s', 'tablecrafter-wp-data-tables'),
+                     '<code style="background: #f0f0f1; border-radius: 4px; padding: 2px 4px; color: #d63638;">' . esc_html($error) . '</code>'
+                 ); ?>
+             </p>
+             <div style="background: #f6f7f7; padding: 12px; border-radius: 4px; font-size: 13px;">
+                 <strong><?php esc_html_e('Troubleshooting Tips:', 'tablecrafter-wp-data-tables'); ?></strong>
+                 <ul style="margin: 8px 0 0 20px; padding: 0;">
+                     <li><?php esc_html_e('Verify the Source URL is public and returns JSON.', 'tablecrafter-wp-data-tables'); ?></li>
+                     <li><?php esc_html_e('Ensure the "JSON Root" path accurately matches your data nesting.', 'tablecrafter-wp-data-tables'); ?></li>
+                     <li><?php esc_html_e('Check if your source is a list of objects (rows) and not a single value.', 'tablecrafter-wp-data-tables'); ?></li>
+                 </ul>
+             </div>
+             <p style="margin: 10px 0 0 0; font-size: 12px; color: #646970;">
+                 <em><?php esc_html_e('Note: This helper is only visible to site administrators.', 'tablecrafter-wp-data-tables'); ?></em>
+             </p>
+        </div>
+        <?php
+        return ob_get_clean();
     }
 
     /**

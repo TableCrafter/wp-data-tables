@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.6
+Stable tag: 2.2.7
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -124,6 +124,12 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 
 
 == Changelog ==
+
+= 2.2.7 =
+* Feature: Introduced "Data Resilience" mission - plugin now provides graceful fallbacks and diagnostics for broken data sources.
+* UX: Added "Onboarding Guardrails" via an Admin Debug Helper that explains exactly why a data fetch failed (e.g., API Error, Path Error).
+* Core: Added a frontend "Retry" mechanism to the TableCrafter library for handling network glitches seamlessly.
+* Maintenance: Bumped core library to v1.4.2.
 
 = 2.2.6 =
 * Performance: Implemented "Zero-Latency Hydration" to eliminate redundant network requests.
@@ -297,6 +303,9 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.2.7 =
+Feature: Data Resilience & Onboarding Guardrails. TableCrafter now helps you fix your configuration with intelligent error diagnostics.
 
 = 2.2.6 =
 Performance: Implemented "Zero-Latency Hydration" to eliminate redundant network requests.
