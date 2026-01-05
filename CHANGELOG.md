@@ -2,6 +2,23 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.6] - 2026-01-06
+### Added
+- **Performance:** Implemented "Zero-Latency Hydration" to eliminate redundant network requests.
+- **Optimization:** Tables now become interactive instantly upon page load by utilizing embedded data payloads.
+
+### Fixed
+- **Performance:** Resolved a critical "Double Fetch" bug that wasted user bandwidth and server resources.
+
+## [2.2.5] - 2026-01-05
+### Added
+- **Export:** Added "Copy to Clipboard" export tool for quick spreadsheet integration with tab-separated values.
+- **UI:** Integrated Global Search directly into a unified filters area for a cleaner interface.
+
+### Fixed
+- **Block:** Resolved an "Iframe Blindness" bug where TableCrafter couldn't initialize inside Gutenberg's iframes.
+- **Core:** Improved hydration logic to ensure all interactive tools (Search, Export, Filters) are fully functional on SSR-rendered tables.
+
 ## [2.2.4] - 2026-01-05
 ### Fixed
 - **Core:** Implemented "Hydration Mode" to support injecting filters and export tools into server-side rendered (SSR) tables without flickering.
