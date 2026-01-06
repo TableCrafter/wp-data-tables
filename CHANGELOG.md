@@ -2,6 +2,14 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.8] - 2026-01-06
+### Fixed
+- **Admin Preview:** Fixed Live Preview not loading data in the admin dashboard. Resolved data initialization logic to properly handle empty arrays and URL-based data sources.
+- **Data Loading:** Improved error handling and logging for better debugging when data fails to load.
+- **Container Rendering:** Enhanced container clearing and rendering flow to ensure tables display correctly after data loads.
+- **Permissions:** Fixed permission checks to allow both `edit_posts` and `manage_options` capabilities for admin preview.
+- **Local Files:** Improved local file path resolution for demo data files to work correctly in admin preview.
+
 ## [2.2.7] - 2026-01-06
 ### Added
 - **Resilience:** Introduced "Data Resilience" diagnostics. The engine now returns descriptive error codes instead of silent failures.
