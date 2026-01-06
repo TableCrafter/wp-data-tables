@@ -125,6 +125,13 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 
 == Changelog ==
 
+= 2.2.8 =
+* Fix: Resolved Live Preview data loading issue in admin dashboard - tables now properly load and display data from URLs.
+* Fix: Improved data initialization logic to correctly handle empty arrays and URL-based data sources.
+* Enhancement: Added comprehensive error handling and debugging logs for better troubleshooting.
+* Fix: Enhanced permission checks to allow both edit_posts and manage_options capabilities for admin preview.
+* Fix: Improved local file path resolution for demo data files in admin preview.
+
 = 2.2.7 =
 * Feature: Introduced "Data Resilience" mission - plugin now provides graceful fallbacks and diagnostics for broken data sources.
 * UX: Added "Onboarding Guardrails" via an Admin Debug Helper that explains exactly why a data fetch failed (e.g., API Error, Path Error).
@@ -303,6 +310,9 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.2.8 =
+Fix: Live Preview in admin dashboard now works correctly. Data loads and displays properly from any URL source.
 
 = 2.2.7 =
 Feature: Data Resilience & Onboarding Guardrails. TableCrafter now helps you fix your configuration with intelligent error diagnostics.
