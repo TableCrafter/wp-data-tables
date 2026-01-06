@@ -51,20 +51,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (typeof TableCrafter !== 'undefined') {
             const tableId = 'tc-preview-' + Date.now();
-            container.innerHTML = `<div id="${tableId}" class="tablecrafter-container">${tablecrafterAdmin.i18n.loading}</div>`;
+            const previewDiv = document.createElement('div');
+            previewDiv.id = tableId;
+            previewDiv.className = 'tablecrafter-container';
+            previewDiv.textContent = tablecrafterAdmin.i18n.loading;
+            container.appendChild(previewDiv);
 
-            // Initialize the TableCrafter instance with proxy support for admin preview
-            new TableCrafter('#' + tableId, {
-                data: url,
-                pagination: true,
-                responsive: true,
-                api: {
-                    proxy: {
-                        url: tablecrafterAdmin.ajaxUrl,
-                        nonce: tablecrafterAdmin.nonce
+            console.log('TableCrafter Admin: Initializing preview with URL:', url);
+            console.log('TableCrafter Admin: AJAX URL:', tablecrafterAdmin.ajaxUrl);
+            console.log('TableCrafter Admin: Nonce:', tablecrafterAdmin.nonce ? 'Present' : 'Missing');
+
+            try {
+                // Initialize the TableCrafter instance with proxy support for admin preview
+                // Note: The constructor will automatically call loadData() when data is a URL string
+                const tableInstance = new TableCrafter('#' + tableId, {
+                    data: url,
+                    pagination: true,
+                    responsive: true,
+                    api: {
+                        proxy: {
+                            url: tablecrafterAdmin.ajaxUrl,
+                            nonce: tablecrafterAdmin.nonce
+                        }
                     }
-                }
-            });
+                });
+
+                // Set up error monitoring - loadData is already called in constructor
+                // We'll monitor for errors by checking the container state after a delay
+                setTimeout(() => {
+                    const containerContent = previewDiv.innerHTML.trim();
+                    if (containerContent === tablecrafterAdmin.i18n.loading || 
+                        containerContent.includes('Loading')) {
+                        // Still loading after 10 seconds - might be stuck
+                        console.warn('TableCrafter Admin: Still loading after 10 seconds');
+                    }
+                }, 10000);
+            } catch (error) {
+                console.error('TableCrafter Admin: Initialization error:', error);
+                previewDiv.innerHTML = `
+                    <div class="notice notice-error inline" style="padding: 15px; margin: 0;">
+                        <p><strong>Initialization error:</strong> ${error.message || 'Unknown error'}</p>
+                    </div>
+                `;
+            }
         } else {
             container.innerHTML = `<div class="notice notice-error inline"><p>${tablecrafterAdmin.i18n.libMissing}</p></div>`;
         }

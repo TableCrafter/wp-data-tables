@@ -11,8 +11,11 @@ class TableCrafter {
     // Handle container parameter
     this.container = this.resolveContainer(container);
     if (!this.container) {
-      throw new Error('Container element not found');
+      const errorMsg = `Container element not found: ${container}`;
+      console.error('TableCrafter:', errorMsg);
+      throw new Error(errorMsg);
     }
+    console.log('TableCrafter: Container resolved:', this.container);
 
     // Set up default configuration
     this.config = {
@@ -166,19 +169,38 @@ class TableCrafter {
       }
     }
 
-    if (!this.data && this.config.data) {
-      if (Array.isArray(this.config.data)) {
+    // Check if we have embedded data first (from .tc-initial-data script tag)
+    console.log('TableCrafter: Checking data sources. this.data:', this.data, 'this.config.data:', this.config.data);
+    
+    if (this.data && Array.isArray(this.data) && this.data.length > 0) {
+      // We have embedded data, check if config also has a URL for refreshes
+      if (typeof this.config.data === 'string') {
+        this.dataUrl = this.config.data;
+      }
+      // Don't call loadData() because we already have the data
+      console.log('TableCrafter: Using embedded data, rows:', this.data.length);
+    } else if (this.config.data) {
+      // No embedded data, use config data
+      console.log('TableCrafter: Config data type:', typeof this.config.data, 'Is array?', Array.isArray(this.config.data));
+      
+      if (Array.isArray(this.config.data) && this.config.data.length > 0) {
         this.data = [...this.config.data];
         this.autoDiscoverColumns();
+        console.log('TableCrafter: Using config array data, rows:', this.data.length);
       } else if (typeof this.config.data === 'string') {
         // URL provided, will load asynchronously
         this.dataUrl = this.config.data;
-        this.loadData();
+        console.log('TableCrafter: Loading data from URL:', this.dataUrl);
+        console.log('TableCrafter: About to call loadData()');
+        this.loadData().catch(error => {
+          console.error('TableCrafter: Unhandled error in loadData:', error);
+          // Error handling is done in loadData(), but we catch here to prevent unhandled promise rejection
+        });
+      } else {
+        console.warn('TableCrafter: Config data is neither array nor string:', typeof this.config.data);
       }
-    } else if (this.data && typeof this.config.data === 'string') {
-      // Data was embedded, but we still store the URL for potential refreshes
-      this.dataUrl = this.config.data;
-      // We don't call loadData() because we already have the data
+    } else {
+      console.log('TableCrafter: No data source provided');
     }
 
     // Bind resize handler if responsive
@@ -234,13 +256,28 @@ class TableCrafter {
       if (this.dataUrl) {
         // Option B: Legacy Hydration (Background fetch for active SSR content)
         try {
-          const response = await fetch(this.dataUrl);
-          const data = await response.json();
-          this.data = data;
-          this.autoDiscoverColumns();
-          this.detectFilterTypes();
-          this.container.dataset.ssr = "false";
-          this.render();
+          let response;
+          if (this.config.api && this.config.api.proxy && this.config.api.proxy.url) {
+            const formData = new FormData();
+            formData.append('action', 'tc_proxy_fetch');
+            formData.append('url', this.dataUrl);
+            formData.append('nonce', this.config.api.proxy.nonce);
+            response = await fetch(this.config.api.proxy.url, { method: 'POST', body: formData });
+          } else {
+            response = await fetch(this.dataUrl);
+          }
+
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          let json = await response.json();
+          const data = json.success !== undefined ? (json.success ? json.data : null) : json;
+
+          if (data) {
+            this.data = data;
+            this.autoDiscoverColumns();
+            this.detectFilterTypes();
+            this.container.dataset.ssr = "false";
+            this.render();
+          }
         } catch (e) {
           console.error('TableCrafter: Hydration fetch failed:', e);
         }
@@ -259,25 +296,99 @@ class TableCrafter {
     }
 
     try {
-      const response = await fetch(this.dataUrl);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      let response;
+      if (this.config.api && this.config.api.proxy && this.config.api.proxy.url) {
+        console.log('TableCrafter: Using proxy to fetch:', this.dataUrl);
+        const formData = new FormData();
+        formData.append('action', 'tc_proxy_fetch');
+        formData.append('url', this.dataUrl);
+        formData.append('nonce', this.config.api.proxy.nonce);
+        console.log('TableCrafter: Sending proxy request to:', this.config.api.proxy.url);
+        response = await fetch(this.config.api.proxy.url, { method: 'POST', body: formData });
+        console.log('TableCrafter: Proxy response status:', response.status, response.statusText);
+      } else {
+        console.log('TableCrafter: Fetching directly from:', this.dataUrl);
+        response = await fetch(this.dataUrl);
+        console.log('TableCrafter: Direct response status:', response.status, response.statusText);
       }
-      const data = await response.json();
-      this.data = data;
+
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => '');
+        throw new Error(`HTTP error! status: ${response.status}${errorText ? ' - ' + errorText : ''}`);
+      }
+
+      let json;
+      try {
+        json = await response.json();
+        console.log('TableCrafter: Response JSON:', json);
+      } catch (parseError) {
+        console.error('TableCrafter: Failed to parse JSON response:', parseError);
+        const text = await response.text();
+        console.error('TableCrafter: Response text:', text);
+        throw new Error(`Invalid JSON response: ${parseError.message}`);
+      }
+
+      // Handle WordPress AJAX response format
+      let loadedData;
+      if (json.success !== undefined) {
+        if (json.success === false) {
+          throw new Error(json.data || json.message || 'Unknown proxy error');
+        }
+        // WordPress AJAX success response
+        loadedData = json.data !== undefined ? json.data : json;
+        if (!loadedData) {
+          throw new Error('No data received from server');
+        }
+        if (Array.isArray(loadedData) && loadedData.length === 0) {
+          throw new Error('Empty array received from server');
+        }
+      } else {
+        // Direct JSON response (not WordPress AJAX format)
+        if (!json) {
+          throw new Error('No data received from server');
+        }
+        if (Array.isArray(json) && json.length === 0) {
+          throw new Error('Empty array received from server');
+        }
+        loadedData = json;
+      }
+
+      // Validate that we have an array
+      if (!Array.isArray(loadedData)) {
+        throw new Error('Data received is not an array. Expected an array of objects.');
+      }
+
+      this.data = loadedData;
+
       this.isLoading = false;
+      console.log('TableCrafter: Data loaded successfully, rows:', Array.isArray(this.data) ? this.data.length : 'N/A');
+      
+      // Clear loading message before rendering
+      if (this.container.innerHTML.includes('Loading') || this.container.textContent.includes('Loading')) {
+        this.container.innerHTML = '';
+      }
+      
       this.autoDiscoverColumns();
+      console.log('TableCrafter: Columns discovered:', this.config.columns.length);
       this.render();
-      return data;
+      console.log('TableCrafter: Render complete');
+      return this.data;
     } catch (error) {
       this.isLoading = false;
       console.error('TableCrafter: Data fetch failed:', error);
+      console.error('TableCrafter: URL was:', this.dataUrl);
+      console.error('TableCrafter: Proxy config:', this.config.api?.proxy);
 
+      const errorMessage = error.message || 'Check your internet connection or data source URL.';
       this.container.innerHTML = `
         <div class="tc-error-state" style="padding: 40px; text-align: center; border: 1px solid #fee2e2; background: #fef2f2; border-radius: 8px;">
           <div style="font-size: 24px; margin-bottom: 10px;">⚠️</div>
           <h3 style="margin: 0 0 10px 0; color: #991b1b;">Unable to load data</h3>
-          <p style="margin: 0 0 20px 0; color: #b91c1c; font-size: 14px;">${error.message || 'Check your internet connection or data source URL.'}</p>
+          <p style="margin: 0 0 20px 0; color: #b91c1c; font-size: 14px;">${errorMessage}</p>
+          <details style="text-align: left; margin: 20px 0; padding: 10px; background: #fff; border-radius: 4px;">
+            <summary style="cursor: pointer; font-weight: 600; color: #991b1b;">Technical Details</summary>
+            <pre style="margin: 10px 0 0 0; font-size: 12px; color: #666; overflow: auto;">${error.stack || error.toString()}</pre>
+          </details>
           <button class="tc-retry-button" style="background: #991b1b; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: 600;">
             Retry Loading
           </button>
@@ -392,13 +503,15 @@ class TableCrafter {
    * Auto-discover columns from data
    */
   autoDiscoverColumns() {
-    if (this.data.length > 0 && this.config.columns.length === 0) {
+    if (Array.isArray(this.data) && this.data.length > 0 && this.config.columns.length === 0) {
       const firstItem = this.data[0];
-      this.config.columns = Object.keys(firstItem).map(key => ({
-        field: key,
-        label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '),
-        sortable: true
-      }));
+      if (firstItem && typeof firstItem === 'object') {
+        this.config.columns = Object.keys(firstItem).map(key => ({
+          field: key,
+          label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '),
+          sortable: true
+        }));
+      }
     }
   }
 
@@ -406,9 +519,15 @@ class TableCrafter {
    * Main render method
    */
   render() {
+    console.log('TableCrafter: render() called, data length:', Array.isArray(this.data) ? this.data.length : 'N/A');
+    console.log('TableCrafter: Container SSR attribute:', this.container.dataset.ssr);
+    console.log('TableCrafter: Container innerHTML before render:', this.container.innerHTML.substring(0, 100));
+    
     // Check if we are hydrating (SSR content already present)
     const isHydrating = this.container.dataset.ssr === "true" &&
       (this.container.querySelector('table') || this.container.querySelector('.tc-cards-container') || this.container.querySelector('.tc-loading') || this.container.querySelector('.tc-wrapper'));
+
+    console.log('TableCrafter: Is hydrating?', isHydrating);
 
     let wrapper;
     if (isHydrating) {
@@ -431,6 +550,7 @@ class TableCrafter {
       tools.forEach(tool => tool.remove());
     } else {
       // Standard render: clear and rebuild
+      console.log('TableCrafter: Standard render - clearing container');
       this.container.innerHTML = '';
       wrapper = document.createElement('div');
       wrapper.className = 'tc-wrapper';
@@ -466,10 +586,21 @@ class TableCrafter {
 
     // Render data view if not hydrating
     if (!isHydrating) {
-      if (this.config.responsive && this.isMobile()) {
-        wrapper.appendChild(this.renderCards());
+      if (!Array.isArray(this.data) || this.data.length === 0) {
+        console.warn('TableCrafter: No data to render. Data:', this.data);
+        const noDataMsg = document.createElement('div');
+        noDataMsg.className = 'tc-no-data';
+        noDataMsg.style.padding = '20px';
+        noDataMsg.style.textAlign = 'center';
+        noDataMsg.style.color = '#666';
+        noDataMsg.textContent = 'No data available to display.';
+        wrapper.appendChild(noDataMsg);
       } else {
-        wrapper.appendChild(this.renderTable());
+        if (this.config.responsive && this.isMobile()) {
+          wrapper.appendChild(this.renderCards());
+        } else {
+          wrapper.appendChild(this.renderTable());
+        }
       }
     }
 
