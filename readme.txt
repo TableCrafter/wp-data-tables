@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.14
+Stable tag: 2.2.15
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -12,6 +12,10 @@ Donate link: https://www.paypal.me/fahadmurtaza
 Create dynamic, SEO-friendly HTML tables from any JSON API or file. Features native Gutenberg support, SSR, Live Search, and Pagination.
 
 == Changelog ==
+
+= 2.2.15 =
+* Fix: Updated WordPress Playground blueprint.json with required meta fields and preferredVersions for Live Preview compatibility.
+* Improvement: Blueprint now includes proper title, author, and PHP/WordPress version preferences.
 
 = 2.2.14 =
 * Security: Fixed a critical SSRF vulnerability in the AJAX proxy by enforcing strict URL validation and safe remote requests.
@@ -340,6 +344,9 @@ Fix: Updated Live Preview blueprint for compatibility.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.2.15 =
+Fix: WordPress Playground Live Preview now works correctly with updated blueprint configuration.
 
 = 2.2.14 =
 Security Fix: Critical patch for SSRF vulnerability. Please update immediately.

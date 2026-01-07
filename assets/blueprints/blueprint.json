@@ -1,5 +1,13 @@
 {
     "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+    "meta": {
+        "title": "TableCrafter - WordPress Data Tables",
+        "author": "TableCrafter"
+    },
+    "preferredVersions": {
+        "php": "8.0",
+        "wp": "latest"
+    },
     "steps": [
         {
             "step": "login",

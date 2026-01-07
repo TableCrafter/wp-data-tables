@@ -2,6 +2,10 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.15] - 2026-01-08
+### Fixed
+- **Playground:** Updated WordPress Playground blueprint.json with required meta fields (title, author) and preferredVersions (PHP, WordPress) for Live Preview compatibility.
+
 ## [2.2.14] - 2026-01-08
 ### Security
 - **Critical Fix:** Patched a Blind SSRF vulnerability in `ajax_proxy_fetch`. Implemented `wp_safe_remote_get()` and `wp_http_validate_url()` to prevent DNS rebinding and internal network scanning.
