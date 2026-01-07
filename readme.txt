@@ -11,19 +11,6 @@ Donate link: https://www.paypal.me/fahadmurtaza
 
 Create dynamic, SEO-friendly HTML tables from any JSON API or file. Features native Gutenberg support, SSR, Live Search, and Pagination.
 
-== Changelog ==
-
-= 2.2.16 =
-* Fix: Cleaned up readme.txt formatting issues - removed duplicate changelog entries and misplaced product description.
-
-= 2.2.15 =
-* Fix: Updated WordPress Playground blueprint.json with required meta fields and preferredVersions for Live Preview compatibility.
-* Improvement: Blueprint now includes proper title, author, and PHP/WordPress version preferences.
-
-= 2.2.14 =
-* Security: Fixed a critical SSRF vulnerability in the AJAX proxy by enforcing strict URL validation and safe remote requests.
-* Optimization: Improved error handling for proxy requests.
-
 **TableCrafter** is the ultimate lightweight solution for displaying dynamic data in WordPress. 
 
 [Try Live Demo](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
@@ -47,6 +34,19 @@ We fill the gap between complex, expensive plugins and raw HTML tables.
 *   **E-Commerce Stock:** Show real-time availability from external supplier feeds.
 *   **Company Directories:** Visualize employee lists fetched from internal HR platforms.
 *   **Live Metrics:** Show sales data, weather stats, or sports scores in real-time.
+
+== Changelog ==
+
+= 2.2.16 =
+* Fix: Cleaned up readme.txt formatting issues - removed duplicate changelog entries and misplaced product description.
+
+= 2.2.15 =
+* Fix: Updated WordPress Playground blueprint.json with required meta fields and preferredVersions for Live Preview compatibility.
+* Improvement: Blueprint now includes proper title, author, and PHP/WordPress version preferences.
+
+= 2.2.14 =
+* Security: Fixed a critical SSRF vulnerability in the AJAX proxy by enforcing strict URL validation and safe remote requests.
+* Optimization: Improved error handling for proxy requests.
 
 == Installation ==
 
