@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.9
+Stable tag: 2.2.10
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -15,7 +15,7 @@ Create dynamic, SEO-friendly HTML tables from any JSON API or file. Features nat
 
 **TableCrafter** is the ultimate lightweight solution for displaying dynamic data in WordPress. 
 
-[Try Live Demo](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/TableCrafter/wp-data-tables/trunk/blueprint.json)
+[Try Live Demo](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/TableCrafter/wp-data-tables/trunk/assets/blueprints/blueprint.json)
 
 Unlike heavy table builders that bloat your database, TableCrafter acts as a direct, high-performance window to your data. Connect to any external API or JSON file, and we'll render a beautiful, responsive table instantly. 
 
@@ -126,6 +126,9 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 
 
 == Changelog ==
+
+= 2.2.10 =
+* Fix: Moved blueprint.json to correct assets/blueprints location for WordPress.org Live Preview support.
 
 = 2.2.9 =
 * Feature: Enabled "Live Preview" for WordPress Playground with a valid blueprint configuration.

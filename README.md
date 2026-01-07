@@ -2,7 +2,7 @@
 
 **Turn any JSON API or remote file into a high-performance, responsive table in seconds.** 
 
-[![Try Live Demo](https://img.shields.io/badge/Try%20Live%20Demo-WordPress%20Playground-blue?logo=wordpress)](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/TableCrafter/wp-data-tables/trunk/blueprint.json)
+[![Try Live Demo](https://img.shields.io/badge/Try%20Live%20Demo-WordPress%20Playground-blue?logo=wordpress)](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/TableCrafter/wp-data-tables/trunk/assets/blueprints/blueprint.json)
 
 ### 🚀 Upgrade to Pro: Gravity Tables
 
