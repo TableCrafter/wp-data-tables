@@ -169,9 +169,9 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 
 == Screenshots ==
 
-1. **Gutenberg Block** - The native TableCrafter block with visual sidebar controls.
-2. **Interactive Frontend** - A live table showing the search bar and pagination footer.
-3. **Admin Dashboard** - The shortcode generator and preview playground.
+1. **Gutenberg Block Editor** - Native WordPress block with visual sidebar controls, quick demo data options, and live preview. No external APIs needed to test functionality.
+2. **Admin Dashboard & Live Preview** - Product inventory demo showing JSON data transformed into responsive tables with live search functionality. Includes shortcode generator for easy copying.
+3. **Interactive Data Table** - Real-time search filtering and smart auto-detected column filters working on live data. Shows mobile-responsive design and advanced filtering capabilities.
 
 
 == Changelog ==
