@@ -1,5 +1,9 @@
 {
     "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+    "preferredVersions": {
+        "php": "8.2",
+        "wp": "latest"
+    },
     "steps": [
         {
             "step": "login",
@@ -16,5 +20,6 @@
                 "activate": true
             }
         }
-    ]
+    ],
+    "landingPage": "/wp-admin/admin.php?page=tablecrafter-wp-data-tables"
 }

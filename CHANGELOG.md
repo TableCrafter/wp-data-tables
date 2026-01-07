@@ -2,6 +2,11 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.9] - 2026-01-07
+### Added
+- **Preview:** Enabled "Live Preview" for WordPress Playground with a valid blueprint configuration.
+- **Docs:** Added "Try Live Demo" badge to README.
+
 ## [2.2.8] - 2026-01-06
 ### Fixed
 - **Admin Preview:** Fixed Live Preview not loading data in the admin dashboard. Resolved data initialization logic to properly handle empty arrays and URL-based data sources.

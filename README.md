@@ -2,6 +2,8 @@
 
 **Turn any JSON API or remote file into a high-performance, responsive table in seconds.** 
 
+[![Try Live Demo](https://img.shields.io/badge/Try%20Live%20Demo-WordPress%20Playground-blue?logo=wordpress)](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/TableCrafter/wp-data-tables/trunk/blueprint.json)
+
 ### 🚀 Upgrade to Pro: Gravity Tables
 
 Unlock the full potential of your data with **[Advanced Data Tables for Gravity Forms](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)** — the ultimate solution for managing Gravity Forms entries.
