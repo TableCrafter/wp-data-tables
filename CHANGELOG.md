@@ -2,6 +2,10 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.13] - 2026-01-07
+### Changed
+- **Docs:** Switched "Live Demo" link to verify via **TasteWP** for guaranteed stability while WordPress Playground integration is being debugged.
+
 ## [2.2.12] - 2026-01-07
 ### Fixed
 - **Docs:** Fixed "Try Live Demo" link to point to the correct GitHub `main` branch instead of `trunk`.

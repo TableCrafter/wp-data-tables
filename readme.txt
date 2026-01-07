@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.12
+Stable tag: 2.2.13
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -15,7 +15,7 @@ Create dynamic, SEO-friendly HTML tables from any JSON API or file. Features nat
 
 **TableCrafter** is the ultimate lightweight solution for displaying dynamic data in WordPress. 
 
-[Try Live Demo](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/TableCrafter/wp-data-tables/main/assets/blueprints/blueprint.json)
+[Try Live Demo](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
 
 Unlike heavy table builders that bloat your database, TableCrafter acts as a direct, high-performance window to your data. Connect to any external API or JSON file, and we'll render a beautiful, responsive table instantly. 
 
@@ -126,6 +126,12 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 
 
 == Changelog ==
+
+= 2.2.13 =
+* Change: Temporarily switched Live Demo link to TasteWP for better stability.
+
+= 2.2.13 =
+Change: Switched Live Demo to TasteWP.
 
 = 2.2.12 =
 * Fix: Addressed bad link for "Try Live Demo" which pointed to incorrect branch.
