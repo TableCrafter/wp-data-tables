@@ -2,6 +2,10 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.16] - 2026-01-07
+### Fixed
+- **Docs:** Cleaned up readme.txt formatting issues - removed duplicate changelog entries and misplaced product description from v2.2.13 section.
+
 ## [2.2.15] - 2026-01-08
 ### Fixed
 - **Playground:** Updated WordPress Playground blueprint.json with required meta fields (title, author) and preferredVersions (PHP, WordPress) for Live Preview compatibility.
