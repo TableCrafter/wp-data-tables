@@ -2,6 +2,10 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.17] - 2026-01-07
+### Fixed
+- **Docs:** Added proper "== Description ==" section header for better WordPress.org formatting and compliance.
+
 ## [2.2.16] - 2026-01-07
 ### Fixed
 - **Docs:** Cleaned up readme.txt formatting issues - removed duplicate changelog entries and misplaced product description from v2.2.13 section.
