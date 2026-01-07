@@ -9,7 +9,7 @@ License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://www.paypal.me/fahadmurtaza
 
-Create dynamic, SEO-friendly HTML tables from any JSON API or file. Features native Gutenberg support, SSR, Live Search, and Pagination.
+Create dynamic, SEO-friendly HTML tables from any JSON API or file. Features Gutenberg support, SSR, Live Search, and Pagination.
 
 **TableCrafter** is the ultimate lightweight solution for displaying dynamic data in WordPress. 
 
