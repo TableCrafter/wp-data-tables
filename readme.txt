@@ -9,33 +9,66 @@ License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://www.paypal.me/fahadmurtaza
 
-Create dynamic, SEO-friendly HTML tables from any JSON API or file. Features Gutenberg support, SSR, Live Search, and Pagination.
+Transform any JSON API or CSV into beautiful, responsive WordPress data tables. Features live search, pagination, sorting, mobile optimization, and SEO-friendly server-side rendering.
 
 == Description ==
 
-**TableCrafter** is the ultimate lightweight solution for displaying dynamic data in WordPress. 
+**TableCrafter** is the most powerful WordPress data table plugin for displaying dynamic content from external APIs, JSON files, and CSV data sources. Perfect for developers, agencies, and businesses who need to showcase real-time data without database bloat.
 
 [Try Live Demo](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
 
-Unlike heavy table builders that bloat your database, TableCrafter acts as a direct, high-performance window to your data. Connect to any external API or JSON file, and we'll render a beautiful, responsive table instantly. 
+### 🚀 Why TableCrafter is the Best WordPress Table Plugin
 
-We fill the gap between complex, expensive plugins and raw HTML tables. 
+**Zero Database Impact** - Unlike other WordPress table plugins that store data in your database, TableCrafter fetches data directly from your sources, keeping your WordPress installation clean and fast.
 
-**Why choose TableCrafter?**
+**SEO-Optimized Tables** - Every table is rendered server-side with proper HTML structure, making all your data crawlable by Google, Bing, and other search engines for better rankings.
 
-*   **⚡ High Performance:** Powered by **SSR (Server-Side Rendering)** and **SWR (Stale-While-Revalidate)** caching for sub-100ms load times.
-*   **🔍 SEO-First:** Data is rendered in PHP, making every cell crawlable by search engines like Google.
-*   **🧱 Gutenberg Ready:** Native WordPress block with a visual sidebar and live preview.
-*   **📄 Smart Pagination:** Effortlessly navigate thousands of rows with built-in client-side pagination.
-*   **⚡ Live Search:** Real-time filtering allows users to find data instantly as they type.
-*   **🛡️ Hardened Security:** Built-in SSRF protection and strict authorization for all remote data operations.
+**Lightning-Fast Performance** - Advanced caching with Stale-While-Revalidate (SWR) delivers sub-100ms load times while keeping data fresh.
 
-### 💡 Powerful Use Cases
+**Mobile-First Design** - Tables automatically transform into responsive card layouts on mobile devices, ensuring perfect user experience across all screen sizes.
 
-*   **Crypto & Finance:** Display live Bitcoin/ETH prices from CoinGecko or Binance.
-*   **E-Commerce Stock:** Show real-time availability from external supplier feeds.
-*   **Company Directories:** Visualize employee lists fetched from internal HR platforms.
-*   **Live Metrics:** Show sales data, weather stats, or sports scores in real-time.
+### 🛠️ Key Features for WordPress Developers
+
+*   **🎯 API Integration:** Connect to any REST API, JSON endpoint, or CSV file with zero coding
+*   **⚡ Live Search & Filtering:** Real-time data filtering as users type, with debounced performance
+*   **📱 Responsive Design:** Mobile-optimized card view with automatic reflow for small screens  
+*   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls
+*   **📄 Smart Pagination:** Client-side pagination for large datasets with customizable page sizes
+*   **🎨 Custom Styling:** CSS-friendly with variables and hooks for complete design control
+*   **🔒 Security First:** Built-in SSRF protection and WordPress capability-based authorization
+*   **📊 Data Export:** CSV and clipboard export with respect for current filters
+*   **🗂️ Column Management:** Show/hide specific columns with include/exclude parameters
+*   **🔗 Auto-Linking:** Automatically converts URLs and email addresses to clickable links
+
+### 💼 Perfect for These Business Use Cases
+
+**Financial Services:** Display live cryptocurrency prices, stock data, or exchange rates from APIs like CoinGecko, Alpha Vantage, or custom trading platforms.
+
+**E-Commerce:** Show real-time inventory levels, price comparisons, or product catalogs from external suppliers and marketplaces.
+
+**SaaS Dashboards:** Create client portals displaying usage metrics, billing information, or performance data from your application's API.
+
+**Real Estate:** Display property listings, market data, or rental information from MLS feeds or real estate APIs.
+
+**News & Media:** Showcase live sports scores, weather data, or social media metrics from external feeds.
+
+**Corporate Directories:** Display employee information, contact lists, or organizational data from HR systems.
+
+### 🎯 SEO Benefits for Your WordPress Site
+
+*   **Server-Side Rendering:** All table data is rendered in HTML, making it fully indexable by search engines
+*   **Structured Data Ready:** Clean HTML table markup perfect for rich snippets and schema markup
+*   **Fast Loading:** Improved Core Web Vitals scores with optimized caching and performance
+*   **Mobile-Friendly:** Google's mobile-first indexing loves our responsive table design
+*   **Fresh Content:** Dynamic data keeps your pages updated without manual intervention
+
+### 🔌 Developer-Friendly Features
+
+*   **WordPress Hooks:** Extensive filter and action hooks for customization
+*   **REST API Proxy:** Bypass CORS restrictions with our secure server-side proxy
+*   **WP-CLI Support:** Command-line cache management and debugging tools
+*   **Shortcode API:** Flexible shortcode parameters for non-technical users
+*   **Debug Mode:** Comprehensive error reporting and troubleshooting tools
 
 == Changelog ==
 

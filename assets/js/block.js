@@ -12,12 +12,10 @@
     blocks.registerBlockType('tablecrafter/data-table', {
         title: 'TableCrafter',
         description: 'Create dynamic, SEO-friendly data tables from any JSON source.',
-        icon: el('svg', { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
-            el('rect', { x: 3, y: 3, width: 18, height: 18, rx: 2, stroke: 'currentColor', strokeWidth: 2, strokeLinejoin: 'round' }),
-            el('path', { d: 'M3 8.5H21', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round' }),
-            el('path', { d: 'M9 8.5V21', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round' }),
-            el('path', { d: 'M15 8.5V21', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round' }),
-            el('circle', { cx: 18, cy: 5.5, r: 1.5, fill: '#3498db' })
+        icon: el('svg', { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'currentColor' },
+            el('path', { d: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z' }),
+            el('circle', { cx: 18.5, cy: 5.5, r: 2.5, fill: '#0073aa' }),
+            el('path', { d: 'M18.5 7c.8 0 1.5-.7 1.5-1.5S19.3 4 18.5 4 17 4.7 17 5.5 17.7 7 18.5 7z', fill: 'white' })
         ),
         category: 'widgets',
 
