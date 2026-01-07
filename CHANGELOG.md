@@ -2,6 +2,10 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.11] - 2026-01-07
+### Fixed
+- **Playground:** Simplified `blueprint.json` configuration to ensure maximum compatibility with WordPress.org Live Preview validator.
+
 ## [2.2.10] - 2026-01-07
 ### Fixed
 - **Playground:** Moved `blueprint.json` to `assets/blueprints/` directory to fix validity error and comply with WordPress.org standards.

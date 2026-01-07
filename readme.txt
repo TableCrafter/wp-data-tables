@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.10
+Stable tag: 2.2.11
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -126,6 +126,12 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 
 
 == Changelog ==
+
+= 2.2.11 =
+* Fix: Simplified Live Preview blueprint configuration for better compatibility.
+
+= 2.2.11 =
+Fix: Updated Live Preview blueprint for compatibility.
 
 = 2.2.10 =
 * Fix: Moved blueprint.json to correct assets/blueprints location for WordPress.org Live Preview support.

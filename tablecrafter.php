@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – WordPress Data Tables & Dynamic Content Plugin
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 2.2.10
+ * Version: 2.2.11
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.2.10');
+define('TABLECRAFTER_VERSION', '2.2.11');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -173,7 +173,8 @@ class TableCrafter
                     <div class="card"
                         style="margin: 0; max-width: none; min-height: 500px; display: flex; flex-direction: column;">
                         <h2 style="border-bottom: 1px solid #f0f0f1; padding-bottom: 15px; margin-bottom: 15px; margin-top: 0;">
-                            <?php esc_html_e('Live Preview', 'tablecrafter-wp-data-tables'); ?></h2>
+                            <?php esc_html_e('Live Preview', 'tablecrafter-wp-data-tables'); ?>
+                        </h2>
 
                         <div id="tc-preview-wrap" style="flex: 1; overflow: auto; background: #fff;">
                             <div id="tc-preview-container"
