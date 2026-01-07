@@ -21,8 +21,6 @@ Create dynamic, SEO-friendly HTML tables from any JSON API or file. Features nat
 * Security: Fixed a critical SSRF vulnerability in the AJAX proxy by enforcing strict URL validation and safe remote requests.
 * Optimization: Improved error handling for proxy requests.
 
-= 2.2.13 =
-
 **TableCrafter** is the ultimate lightweight solution for displaying dynamic data in WordPress. 
 
 [Try Live Demo](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
@@ -138,10 +136,8 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 == Changelog ==
 
 = 2.2.13 =
-* Change: Temporarily switched Live Demo link to TasteWP for better stability.
+* Change: Switched "Live Demo" link to verify via TasteWP for guaranteed stability while WordPress Playground integration is being debugged.
 
-= 2.2.13 =
-Change: Switched Live Demo to TasteWP.
 
 = 2.2.12 =
 * Fix: Addressed bad link for "Try Live Demo" which pointed to incorrect branch.
