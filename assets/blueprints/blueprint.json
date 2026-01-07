@@ -1,13 +1,12 @@
 {
-    "$schema": "https://playground.wordpress.net/blueprint-schema.json",
-    "meta": {
-        "title": "TableCrafter - WordPress Data Tables",
-        "author": "TableCrafter"
-    },
+    "landingPage": "/wp-admin/admin.php?page=tablecrafter-wp-data-tables",
     "preferredVersions": {
         "php": "8.0",
         "wp": "latest"
     },
+    "phpExtensionBundles": [
+        "kitchen-sink"
+    ],
     "steps": [
         {
             "step": "login",
@@ -16,7 +15,7 @@
         },
         {
             "step": "installPlugin",
-            "pluginData": {
+            "pluginZipFile": {
                 "resource": "wordpress.org/plugins",
                 "slug": "tablecrafter-wp-data-tables"
             },
@@ -24,6 +23,5 @@
                 "activate": true
             }
         }
-    ],
-    "landingPage": "/wp-admin/admin.php?page=tablecrafter-wp-data-tables"
+    ]
 }
