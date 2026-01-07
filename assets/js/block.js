@@ -156,8 +156,14 @@
             if (container.dataset.tcSearch !== search.toString() || container.dataset.tcInitialized !== 'true') {
                 console.log('TableCrafter Block: (Re)Initializing instance');
 
+                // Clear all TableCrafter data attributes and content to force clean re-init
                 container.removeAttribute('data-tc-initialized');
                 container.removeAttribute('data-tc-loaded');
+                container.dataset.ssr = "false"; // Disable SSR mode for re-init
+                
+                // Clear any existing TableCrafter UI elements
+                const existingUI = container.querySelectorAll('.tc-controls, .tc-filters, .tc-global-search, .tc-pagination');
+                existingUI.forEach(el => el.remove());
 
                 new TC(container, {
                     data: source,
@@ -166,7 +172,9 @@
                     pageSize: perPage > 0 ? perPage : 25,
                     globalSearch: search,
                     filterable: search,
-                    exportable: exportable
+                    exportable: exportable,
+                    // Force a fresh render
+                    forceRender: true
                 });
 
                 container.dataset.tcInitialized = 'true';
