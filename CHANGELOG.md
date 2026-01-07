@@ -2,6 +2,10 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.12] - 2026-01-07
+### Fixed
+- **Docs:** Fixed "Try Live Demo" link to point to the correct GitHub `main` branch instead of `trunk`.
+
 ## [2.2.11] - 2026-01-07
 ### Fixed
 - **Playground:** Simplified `blueprint.json` configuration to ensure maximum compatibility with WordPress.org Live Preview validator.
