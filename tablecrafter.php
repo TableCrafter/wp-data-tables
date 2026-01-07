@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – WordPress Data Tables & Dynamic Content Plugin
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 2.2.13
+ * Version: 2.2.14
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.2.13');
+define('TABLECRAFTER_VERSION', '2.2.14');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -781,9 +781,13 @@ class TableCrafter
             wp_send_json_error(__('TableCrafter Security Error: The provided URL is blocked for safety (Local/Private IP).', 'tablecrafter-wp-data-tables'));
         }
 
-        $response = wp_remote_get($url, array(
+        // Use wp_safe_remote_get to enforce 'reject_unsafe_urls' at the http layer
+        // This prevents DNS Rebinding attacks where a domain resolves to a private IP
+        $response = wp_safe_remote_get($url, array(
             'timeout' => 15,
-            'sslverify' => false // Permissive for local dev environments
+            'redirection' => 5,
+            'reject_unsafe_urls' => true,
+            'sslverify' => false
         ));
 
         if (is_wp_error($response)) {
@@ -894,6 +898,13 @@ class TableCrafter
      */
     private function is_safe_url(string $url): bool
     {
+        // Use WordPress Core's robust validation
+        // This handles private IP ranges, localhost normalization, and valid URL formatting.
+        if (function_exists('wp_http_validate_url')) {
+            return (bool) wp_http_validate_url($url);
+        }
+
+        // Fallback for very old WP versions (unlikely but safe)
         $host = parse_url($url, PHP_URL_HOST);
         if (!$host)
             return false;

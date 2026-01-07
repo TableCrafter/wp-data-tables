@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.13
+Stable tag: 2.2.14
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -11,7 +11,13 @@ Donate link: https://www.paypal.me/fahadmurtaza
 
 Create dynamic, SEO-friendly HTML tables from any JSON API or file. Features native Gutenberg support, SSR, Live Search, and Pagination.
 
-== Description ==
+== Changelog ==
+
+= 2.2.14 =
+* Security: Fixed a critical SSRF vulnerability in the AJAX proxy by enforcing strict URL validation and safe remote requests.
+* Optimization: Improved error handling for proxy requests.
+
+= 2.2.13 =
 
 **TableCrafter** is the ultimate lightweight solution for displaying dynamic data in WordPress. 
 
@@ -334,6 +340,9 @@ Fix: Updated Live Preview blueprint for compatibility.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.2.14 =
+Security Fix: Critical patch for SSRF vulnerability. Please update immediately.
 
 = 2.2.9 =
 Feature: Enabled "Live Preview" for WordPress Playground.
