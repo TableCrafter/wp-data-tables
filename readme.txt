@@ -127,6 +127,10 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 
 == Changelog ==
 
+= 2.2.9 =
+* Feature: Enabled "Live Preview" for WordPress Playground with a valid blueprint configuration.
+* Docs: Added "Try Live Demo" badge to README.
+
 = 2.2.8 =
 * Fix: Resolved Live Preview data loading issue in admin dashboard - tables now properly load and display data from URLs.
 * Fix: Improved data initialization logic to correctly handle empty arrays and URL-based data sources.
@@ -312,6 +316,9 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.2.9 =
+Feature: Enabled "Live Preview" for WordPress Playground.
 
 = 2.2.8 =
 Fix: Live Preview in admin dashboard now works correctly. Data loads and displays properly from any URL source.
