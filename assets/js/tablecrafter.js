@@ -558,8 +558,17 @@ class TableCrafter {
     }
 
     // Add filters/search if enabled
+    console.log('TableCrafter: Checking if should add search/filters', {
+      filterable: this.config.filterable,
+      globalSearch: this.config.globalSearch,
+      shouldAdd: this.config.filterable || this.config.globalSearch,
+      containerId: this.container.id
+    });
+    
     if (this.config.filterable || this.config.globalSearch) {
+      console.log('TableCrafter: Rendering filters/search UI');
       const filters = this.renderFilters();
+      console.log('TableCrafter: Filters rendered', filters);
       if (isHydrating) {
         wrapper.insertBefore(filters, wrapper.firstChild);
       } else {
@@ -1380,10 +1389,23 @@ class TableCrafter {
    * Render filter controls
    */
   renderFilters() {
+    console.log('TableCrafter: renderFilters called', {
+      globalSearch: this.config.globalSearch,
+      filterable: this.config.filterable,
+      containerId: this.container.id
+    });
+    
     const filtersContainer = document.createElement('div');
     filtersContainer.className = 'tc-filters';
 
-    // 1. Clear All Button
+    // 1. Global Search
+    if (this.config.globalSearch) {
+      console.log('TableCrafter: Adding global search to filters');
+      const globalSearch = this.renderGlobalSearch();
+      filtersContainer.appendChild(globalSearch);
+    }
+
+    // 2. Clear All Button
     if (this.config.filterable && this.config.filters.showClearAll) {
       const clearAllBtn = document.createElement('button');
       clearAllBtn.className = 'tc-clear-filters';
@@ -1392,7 +1414,7 @@ class TableCrafter {
       filtersContainer.appendChild(clearAllBtn);
     }
 
-    // 2. Specific Column Filters
+    // 3. Specific Column Filters
     if (this.config.filterable) {
       this.detectFilterTypes();
       const filterRow = document.createElement('div');

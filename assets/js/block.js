@@ -142,8 +142,16 @@
 
         console.log('TableCrafter Block: Checking container', {
             id: container.id,
+            source,
             search,
-            initialized: container.dataset.tcInitialized
+            exportable,
+            perPage,
+            initialized: container.dataset.tcInitialized,
+            tcSearch: container.dataset.tcSearch,
+            ssr: container.dataset.ssr,
+            hasSearchUI: !!container.querySelector('.tc-global-search'),
+            hasFiltersUI: !!container.querySelector('.tc-filters'),
+            hasControlsUI: !!container.querySelector('.tc-controls')
         });
 
         // Aggressive re-initialization check
@@ -154,7 +162,11 @@
 
             // Force re-init if settings changed
             if (container.dataset.tcSearch !== search.toString() || container.dataset.tcInitialized !== 'true') {
-                console.log('TableCrafter Block: (Re)Initializing instance');
+                console.log('TableCrafter Block: (Re)Initializing instance', {
+                    oldSearch: container.dataset.tcSearch,
+                    newSearch: search.toString(),
+                    wasInitialized: container.dataset.tcInitialized
+                });
 
                 // Clear all TableCrafter data attributes and content to force clean re-init
                 container.removeAttribute('data-tc-initialized');
@@ -163,9 +175,10 @@
                 
                 // Clear any existing TableCrafter UI elements
                 const existingUI = container.querySelectorAll('.tc-controls, .tc-filters, .tc-global-search, .tc-pagination');
+                console.log('TableCrafter Block: Removing existing UI elements', existingUI.length);
                 existingUI.forEach(el => el.remove());
 
-                new TC(container, {
+                const config = {
                     data: source,
                     responsive: true,
                     pagination: perPage > 0,
@@ -175,10 +188,32 @@
                     exportable: exportable,
                     // Force a fresh render
                     forceRender: true
+                };
+                
+                console.log('TableCrafter Block: Creating new instance with config', config);
+                const tcInstance = new TC(container, config);
+                
+                console.log('TableCrafter Block: Instance created', {
+                    instance: tcInstance,
+                    hasSearchAfter: !!container.querySelector('.tc-global-search'),
+                    hasFiltersAfter: !!container.querySelector('.tc-filters'),
+                    hasControlsAfter: !!container.querySelector('.tc-controls')
                 });
 
                 container.dataset.tcInitialized = 'true';
                 container.dataset.tcSearch = search.toString();
+                
+                // Double check after a short delay
+                setTimeout(() => {
+                    console.log('TableCrafter Block: Post-init check', {
+                        id: container.id,
+                        search,
+                        hasSearchUI: !!container.querySelector('.tc-global-search'),
+                        hasFiltersUI: !!container.querySelector('.tc-filters'),
+                        hasControlsUI: !!container.querySelector('.tc-controls'),
+                        containerHTML: container.innerHTML.substring(0, 500) + '...'
+                    });
+                }, 100);
             }
         } else if (source) {
             console.warn('TableCrafter Block: Library not found, retrying in 1s...');
