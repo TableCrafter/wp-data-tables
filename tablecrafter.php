@@ -79,6 +79,9 @@ class TableCrafter
         if (defined('WP_CLI') && WP_CLI) {
             WP_CLI::add_command('tablecrafter', array($this, 'cli_commands'));
         }
+
+        // Lead Magnet AJAX Handler
+        add_action('wp_ajax_tc_subscribe_lead', array($this, 'handle_lead_subscription'));
     }
 
     /**
@@ -974,6 +977,66 @@ class TableCrafter
     public static function activate(): void
     {
         add_option('tc_do_activation_redirect', true);
+    }
+
+    /**
+     * Handle lead magnet email subscription
+     * 
+     * @return void
+     */
+    public function handle_lead_subscription(): void
+    {
+        // Verify nonce
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'tc_lead_nonce')) {
+            wp_send_json_error('Invalid nonce');
+            return;
+        }
+
+        // Validate email
+        $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
+        if (!is_email($email)) {
+            wp_send_json_error('Invalid email address');
+            return;
+        }
+
+        // Store in WordPress options (simple approach)
+        $subscribers = get_option('tc_lead_subscribers', array());
+
+        // Check if already subscribed
+        if (in_array($email, $subscribers)) {
+            wp_send_json_success(array('message' => 'Already subscribed'));
+            return;
+        }
+
+        // Add new subscriber
+        $subscribers[] = $email;
+        update_option('tc_lead_subscribers', $subscribers);
+
+        // Log subscription with timestamp
+        $log = get_option('tc_lead_log', array());
+        $log[] = array(
+            'email' => $email,
+            'date' => current_time('mysql'),
+            'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+        );
+        update_option('tc_lead_log', $log);
+
+        // TODO: Send to ConvertKit/Mailchimp API
+        // For now, send admin notification
+        $admin_email = get_option('admin_email');
+        $subject = 'New TableCrafter Lead: ' . $email;
+        $message = "New lead magnet subscription:\n\n";
+        $message .= "Email: " . $email . "\n";
+        $message .= "Date: " . current_time('mysql') . "\n";
+        $message .= "Total subscribers: " . count($subscribers) . "\n\n";
+        $message .= "View all subscribers in TableCrafter > Leads";
+
+        wp_mail($admin_email, $subject, $message);
+
+        wp_send_json_success(array(
+            'message' => 'Subscription successful',
+            'total' => count($subscribers)
+        ));
     }
 }
 

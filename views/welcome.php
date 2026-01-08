@@ -30,6 +30,61 @@ if (!defined('ABSPATH')) {
                 </div>
             </div>
 
+            <!-- Lead Magnet Section -->
+            <div class="card"
+                style="padding: 0; overflow: hidden; max-width: none; margin-top: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div style="padding: 30px; text-align: center; color: white;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">🎁</div>
+                    <h2 style="margin: 0 0 10px; font-size: 24px; color: white;">Get 50 Free JSON Data Sources</h2>
+                    <p style="font-size: 16px; margin-bottom: 25px; opacity: 0.95;">
+                        Discover the best public APIs for your tables. Finance, weather, sports, news & more!
+                    </p>
+                    <form id="tc-lead-form" style="max-width: 400px; margin: 0 auto;">
+                        <div style="display: flex; gap: 10px;">
+                            <input type="email" id="tc-email" placeholder="Enter your email" required
+                                style="flex: 1; padding: 12px 16px; border: none; border-radius: 6px; font-size: 14px;">
+                            <button type="submit" class="button button-primary"
+                                style="background: #1d2327; border-color: #1d2327; padding: 12px 24px; height: auto; font-size: 14px; font-weight: 600;">
+                                Get Free Guide →
+                            </button>
+                        </div>
+                        <p style="font-size: 12px; margin-top: 15px; opacity: 0.8;">
+                            ✓ Instant download • No spam, ever • Unsubscribe anytime
+                        </p>
+                    </form>
+                    <div id="tc-lead-success"
+                        style="display: none; padding: 20px; background: rgba(255,255,255,0.2); border-radius: 8px; margin-top: 20px;">
+                        <p style="margin: 0; font-size: 16px; font-weight: 600;">✅ Check your email!</p>
+                        <p style="margin: 10px 0 0; font-size: 14px; opacity: 0.9;">Your free guide is on its way.</p>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.getElementById('tc-lead-form').addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    var email = document.getElementById('tc-email').value;
+
+                    // Send to your email service (ConvertKit, Mailchimp, etc.)
+                    // For now, we'll use a simple AJAX call to a WordPress endpoint
+                    fetch('<?php echo esc_url(admin_url('admin-ajax.php')); ?>', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'action=tc_subscribe_lead&email=' + encodeURIComponent(email) + '&nonce=<?php echo wp_create_nonce('tc_lead_nonce'); ?>'
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                document.getElementById('tc-lead-form').style.display = 'none';
+                                document.getElementById('tc-lead-success').style.display = 'block';
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            </script>
+
             <div class="card" style="padding: 20px; max-width: none; margin-top: 20px;">
                 <h3 style="margin-top: 0;">📚 Resources</h3>
                 <ul style="list-style: disc; margin-left: 20px;">
