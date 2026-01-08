@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: TableCrafter – Dynamic Data Tables for WordPress
+ * Plugin Name: TableCrafter – Dynamic JSON & API Data Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
  * Version: 2.2.21
@@ -436,7 +436,7 @@ class TableCrafter
             data-search="<?php echo $atts['search'] ? 'true' : 'false'; ?>"
             data-export="<?php echo $atts['export'] ? 'true' : 'false'; ?>"
             data-per-page="<?php echo esc_attr($atts['per_page']); ?>" data-ssr="true">
-            <?php echo $html_content ? $html_content : '<div class="tc-loading">' . esc_html__('Loading TableCrafter...', 'tablecrafter-wp-data-tables') . '</div>'; ?>
+            <?php echo $html_content ? wp_kses_post($html_content) : '<div class="tc-loading">' . esc_html__('Loading TableCrafter...', 'tablecrafter-wp-data-tables') . '</div>'; ?>
             <?php if (!empty($initial_data)): ?>
                 <script type="application/json" class="tc-initial-data"><?php echo wp_json_encode($initial_data); ?></script>
             <?php endif; ?>

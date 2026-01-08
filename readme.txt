@@ -1,4 +1,4 @@
-=== TableCrafter – Dynamic Data Tables for WordPress ===
+=== TableCrafter – Dynamic JSON & API Data Tables ===
 Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
