@@ -2,6 +2,21 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.18] - 2026-01-08
+### Enhanced
+- **Docs:** Completely rewrote README.md with comprehensive technical documentation, API reference, and developer hooks
+- **SEO:** Enhanced plugin description and screenshot descriptions with targeted keywords and use cases
+- **Screenshots:** Updated with new contextual images showcasing Gutenberg block, admin dashboard, and interactive features
+
+### Fixed
+- **Critical:** Resolved Live Search toggle not working in Gutenberg block editor due to hydration bug in renderFilters method
+- **UI:** Updated Gutenberg block icon to match WordPress design standards with proper branding
+
+### Added
+- **Documentation:** Extensive developer documentation including PHP hooks, JavaScript events, and architecture details
+- **Badges:** WordPress.org plugin badges showing version, downloads, and ratings
+- **Examples:** Complete code examples for shortcodes, hooks, and troubleshooting
+
 ## [2.2.17] - 2026-01-07
 ### Fixed
 - **Docs:** Added proper "== Description ==" section header for better WordPress.org formatting and compliance.
