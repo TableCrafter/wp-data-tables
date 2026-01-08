@@ -299,7 +299,8 @@ class TableCrafter
             'tablecrafter-block',
             TABLECRAFTER_URL . 'assets/js/block.js',
             array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-server-side-render', 'tablecrafter-lib'),
-            TABLECRAFTER_VERSION
+            TABLECRAFTER_VERSION,
+            true // Load in footer for better performance
         );
 
         wp_localize_script('tablecrafter-block', 'tablecrafterData', array(
