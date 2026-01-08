@@ -25,6 +25,11 @@ All notable changes to TableCrafter will be documented in this file.
 ### Fixed
 - **Docs:** Cleaned up readme.txt formatting issues - removed duplicate changelog entries and misplaced product description from v2.2.13 section.
 
+## [2.2.21] - 2026-01-08
+### Changed
+- **UI:** Global search is now disabled by default for cleaner initial appearance.
+- **UI:** Moved "Clear All Filters" button below filter inputs and added top spacing.
+
 ## [2.2.20] - 2026-01-08
 ### Added
 - **Onboarding:** Implemented "Welcome Screen" with activation redirect to guide new users to create their first table.

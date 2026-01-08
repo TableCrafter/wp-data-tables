@@ -26,7 +26,7 @@ class TableCrafter {
       pagination: false,
       sortable: true,
       filterable: true,
-      globalSearch: true,
+      globalSearch: false,
       globalSearchPlaceholder: 'Search...',
       exportable: false,
       exportFiltered: true,
@@ -1398,23 +1398,14 @@ class TableCrafter {
     const filtersContainer = document.createElement('div');
     filtersContainer.className = 'tc-filters';
 
-    // 1. Global Search
+    // 1. Global Search (Disabled by default now, but respected if enabled)
     if (this.config.globalSearch) {
       console.log('TableCrafter: Adding global search to filters');
       const globalSearch = this.renderGlobalSearch();
       filtersContainer.appendChild(globalSearch);
     }
 
-    // 2. Clear All Button
-    if (this.config.filterable && this.config.filters.showClearAll) {
-      const clearAllBtn = document.createElement('button');
-      clearAllBtn.className = 'tc-clear-filters';
-      clearAllBtn.textContent = 'Clear All Filters';
-      clearAllBtn.addEventListener('click', () => this.clearFilters());
-      filtersContainer.appendChild(clearAllBtn);
-    }
-
-    // 3. Specific Column Filters
+    // 2. Specific Column Filters
     if (this.config.filterable) {
       this.detectFilterTypes();
       const filterRow = document.createElement('div');
@@ -1426,6 +1417,15 @@ class TableCrafter {
         filterRow.appendChild(filterDiv);
       });
       filtersContainer.appendChild(filterRow);
+    }
+
+    // 3. Clear All Button (Moved to bottom)
+    if (this.config.filterable && this.config.filters.showClearAll) {
+      const clearAllBtn = document.createElement('button');
+      clearAllBtn.className = 'tc-clear-filters';
+      clearAllBtn.textContent = 'Clear All Filters';
+      clearAllBtn.addEventListener('click', () => this.clearFilters());
+      filtersContainer.appendChild(clearAllBtn);
     }
 
     return filtersContainer;
