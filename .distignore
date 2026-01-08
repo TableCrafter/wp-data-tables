@@ -1,0 +1,18 @@
+# Development and testing files
+tests/
+make_banner.php
+.DS_Store
+.git
+.gitignore
+.github
+node_modules
+*.log
+*.zip
+
+# Documentation (keep only readme.txt for WordPress.org)
+docs/
+IMPACT_REPORT.md
+README.md
+
+# Build artifacts
+*.map
