@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
                     <p style="font-size: 16px; margin-bottom: 30px;">
                         Connect any JSON URL and visualize it instantly. No coding required.
                     </p>
-                    <a href="<?php echo admin_url('admin.php?page=tablecrafter-wp-data-tables'); ?>"
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=tablecrafter-wp-data-tables')); ?>"
                         class="button button-primary button-hero">
                         Create Your First Table &rarr;
                     </a>

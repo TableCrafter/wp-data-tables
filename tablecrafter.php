@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: TableCrafter – WordPress Data Tables & Dynamic Content Plugin
+ * Plugin Name: TableCrafter – Dynamic Data Tables for WordPress
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
  * Version: 2.2.21
@@ -618,7 +618,9 @@ class TableCrafter
                     style="font-size: 16px;"><?php esc_html_e('TableCrafter Setup Guide', 'tablecrafter-wp-data-tables'); ?></strong>
             </div>
             <p style="margin: 0 0 10px 0; color: #1d2327;">
-                <?php echo sprintf(
+                <?php
+                /* translators: %s: Error message describing what went wrong with the data source */
+                echo sprintf(
                     esc_html__('We encountered an issue with your data source: %s', 'tablecrafter-wp-data-tables'),
                     '<code style="background: #f0f0f1; border-radius: 4px; padding: 2px 4px; color: #d63638;">' . esc_html($error) . '</code>'
                 ); ?>
@@ -727,7 +729,7 @@ class TableCrafter
             wp_send_json_error(__('Unauthorized: You do not have permission to fetch remote data.', 'tablecrafter-wp-data-tables'));
         }
 
-        $url = isset($_POST['url']) ? esc_url_raw($_POST['url']) : '';
+        $url = isset($_POST['url']) ? esc_url_raw(wp_unslash($_POST['url'])) : '';
 
         if (empty($url)) {
             wp_send_json_error(__('Error: No URL provided.', 'tablecrafter-wp-data-tables'));
@@ -915,7 +917,7 @@ class TableCrafter
         }
 
         // Fallback for very old WP versions (unlikely but safe)
-        $host = parse_url($url, PHP_URL_HOST);
+        $host = wp_parse_url($url, PHP_URL_HOST);
         if (!$host)
             return false;
 
