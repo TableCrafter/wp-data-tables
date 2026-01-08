@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.19
+Stable tag: 2.2.20
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -13,7 +13,7 @@ Transform JSON APIs or CSVs into responsive WordPress tables. Features live sear
 
 == Description ==
 
-**TableCrafter** is the most powerful WordPress data table plugin for displaying dynamic content from external APIs, JSON files, and CSV data sources. Perfect for developers, agencies, and businesses who need to showcase real-time data without database bloat.
+**TableCrafter** is the most powerful WordPress data table plugin for displaying dynamic content from external APIs, JSON files, and CSV data sources. Perfect for developing, agencies, and businesses who need to showcase real-time data without database bloat.
 
 [Try Live Demo](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
 
@@ -71,6 +71,10 @@ Transform JSON APIs or CSVs into responsive WordPress tables. Features live sear
 *   **Debug Mode:** Comprehensive error reporting and troubleshooting tools
 
 == Changelog ==
+
+= 2.2.20 =
+* Feature: Added "Welcome Screen" with quick-start guide and one-click demo data loading to improve onboarding.
+* Fix: Corrected "Learn More" link for Pro features.
 
 = 2.2.19 =
 * Fix: Shortened plugin description to comply with WordPress.org repository standards (max 150 chars).

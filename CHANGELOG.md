@@ -25,6 +25,10 @@ All notable changes to TableCrafter will be documented in this file.
 ### Fixed
 - **Docs:** Cleaned up readme.txt formatting issues - removed duplicate changelog entries and misplaced product description from v2.2.13 section.
 
+## [2.2.20] - 2026-01-08
+### Added
+- **Onboarding:** Implemented "Welcome Screen" with activation redirect to guide new users to create their first table.
+
 ## [2.2.19] - 2026-01-08
 ### Fixed
 - **Repo:** Shortened plugin description to <150 characters to fix WordPress.org import warning.

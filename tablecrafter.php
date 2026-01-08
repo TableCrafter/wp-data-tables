@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – WordPress Data Tables & Dynamic Content Plugin
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 2.2.19
+ * Version: 2.2.20
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.2.19');
+define('TABLECRAFTER_VERSION', '2.2.20');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -61,6 +61,7 @@ class TableCrafter
         add_action('init', array($this, 'register_block'));
         add_shortcode('tablecrafter', array($this, 'render_table'));
         add_action('admin_menu', array($this, 'add_admin_menu'));
+        add_action('admin_init', array($this, 'welcome_redirect'));
 
         // AJAX Proxy Handlers for frontend and admin
         add_action('wp_ajax_tc_proxy_fetch', array($this, 'ajax_proxy_fetch'));
@@ -95,6 +96,15 @@ class TableCrafter
             array($this, 'render_admin_page'),
             'dashicons-editor-table',
             20
+        );
+
+        add_submenu_page(
+            'tablecrafter-wp-data-tables',
+            __('Welcome to TableCrafter', 'tablecrafter-wp-data-tables'),
+            __('Welcome', 'tablecrafter-wp-data-tables'),
+            'manage_options',
+            'tablecrafter-welcome',
+            array($this, 'render_welcome_page')
         );
     }
 
@@ -925,9 +935,54 @@ class TableCrafter
 
         return true;
     }
+    /**
+     * Render the Welcome Page.
+     */
+    public function render_welcome_page(): void
+    {
+        include TABLECRAFTER_PATH . 'views/welcome.php';
+    }
+
+    /**
+     * Handle Welcome Redirect on Activation.
+     */
+    public function welcome_redirect(): void
+    {
+        if (!get_option('tc_do_activation_redirect', false)) {
+            return;
+        }
+
+        if (defined('DOING_AJAX') && DOING_AJAX) {
+            return;
+        }
+
+        if (is_network_admin()) {
+            return;
+        }
+
+        delete_option('tc_do_activation_redirect');
+        wp_safe_redirect(admin_url('admin.php?page=tablecrafter-welcome'));
+        exit;
+    }
+
+    /**
+     * Plugin Activation Hook.
+     */
+    public static function activate(): void
+    {
+        add_option('tc_do_activation_redirect', true);
+    }
 }
 
 /**
  * Initialize TableCrafter.
  */
+/**
+ * Initialize TableCrafter.
+ */
 TableCrafter::get_instance();
+
+/**
+ * Register Activation Hook.
+ */
+register_activation_hook(__FILE__, array('TableCrafter', 'activate'));
