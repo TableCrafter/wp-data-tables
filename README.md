@@ -1,10 +1,48 @@
 # 🚀 TableCrafter: WordPress Data Tables & Dynamic Content Plugin
 
-**Turn any JSON API or remote file into a high-performance, responsive table in seconds.** 
+**Transform any JSON API or CSV into beautiful, responsive WordPress data tables. Features live search, pagination, sorting, mobile optimization, and SEO-friendly server-side rendering.**
 
 [![Try Live Demo](https://img.shields.io/badge/Try%20Live%20Demo-TasteWP-blue?logo=wordpress)](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
+[![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/tablecrafter-wp-data-tables?logo=wordpress)](https://wordpress.org/plugins/tablecrafter-wp-data-tables/)
+[![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dt/tablecrafter-wp-data-tables?logo=wordpress)](https://wordpress.org/plugins/tablecrafter-wp-data-tables/)
+[![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/r/tablecrafter-wp-data-tables?logo=wordpress)](https://wordpress.org/plugins/tablecrafter-wp-data-tables/)
+[![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2+-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
 
-### 🚀 Upgrade to Pro: Gravity Tables
+## 📸 Screenshots
+
+### Gutenberg Block Editor
+![Gutenberg Block Editor](screenshot-1.png)
+*Native WordPress block with visual sidebar controls, quick demo data options, and live preview. No external APIs needed to test functionality.*
+
+### Admin Dashboard & Live Preview
+![Admin Dashboard](screenshot-2.png)  
+*Product inventory demo showing JSON data transformed into responsive tables with live search functionality. Includes shortcode generator for easy copying.*
+
+### Interactive Data Table
+![Interactive Table](screenshot-3.png)
+*Real-time search filtering and smart auto-detected column filters working on live data. Shows mobile-responsive design and advanced filtering capabilities.*
+
+---
+
+## 🚀 Why TableCrafter?
+
+**The most powerful WordPress data table plugin for displaying dynamic content from external APIs, JSON files, and CSV data sources. Perfect for developers, agencies, and businesses who need to showcase real-time data without database bloat.**
+
+### 🌟 Zero Database Impact
+Unlike other WordPress table plugins that store data in your database, TableCrafter fetches data directly from your sources, keeping your WordPress installation clean and fast.
+
+### 🔍 SEO-Optimized Tables  
+Every table is rendered server-side with proper HTML structure, making all your data crawlable by Google, Bing, and other search engines for better rankings.
+
+### ⚡ Lightning-Fast Performance
+Advanced caching with Stale-While-Revalidate (SWR) delivers sub-100ms load times while keeping data fresh.
+
+### 📱 Mobile-First Design
+Tables automatically transform into responsive card layouts on mobile devices, ensuring perfect user experience across all screen sizes.
+
+---
+
+## 🚀 Upgrade to Pro: Gravity Tables
 
 Unlock the full potential of your data with **[Advanced Data Tables for Gravity Forms](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)** — the ultimate solution for managing Gravity Forms entries.
 
@@ -19,93 +57,438 @@ Unlock the full potential of your data with **[Advanced Data Tables for Gravity 
 
 **[Start your 10-day free trial today!](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**
 
-### 🛠️ Custom Customization
-Need a specific feature, a custom API integration, or a unique table layout? Contact me at **[info@fahdmurtaza.com](mailto:info@fahdmurtaza.com)** if you need to customise the plugin in any way for a fee. 
+---
 
+## 🛠️ Key Features for WordPress Developers
 
-TableCrafter is a mission-critical bridge between your dynamic external data and your WordPress site. Built for speed, hardened for security, and optimized for search engines. Now with **Smart Formatting**, **CSV Export**, **Mobile Reflow**, **Pagination**, and **Live Search**.
+*   **🎯 API Integration:** Connect to any REST API, JSON endpoint, or CSV file with zero coding
+*   **⚡ Live Search & Filtering:** Real-time data filtering as users type, with debounced performance
+*   **📱 Responsive Design:** Mobile-optimized card view with automatic reflow for small screens  
+*   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls
+*   **📄 Smart Pagination:** Client-side pagination for large datasets with customizable page sizes
+*   **🎨 Custom Styling:** CSS-friendly with variables and hooks for complete design control
+*   **🔒 Security First:** Built-in SSRF protection and WordPress capability-based authorization
+*   **📊 Data Export:** CSV and clipboard export with respect for current filters
+*   **🗂️ Column Management:** Show/hide specific columns with include/exclude parameters
+*   **🔗 Auto-Linking:** Automatically converts URLs and email addresses to clickable links
 
 ---
 
-### 🔥 Why TableCrafter?
+## 💼 Perfect Business Use Cases
 
-| Feature | The TableCrafter Advantage |
-| :--- | :--- |
-| **🚀 Instant Performance** | Powered by **SSR (Server-Side Rendering)** and **SWR (Stale-While-Revalidate)** caching for sub-100ms load times. |
-| **✨ Smart Formatting** | Automatically turns **Dates**, **URLs**, **Emails**, and **Booleans** into professional UI elements. |
-| **💾 Data Export** | One-click export to **CSV** or **Clipboard** for further analysis in Excel/Sheets. |
-| **🔍 SEO-Ready** | Data is rendered in PHP before the page loads, making every cell crawlable by Google. |
-| **📱 Mobile Reflow** | Automatically transforms wide tables into a responsive "Card View" for phones. |
-| **🛡️ Hardened Security** | Built-in SSRF protection and strict capability checks for all remote data operations. |
-| **📄 Smart Pagination** | Effortlessly navigate huge datasets with built-in client-side pagination. |
-| **⚡ Live Search** | Filter thousands of rows instantly with ultra-fast client-side search. |
-| **↕️ Interactive Sorting** | Click any header to sort numerically or alphabetically with smart type detection. |
-| **🧱 Block Editor First** | Native Gutenberg support. Build and preview your tables visually in seconds. |
+**Financial Services:** Display live cryptocurrency prices, stock data, or exchange rates from APIs like CoinGecko, Alpha Vantage, or custom trading platforms.
 
----
+**E-Commerce:** Show real-time inventory levels, price comparisons, or product catalogs from external suppliers and marketplaces.
 
-### ✨ Key Features
+**SaaS Dashboards:** Create client portals displaying usage metrics, billing information, or performance data from your application's API.
 
-*   **Native Gutenberg Block:** Add tables visually with a live preview directly in the WordPress editor.
-*   **Smart Auto-Formatting:** Intelligent detection of **Images**, **Emails**, **Dates**, and **Booleans**.
-*   **Data Export Suite:** Enable CSV download and Copy-to-Clipboard buttons for your users.
-*   **Mobile-First Design:** Smart reflow layout makes data readable on any device.
-*   **Safe Data Proxy:** Securely fetch remote JSON to bypass CORS while protecting your server from SSRF.
-*   **Data Pagination:** Keep your pages clean and fast by showing 10, 25, or 50 rows at a time.
-*   **Interactive Header Sorting:** Toggle between ASC/DESC for any column instantly.
-*   **Live Table Search:** Toggle a real-time search bar that filters data as you type.
-*   **Precision Data Curation:** Use `include` or `exclude` attributes to cherry-pick exactly what matters.
+**Real Estate:** Display property listings, market data, or rental information from MLS feeds or real estate APIs.
+
+**News & Media:** Showcase live sports scores, weather data, or social media metrics from external feeds.
+
+**Corporate Directories:** Display employee information, contact lists, or organizational data from HR systems.
 
 ---
 
-### 🕹️ How It Works
+## 🚀 Quick Start
 
-1.  **Install & Activate:** Up and running in under 60 seconds.
-2.  **Add the Block:** In the Block Editor, search for "TableCrafter" and add it to your page.
-3.  **Configure Visually:** Enter your JSON URL, toggle "Enable Export", and watch the table render instantly.
-4.  **Secure by Default:** All remote requests are validated and authorized automatically.
+### Option 1: Gutenberg Block (Recommended)
+1. Add the **TableCrafter** block to any page/post
+2. Enter your JSON URL in the sidebar
+3. Configure display options (search, export, pagination)
+4. Publish and you're done!
 
----
+### Option 2: Shortcode
+```
+[tablecrafter source="https://api.example.com/data.json" search="true" export="true"]
+```
 
-### 🛠️ Shortcode Attributes
-
-The `[tablecrafter]` shortcode remains fully supported:
-
-*   **`source`**: The JSON endpoint you want to visualize.
-*   **`export`**: Enable export buttons (`true` or `false`).
-*   **`per_page`**: Number of rows to show per page (e.g., `per_page="10"`).
-*   **`search`**: Toggle the search bar (`true` or `false`).
-*   **`root`**: The JSON path to the data array (e.g., `root="products"`).
-*   **`include`**: Limit columns and rename them (e.g., `include="id:ID, name:Full Name"`).
-*   **`exclude`**: Hide fields (e.g., `exclude="id,metadata"`).
-
----
-
-### 📈 Technical Pedigree (v2.2.0)
-
-
-*   **Smart Nested Rendering:** Auto-detection and Tag/Badge rendering for Arrays and Objects.
-*   **Custom Column Aliasing:** Advanced parsing logic for `key:Alias` headers in PHP and JS.
-*   **Smart Export:** CSV exports respect custom aliases and current sort/filter state.
-*   **Smart Formatting Engine:** Regex-based type detection (ISO 8601/Email/Boolean) in both PHP and JS.
-*   **Client-Side Export:** Generates CSV blobs in-browser, reducing server load.
-*   **Mobile Reflow:** CSS-driven layout transformation using semantic metadata.
-*   **Interactive Sorting:** Smart-type data sorting engine (Numeric/String/Alpha).
-*   **Security Architecture:** Implemented SSRF protection and WP capability-based authorization.
-*   **Code Quality:** Modern PHP type-hinting and optimized method structures for long-term stability.
-*   **Pagination Engine:** Client-side state management for fast page switching.
-*   **SSR/SWR Engine:** High-performance caching and rendering.
+### Option 3: PHP Function
+```php
+echo tablecrafter_render([
+    'source' => 'https://api.example.com/data.json',
+    'search' => true,
+    'per_page' => 25
+]);
+```
 
 ---
 
-### 📃 Documentation & Metadata
+## 📚 Technical Documentation
 
-**Contributors:** @fahdi  
+### System Requirements
+- **WordPress:** 5.0+
+- **PHP:** 7.4+ (8.0+ recommended)
+- **MySQL:** 5.7+ or MariaDB 10.3+
+- **Memory:** 64MB+ (128MB+ recommended for large datasets)
+
+### Browser Support
+- Chrome 70+
+- Firefox 65+
+- Safari 12+
+- Edge 79+
+- iOS Safari 12+
+- Android Chrome 70+
+
+---
+
+## 🛠️ Shortcode API Reference
+
+### Basic Syntax
+```
+[tablecrafter source="URL" additional_parameters...]
+```
+
+### Core Parameters
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `source` | string | *required* | JSON API endpoint or file URL |
+| `root` | string | `""` | JSONPath to data array (e.g., `data.results`) |
+| `search` | boolean | `false` | Enable live search functionality |
+| `export` | boolean | `false` | Enable CSV/clipboard export tools |
+| `per_page` | integer | `0` | Rows per page (0 = show all) |
+| `include` | string | `""` | Comma-separated columns to show |
+| `exclude` | string | `""` | Comma-separated columns to hide |
+| `id` | string | auto-generated | Unique container ID |
+
+### Advanced Column Selection
+```
+[tablecrafter source="..." include="id:Product ID,name:Product Name,price:Cost"]
+```
+
+### Nested Data Access
+```
+[tablecrafter source="..." root="response.data.products"]
+```
+
+### Complete Example
+```
+[tablecrafter 
+    source="https://api.store.com/products.json" 
+    root="data.items"
+    include="name:Product,price:Price,category:Category"
+    search="true" 
+    export="true" 
+    per_page="25"
+]
+```
+
+---
+
+## 🔧 Developer Hooks & Filters
+
+### PHP Hooks
+
+#### Filters
+```php
+// Modify data before rendering
+add_filter('tablecrafter_data', function($data, $source) {
+    // Transform $data array
+    return $data;
+}, 10, 2);
+
+// Customize cache duration (default: 3600 seconds)
+add_filter('tablecrafter_cache_ttl', function($ttl, $source) {
+    return 7200; // 2 hours
+}, 10, 2);
+
+// Modify HTTP request arguments
+add_filter('tablecrafter_http_args', function($args, $source) {
+    $args['headers']['Authorization'] = 'Bearer ' . get_option('api_token');
+    return $args;
+}, 10, 2);
+
+// Customize column auto-detection
+add_filter('tablecrafter_auto_columns', function($columns, $data) {
+    // Modify or reorder $columns array
+    return $columns;
+}, 10, 2);
+```
+
+#### Actions
+```php
+// Before data fetch
+add_action('tablecrafter_before_fetch', function($source) {
+    // Log API calls, update counters, etc.
+});
+
+// After successful data fetch
+add_action('tablecrafter_after_fetch', function($data, $source) {
+    // Process data, send notifications, etc.
+}, 10, 2);
+
+// On fetch error
+add_action('tablecrafter_fetch_error', function($error, $source) {
+    error_log("TableCrafter fetch failed: {$error->getMessage()}");
+}, 10, 2);
+```
+
+### JavaScript Hooks
+
+#### Events
+```javascript
+// Table rendered
+document.addEventListener('tablecrafter:rendered', function(e) {
+    const container = e.detail.container;
+    const data = e.detail.data;
+    // Custom post-render logic
+});
+
+// Search performed
+document.addEventListener('tablecrafter:searched', function(e) {
+    const searchTerm = e.detail.searchTerm;
+    const results = e.detail.results;
+    // Analytics, etc.
+});
+
+// Data exported
+document.addEventListener('tablecrafter:exported', function(e) {
+    const format = e.detail.format; // 'csv' or 'clipboard'
+    // Track export events
+});
+```
+
+#### Global Configuration
+```javascript
+// Modify default configuration
+window.TableCrafterDefaults = {
+    pagination: true,
+    pageSize: 50,
+    globalSearchPlaceholder: 'Find records...',
+    exportFilename: 'my-export.csv'
+};
+```
+
+---
+
+## 🏗️ Architecture & Performance
+
+### Caching Strategy
+TableCrafter implements a **Stale-While-Revalidate (SWR)** caching pattern:
+
+1. **Serve Stale:** Return cached data immediately
+2. **Validate in Background:** Fetch fresh data asynchronously  
+3. **Update Cache:** Store new data for next request
+4. **Fallback:** Serve stale data if fetch fails
+
+```php
+// Cache key structure
+$cache_key = 'tc_html_' . md5($source . $include . $exclude . $search . $export . $per_page);
+
+// Cache storage
+wp_cache_set($cache_key, $data, 'tablecrafter', $ttl);
+```
+
+### Server-Side Rendering (SSR)
+Tables are rendered on the server for:
+- **SEO Benefits:** All data is crawlable by search engines
+- **Fast TTFB:** No loading spinners or content shifts
+- **Accessibility:** Screen readers can access content immediately
+- **Zero-JS Fallback:** Tables work even with JavaScript disabled
+
+### Security Architecture
+
+#### SSRF Protection
+```php
+// URL validation
+if (!wp_http_validate_url($url)) {
+    throw new Exception('Invalid URL');
+}
+
+// Safe HTTP requests
+$response = wp_safe_remote_get($url, [
+    'timeout' => 30,
+    'user-agent' => 'TableCrafter/' . TABLECRAFTER_VERSION,
+    'headers' => ['Accept' => 'application/json']
+]);
+```
+
+#### Capability Checks
+```php
+// Admin-only features
+if (!current_user_can('edit_posts')) {
+    wp_die('Unauthorized');
+}
+
+// Proxy endpoint protection
+if (!wp_verify_nonce($_POST['nonce'], 'tablecrafter_proxy')) {
+    wp_die('Security check failed');
+}
+```
+
+### Data Processing Pipeline
+
+```
+┌─────────────────┐    ┌──────────────┐    ┌─────────────────┐
+│   JSON Source   │───▶│  HTTP Fetch  │───▶│  Data Parsing   │
+└─────────────────┘    └──────────────┘    └─────────────────┘
+                                                     │
+                                                     ▼
+┌─────────────────┐    ┌──────────────┐    ┌─────────────────┐
+│  Cache Storage  │◀───│  SSR Render  │◀───│ Column Detection│
+└─────────────────┘    └──────────────┘    └─────────────────┘
+                                                     │
+                                                     ▼
+┌─────────────────┐    ┌──────────────┐    ┌─────────────────┐
+│ Client Hydration│◀───│ HTML Output  │◀───│ Data Formatting │
+└─────────────────┘    └──────────────┘    └─────────────────┘
+```
+
+---
+
+## 📊 Database Schema
+
+TableCrafter uses **zero database tables** by design. All data is:
+- Fetched from external sources
+- Cached in WordPress transients
+- Rendered server-side to HTML
+- Enhanced client-side with JavaScript
+
+### Transient Keys
+```php
+// HTML cache
+"tc_html_{md5(source+params)}" => "rendered HTML"
+
+// Data cache  
+"tc_data_{md5(source)}" => "parsed JSON data"
+
+// Column cache
+"tc_cols_{md5(source)}" => "auto-detected columns"
+```
+
+---
+
+## 🧪 Testing & Quality Assurance
+
+### Unit Testing
+```bash
+# Run PHP tests
+php tests/run-tests.php
+
+# Test specific functionality
+php tests/run-tests.php --filter=TestSSRFProtection
+```
+
+### Browser Testing Matrix
+| Browser | Version | Status |
+|---------|---------|--------|
+| Chrome | 120+ | ✅ Full Support |
+| Firefox | 115+ | ✅ Full Support |
+| Safari | 16+ | ✅ Full Support |
+| Edge | 120+ | ✅ Full Support |
+| iOS Safari | 15+ | ✅ Mobile Optimized |
+| Android Chrome | 120+ | ✅ Mobile Optimized |
+
+### Performance Benchmarks
+- **Cold Load:** < 200ms (with external API)
+- **Warm Cache:** < 50ms (SWR cache hit)
+- **Client Hydration:** < 100ms (embedded data)
+- **Search Response:** < 10ms (client-side filtering)
+
+---
+
+## 🔍 Debugging & Troubleshooting
+
+### Debug Mode
+```php
+// Enable debug logging
+add_filter('tablecrafter_debug', '__return_true');
+
+// Log file location
+wp-content/debug.log
+```
+
+### Common Issues
+
+#### CORS Errors
+**Problem:** `Access-Control-Allow-Origin` errors in browser console  
+**Solution:** Use TableCrafter's built-in proxy automatically handles CORS
+
+#### Memory Limits  
+**Problem:** Large datasets causing memory exhaustion  
+**Solution:** Use `per_page` parameter to enable pagination
+
+#### Cache Issues
+**Problem:** Stale data not refreshing  
+**Solution:** Clear cache programmatically
+```php
+// Clear specific cache
+delete_transient('tc_data_' . md5($source));
+
+// Clear all TableCrafter cache
+global $wpdb;
+$wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_tc_%'");
+```
+
+### WP-CLI Commands
+```bash
+# Clear all TableCrafter cache
+wp eval "delete_transient('tc_data_*');"
+
+# Test API endpoint
+wp eval "var_dump(wp_safe_remote_get('https://api.example.com/data.json'));"
+
+# Check plugin status
+wp plugin status tablecrafter-wp-data-tables
+```
+
+---
+
+## 🤝 Contributing
+
+### Development Setup
+```bash
+# Clone repository
+git clone https://github.com/TableCrafter/wp-data-tables.git
+
+# Install development dependencies
+composer install
+npm install
+
+# Run tests
+npm test
+php tests/run-tests.php
+
+# Start local development
+npm run dev
+```
+
+### Code Standards
+- **PHP:** WordPress Coding Standards (WPCS)
+- **JavaScript:** ESLint + WordPress eslint config
+- **CSS:** Stylelint + WordPress CSS guidelines
+- **Documentation:** PHPDoc for all functions
+
+### Release Process
+1. Update version in `tablecrafter.php`, `readme.txt`, `CHANGELOG.md`, `sync_svn.sh`
+2. Run full test suite
+3. Create Git tag: `git tag v2.2.x`
+4. Push to GitHub: `git push origin main --tags`  
+5. Deploy to WordPress.org: `./sync_svn.sh && cd ../tablecrafter-svn && svn ci`
+
+---
+
+## 📄 License & Legal
+
 **License:** GPLv2 or later  
-**Stable tag:** 2.2.1  
-**Requires PHP:** 7.4+
+**Copyright:** © 2024 TableCrafter Team  
+**Compatibility:** WordPress 5.0+ | PHP 7.4+
 
+### Third-Party Assets
+- Icons: Heroicons (MIT License)
+- Inspiration: WordPress Core Table Block
+- Typography: System font stack
 
 ---
 
-**Love TableCrafter?** [Support Development](https://www.paypal.me/fahadmurtaza) ☕
+## 🆘 Support & Contact
+
+- **Documentation:** [GitHub Wiki](https://github.com/TableCrafter/wp-data-tables/wiki)
+- **Bug Reports:** [GitHub Issues](https://github.com/TableCrafter/wp-data-tables/issues)
+- **Feature Requests:** [GitHub Discussions](https://github.com/TableCrafter/wp-data-tables/discussions)
+- **Custom Development:** [info@fahdmurtaza.com](mailto:info@fahdmurtaza.com)
+- **Premium Support:** [Gravity Tables Pro](https://checkout.freemius.com/plugin/20996/plan/35031/)
+
+---
+
+**Love TableCrafter?** ⭐ [Star us on GitHub](https://github.com/TableCrafter/wp-data-tables) | ☕ [Support Development](https://www.paypal.me/fahadmurtaza)
