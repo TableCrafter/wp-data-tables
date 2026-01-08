@@ -1,6 +1,6 @@
 === TableCrafter – WordPress Data Tables & Dynamic Content Plugin ===
 Contributors: fahdi
-Tags: table, json, api, data table, datatables
+Tags: table, json, api, data table, datatables, csv, gutenberg, responsive, rest-api, shortcode, ajax, seo
 Requires at least: 5.0
 Tested up to: 6.9
 Stable tag: 2.2.21
