@@ -189,9 +189,10 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 
 == Screenshots ==
 
-1. **Gutenberg Block Editor** - Native WordPress block with visual sidebar controls, quick demo data options, and live preview. No external APIs needed to test functionality.
-2. **Admin Dashboard & Live Preview** - Product inventory demo showing JSON data transformed into responsive tables with live search functionality. Includes shortcode generator for easy copying.
-3. **Interactive Data Table** - Real-time search filtering and smart auto-detected column filters working on live data. Shows mobile-responsive design and advanced filtering capabilities.
+1. **Welcome Onboarding** - Friendly "Get Started" screen that guides new users to create their first table in seconds with one-click demo data.
+2. **Admin Dashboard & Live Preview** - Shortcode builder with a live preview showing a demo JSON for product inventory.
+3. **Interactive Data Table** - Shortcode builder with a live preview showing how we get automatic filters based on the data type of column.
+4. **Gutenberg Block Editor** - shows the block editor with a demo JSON loaded for sales metrics.
 
 
 == Changelog ==
