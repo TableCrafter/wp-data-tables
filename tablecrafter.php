@@ -619,8 +619,8 @@ class TableCrafter
             </div>
             <p style="margin: 0 0 10px 0; color: #1d2327;">
                 <?php
-                /* translators: %s: Error message describing what went wrong with the data source */
                 echo sprintf(
+                    /* translators: %s: Error message describing what went wrong with the data source */
                     esc_html__('We encountered an issue with your data source: %s', 'tablecrafter-wp-data-tables'),
                     '<code style="background: #f0f0f1; border-radius: 4px; padding: 2px 4px; color: #d63638;">' . esc_html($error) . '</code>'
                 ); ?>
