@@ -320,7 +320,7 @@ class TableCrafter
                 'source' => array('type' => 'string', 'default' => ''),
                 'root' => array('type' => 'string', 'default' => ''),
                 'include' => array('type' => 'string', 'default' => ''),
-                'exclude' => array('type' => 'string', 'default' => ''),
+                'exclude' => array('type' => 'string', 'default' => ''), // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- User-facing parameter, not a query param
                 'search' => array('type' => 'boolean', 'default' => false),
                 'per_page' => array('type' => 'number', 'default' => 0),
                 'export' => array('type' => 'boolean', 'default' => false),
@@ -359,7 +359,7 @@ class TableCrafter
             'source' => '',
             'id' => 'tc-' . uniqid(),
             'include' => '',
-            'exclude' => '',
+            'exclude' => '', // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- Shortcode attribute, not a query param
             'root' => '',
             'search' => false,
             'export' => false,
