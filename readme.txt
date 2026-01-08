@@ -3,13 +3,13 @@ Contributors: fahdi
 Tags: table, json, api, data table, datatables
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.18
+Stable tag: 2.2.19
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://www.paypal.me/fahadmurtaza
 
-Transform any JSON API or CSV into beautiful, responsive WordPress data tables. Features live search, pagination, sorting, mobile optimization, and SEO-friendly server-side rendering.
+Transform JSON APIs or CSVs into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
 
 == Description ==
 
@@ -72,7 +72,10 @@ Transform any JSON API or CSV into beautiful, responsive WordPress data tables. 
 
 == Changelog ==
 
-= 2.2.18 =
+= 2.2.19 =
+* Fix: Shortened plugin description to comply with WordPress.org repository standards (max 150 chars).
+
+= 2.2.17 =
 * Enhancement: Completely rewrote README.md with comprehensive technical documentation for developers
 * Enhancement: Added SEO-optimized screenshot descriptions and WordPress.org plugin badges
 * Fix: Resolved Live Search toggle not working in Gutenberg block editor (critical hydration bug)
