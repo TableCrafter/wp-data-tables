@@ -189,10 +189,10 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 
 == Screenshots ==
 
-1. **Welcome Onboarding** - Friendly "Get Started" screen that guides new users to create their first table in seconds with one-click demo data.
-2. **Admin Dashboard & Live Preview** - Shortcode builder with a live preview showing a demo JSON for product inventory.
-3. **Interactive Data Table** - Shortcode builder with a live preview showing how we get automatic filters based on the data type of column.
-4. **Gutenberg Block Editor** - shows the block editor with a demo JSON loaded for sales metrics.
+1. **Welcome Screen & Quick Start Guide** - New user onboarding experience with one-click demo data loading. Shows the friendly "Get Started" interface that reduces setup time from minutes to seconds.
+2. **Admin Dashboard with Live Table Preview** - WordPress admin interface showing the shortcode generator with real-time preview of product inventory data. Demonstrates how JSON data transforms into responsive, searchable tables instantly.
+3. **Auto-Detected Smart Filters** - Advanced filtering system that automatically detects data types (text, numbers, dates) and creates appropriate filter controls. Shows multi-select dropdowns, date ranges, and number ranges working on live data.
+4. **Gutenberg Block Editor Integration** - Native WordPress block editor with visual sidebar controls for configuring tables. Displays sales metrics demo with no coding required - just paste a JSON URL and customize settings.
 
 
 == Changelog ==
