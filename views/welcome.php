@@ -51,7 +51,7 @@ if (!defined('ABSPATH')) {
         <div class="tc-welcome-sidebar">
             <!-- Lead Magnet -->
             <div class="card"
-                style="margin-top: 0; max-width: none; border-left: 4px solid #2563eb; background: #f8fafc; padding: 24px; display: none;">
+                style="margin-top: 0; max-width: none; border-left: 4px solid #2563eb; background: #f8fafc; padding: 24px;">
                 <div style="text-align: center; margin-bottom: 24px;">
                     <div style="font-size: 36px; margin-bottom: 12px; line-height: 1;">🎁</div>
                     <h3 style="margin: 0 0 8px; font-size: 17px; font-weight: 700; color: #1e293b;">Get 50 Free Data

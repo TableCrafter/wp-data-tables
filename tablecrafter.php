@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – Dynamic JSON & API Data Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 2.2.21
+ * Version: 2.2.22
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.2.21');
+define('TABLECRAFTER_VERSION', '2.2.22');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -999,43 +999,52 @@ class TableCrafter
             return;
         }
 
-        // Store in WordPress options (simple approach)
-        $subscribers = get_option('tc_lead_subscribers', array());
+        // ConvertKit API credentials
+        $api_secret = 'dRZ4dGm1KseJ4DF5kvdPrB0iZwBlrHe87WaYk1-wF3U';
+        $form_id = '8953939';
 
-        // Check if already subscribed
-        if (in_array($email, $subscribers)) {
-            wp_send_json_success(array('message' => 'Already subscribed'));
+        // Send to ConvertKit
+        $response = wp_remote_post("https://api.convertkit.com/v3/forms/{$form_id}/subscribe", array(
+            'body' => wp_json_encode(array(
+                'api_secret' => $api_secret,
+                'email' => $email,
+                'fields' => array(
+                    'plugin_version' => TABLECRAFTER_VERSION,
+                    'site_url' => get_site_url(),
+                    'source' => 'TableCrafter Welcome Screen'
+                )
+            )),
+            'headers' => array(
+                'Content-Type' => 'application/json'
+            ),
+            'timeout' => 15
+        ));
+
+        // Check for errors
+        if (is_wp_error($response)) {
+            // Fallback: send email if ConvertKit fails
+            wp_mail(
+                'info@fahdmurtaza.com',
+                'TableCrafter Lead (CK Failed): ' . $email,
+                "ConvertKit API failed. New subscriber:\n\nEmail: " . $email . "\nSite: " . get_site_url() . "\nError: " . $response->get_error_message()
+            );
+
+            wp_send_json_success(array(
+                'message' => 'Subscription successful'
+            ));
             return;
         }
 
-        // Add new subscriber
-        $subscribers[] = $email;
-        update_option('tc_lead_subscribers', $subscribers);
+        $body = json_decode(wp_remote_retrieve_body($response), true);
 
-        // Log subscription with timestamp
-        $log = get_option('tc_lead_log', array());
-        $log[] = array(
-            'email' => $email,
-            'date' => current_time('mysql'),
-            'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
-        );
-        update_option('tc_lead_log', $log);
-
-        // TODO: Send to ConvertKit/Mailchimp API
-        // For now, send admin notification
-        $admin_email = get_option('admin_email');
-        $subject = 'New TableCrafter Lead: ' . $email;
-        $message = "New lead magnet subscription:\n\n";
-        $message .= "Email: " . $email . "\n";
-        $message .= "Date: " . current_time('mysql') . "\n";
-        $message .= "Total subscribers: " . count($subscribers) . "\n\n";
-        $message .= "View all subscribers in TableCrafter > Leads";
-
-        wp_mail($admin_email, $subject, $message);
+        // Always show success to user (even if there's an API issue)
+        if (!isset($body['subscription'])) {
+            // Log error for debugging
+            error_log('ConvertKit API response: ' . print_r($body, true));
+        }
 
         wp_send_json_success(array(
-            'message' => 'Subscription successful',
-            'total' => count($subscribers)
+            'message' => 'Subscription successful'
         ));
     }
 }
