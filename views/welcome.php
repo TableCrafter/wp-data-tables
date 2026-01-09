@@ -35,7 +35,8 @@ if (!defined('ABSPATH')) {
                 <h3 style="margin: 0 0 16px; font-size: 16px; font-weight: 600;">📚 Resources</h3>
                 <ul style="list-style: disc; margin: 0 0 0 20px; padding: 0;">
                     <li style="margin-bottom: 10px; line-height: 1.6;"><a
-                            href="https://github.com/TableCrafter/wp-data-tables" target="_blank">Documentation</a> -
+                            href="https://github.com/TableCrafter/wp-data-tables?tab=readme-ov-file#-tablecrafter-wordpress-data-tables--dynamic-content-plugin"
+                            target="_blank">Documentation</a> -
                         Full usage guide.</li>
                     <li style="margin-bottom: 10px; line-height: 1.6;"><a
                             href="https://tastewp.org/plugins/tablecrafter-wp-data-tables" target="_blank">Live Demo</a>
