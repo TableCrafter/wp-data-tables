@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.23
+Stable tag: 2.2.24
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -71,6 +71,10 @@ Transform JSON APIs or CSVs into responsive WordPress tables. Features live sear
 *   **Debug Mode:** Comprehensive error reporting and troubleshooting tools
 
 == Changelog ==
+
+= 2.2.24 =
+* Fix: Updated `blueprint.json` to ensure the "Live Preview" in WordPress Playground (and WordPress.org) correctly redirects to the Welcome Screen.
+* Improvement: Smoothed out the onboarding flow for live demos.
 
 = 2.2.23 =
 * Fix: Solved "JSON links not working" issue by implementing Unified Data Fetcher.

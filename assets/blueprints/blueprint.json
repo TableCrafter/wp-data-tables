@@ -1,5 +1,6 @@
 {
-    "landingPage": "/wp-admin/admin.php?page=tablecrafter-wp-data-tables",
+    "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+    "landingPage": "/wp-admin/admin.php?page=tablecrafter-welcome",
     "preferredVersions": {
         "php": "8.0",
         "wp": "latest"
