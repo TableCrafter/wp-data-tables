@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.21
+Stable tag: 2.2.22
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -71,6 +71,10 @@ Transform JSON APIs or CSVs into responsive WordPress tables. Features live sear
 *   **Debug Mode:** Comprehensive error reporting and troubleshooting tools
 
 == Changelog ==
+
+= 2.2.22 =
+* Feature: Added direct ConvertKit integration for lead generation.
+* Improvement: Activated Lead Magnet UI on Welcome Screen for new users.
 
 = 2.2.21 =
 * Improvement: Disabled global search by default for cleaner initial UI.
