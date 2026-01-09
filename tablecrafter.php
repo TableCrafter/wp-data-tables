@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – Dynamic JSON & API Data Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 2.2.22
+ * Version: 2.2.23
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.2.22');
+define('TABLECRAFTER_VERSION', '2.2.23');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -457,6 +457,88 @@ class TableCrafter
      * @param array $atts Configuration attributes.
      * @return array|false array('html' => string, 'data' => array) or false on failure.
      */
+    /**
+     * Unified Data Fetcher (Local & Remote).
+     * 
+     * Handles local file resolution (performance/safety) and remote HTTP fetching.
+     * 
+     * @param string $url The source URL.
+     * @return array|WP_Error Parsed JSON data (array/object) or error.
+     */
+    private function fetch_data_from_source(string $url)
+    {
+        // 1. Try Local File Resolution (Optimization & Loopback bypassing)
+        $site_url = site_url();
+        $home_url = home_url();
+        $plugin_url = TABLECRAFTER_URL;
+
+        if (strpos($url, $site_url) === 0 || strpos($url, $home_url) === 0 || strpos($url, $plugin_url) === 0) {
+            $relative_path = str_replace(array($site_url, $home_url, $plugin_url), '', $url);
+            $relative_path = ltrim($relative_path, '/');
+
+            $possible_paths = array(
+                ABSPATH . $relative_path,
+                rtrim(ABSPATH, '/') . '/' . ltrim($relative_path, '/'),
+                WP_CONTENT_DIR . '/' . $relative_path,
+            );
+
+            if (strpos($relative_path, 'wp-content/plugins/tablecrafter-wp-data-tables/') === 0) {
+                $plugin_relative = str_replace('wp-content/plugins/tablecrafter-wp-data-tables/', '', $relative_path);
+                $possible_paths[] = TABLECRAFTER_PATH . $plugin_relative;
+            } else if (strpos($relative_path, 'tablecrafter-wp-data-tables/') !== false) {
+                $parts = explode('tablecrafter-wp-data-tables/', $relative_path, 2);
+                if (isset($parts[1])) {
+                    $possible_paths[] = TABLECRAFTER_PATH . $parts[1];
+                }
+            }
+
+            foreach ($possible_paths as $abs_path) {
+                $abs_path = realpath($abs_path);
+                if ($abs_path && file_exists($abs_path) && is_readable($abs_path)) {
+                    $content = @file_get_contents($abs_path);
+                    if ($content !== false) {
+                        $data = json_decode($content, true);
+                        if ($data !== null && json_last_error() === JSON_ERROR_NONE) {
+                            return $data;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 2. Security Check for Remote URLs
+        if (!$this->is_safe_url($url)) {
+            return new WP_Error('security_error', 'The provided URL is blocked for safety (Local/Private IP).');
+        }
+
+        // 3. Remote HTTP Fetch
+        $response = wp_safe_remote_get($url, array(
+            'timeout' => 15,
+            'redirection' => 5,
+            'reject_unsafe_urls' => true,
+            'sslverify' => false
+        ));
+
+        if (is_wp_error($response)) {
+            return $response;
+        }
+
+        $code = wp_remote_retrieve_response_code($response);
+        if ($code !== 200) {
+            return new WP_Error('http_error', 'Source returned HTTP ' . $code);
+        }
+
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return new WP_Error('json_error', 'The source did not return a valid JSON structure.');
+        }
+
+        return $data;
+    }
+
+
     private function fetch_and_render_php($atts)
     {
         // 1. Try Cache First
@@ -466,28 +548,14 @@ class TableCrafter
         if ($cached_data !== false) {
             $data = $cached_data;
         } else {
-            // Check security before remote request
-            if (!$this->is_safe_url($atts['source'])) {
-                return array('error' => 'Security Block: The URL provided is not allowed.');
+            // 2. Unified Fetch
+            $result = $this->fetch_data_from_source($atts['source']);
+
+            if (is_wp_error($result)) {
+                return array('error' => $result->get_error_message());
             }
 
-            // 2. Cache Miss: Fetch from Source
-            $response = wp_remote_get($atts['source'], array('timeout' => 15));
-            if (is_wp_error($response)) {
-                return array('error' => 'Connection Failed: ' . $response->get_error_message());
-            }
-
-            $code = wp_remote_retrieve_response_code($response);
-            if ($code !== 200) {
-                return array('error' => 'API Error: Source returned HTTP ' . $code);
-            }
-
-            $body = wp_remote_retrieve_body($response);
-            $data = json_decode($body, true);
-
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                return array('error' => 'Malformed JSON: The source did not return a valid data structure.');
-            }
+            $data = $result;
 
             // 3. Set Cache for Next Time (Read-Through)
             if ($data) {
@@ -746,76 +814,14 @@ class TableCrafter
             wp_send_json_success($cached_data);
         }
 
-        // Optimization: Handle local plugin files directly to avoid loopback hangs
-        // Check this BEFORE security check to allow local plugin files
-        $site_url = site_url();
-        $home_url = home_url();
-        $plugin_url = TABLECRAFTER_URL;
+        // Unified Fetch
+        $result = $this->fetch_data_from_source($url);
 
-        // Check if URL is from this site (try site_url, home_url, or plugin URL)
-        if (strpos($url, $site_url) === 0 || strpos($url, $home_url) === 0 || strpos($url, $plugin_url) === 0) {
-            // Try to resolve as a local file path
-            $relative_path = str_replace(array($site_url, $home_url, $plugin_url), '', $url);
-            $relative_path = ltrim($relative_path, '/');
-
-            // Try multiple possible paths
-            $possible_paths = array(
-                ABSPATH . $relative_path,
-                rtrim(ABSPATH, '/') . '/' . ltrim($relative_path, '/'),
-                WP_CONTENT_DIR . '/' . $relative_path,
-            );
-
-            // If it's a plugin file, try direct plugin path
-            if (strpos($relative_path, 'wp-content/plugins/tablecrafter-wp-data-tables/') === 0) {
-                $plugin_relative = str_replace('wp-content/plugins/tablecrafter-wp-data-tables/', '', $relative_path);
-                $possible_paths[] = TABLECRAFTER_PATH . $plugin_relative;
-            } else if (strpos($relative_path, 'tablecrafter-wp-data-tables/') !== false) {
-                // Handle case where path might already be relative to plugin
-                $parts = explode('tablecrafter-wp-data-tables/', $relative_path, 2);
-                if (isset($parts[1])) {
-                    $possible_paths[] = TABLECRAFTER_PATH . $parts[1];
-                }
-            }
-
-            foreach ($possible_paths as $abs_path) {
-                $abs_path = realpath($abs_path); // Resolve any symlinks or relative paths
-                if ($abs_path && file_exists($abs_path) && is_readable($abs_path)) {
-                    $content = @file_get_contents($abs_path);
-                    if ($content !== false) {
-                        $data = json_decode($content, true);
-                        if ($data !== null && json_last_error() === JSON_ERROR_NONE) {
-                            set_transient($cache_key, $data, HOUR_IN_SECONDS);
-                            wp_send_json_success($data);
-                        }
-                    }
-                }
-            }
+        if (is_wp_error($result)) {
+            wp_send_json_error('TableCrafter Proxy Error: ' . $result->get_error_message());
         }
 
-        // Security check: Only apply to external URLs
-        if (!$this->is_safe_url($url)) {
-            wp_send_json_error(__('TableCrafter Security Error: The provided URL is blocked for safety (Local/Private IP).', 'tablecrafter-wp-data-tables'));
-        }
-
-        // Use wp_safe_remote_get to enforce 'reject_unsafe_urls' at the http layer
-        // This prevents DNS Rebinding attacks where a domain resolves to a private IP
-        $response = wp_safe_remote_get($url, array(
-            'timeout' => 15,
-            'redirection' => 5,
-            'reject_unsafe_urls' => true,
-            'sslverify' => false
-        ));
-
-        if (is_wp_error($response)) {
-            wp_send_json_error('TableCrafter Proxy Error: ' . $response->get_error_message());
-        }
-
-        $body = wp_remote_retrieve_body($response);
-        $data = json_decode($body);
-
-        if ($data === null) {
-            wp_send_json_error('TableCrafter Proxy Error: Invalid JSON response from source.');
-        }
+        $data = $result;
 
         set_transient($cache_key, $data, HOUR_IN_SECONDS);
         $this->track_url($url);
