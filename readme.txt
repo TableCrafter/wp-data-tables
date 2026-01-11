@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.34
+Stable tag: 2.3.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -160,6 +160,12 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Gutenberg Block Editor Integration** - Native WordPress block editor with visual sidebar controls for configuring tables. Displays sales metrics demo with no coding required - just paste a JSON URL and customize settings.
 
 == Changelog ==
+= 2.3.0 =
+* Major Improvement: Consolidated Gutenberg Block Builder stability and reactivity.
+* Feature: Full proxy support for remote data URLs within the block editor.
+* Fix: Resolved persistent Fatal Errors and TypeErrors in SSR rendering for various data structures.
+* Improvement: Graceful handling of simple data lists (auto-converts to table format).
+* UI: Dynamic preview button states (Red/Green) and auto-preview triggers in the admin.
 = 2.2.34 =
 * Fix: Resolved persistent Fatal Error when accessing stdClass objects as arrays in the SSR loop.
 = 2.2.33 =

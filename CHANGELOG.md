@@ -2,6 +2,13 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.3.0] - 2026-01-11
+### Added
+- **Gutenberg Block:** Full proxy support and reactive settings (Search, Filter, Export).
+- **SSR Robustness:** Consolidated fixes for `stdClass` and `TypeError` crashes.
+- **Data Conversion:** Auto-conversion of simple lists to single-column tables.
+- **Admin UI:** Dynamic Red/Green "Preview Table" button and auto-preview on toggle.
+
 ## [2.2.34] - 2026-01-11
 ### Fixed
 - **Hotfix:** Resolved persistent `stdClass` array access error in the main SSR rendering loop.
