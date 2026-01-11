@@ -75,7 +75,7 @@ Transform JSON APIs or CSVs into responsive WordPress tables. Features live sear
 1. **Upload or Search**: Search for `TableCrafter` in **Plugins > Add New** or upload the plugin folder to `/wp-content/plugins/`.
 2. **Activate**: Click **Activate** on the Plugins page.
 3. **Configure**: Visit the **TableCrafter** menu in your sidebar to test JSON URLs and generate shortcodes.
-4. **Embed**: Insert the **TableCrafter Block** in the Gutenberg editor for a visual configuration experience, or use the `[tablecrafter]` shortcode for manual placement. See the **Usage** section below for advanced parameters like `root`, `include`, and `exclude`.
+4. **Embed**: Use the **TableCrafter Block** in Gutenberg for visual control, or use the built-in **Shortcode Builder** (TableCrafter menu) to generate specialized shortcodes for any page builder. See the **Usage** section below for advanced manual parameters.
 
 == Usage ==
 
