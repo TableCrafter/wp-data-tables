@@ -2,6 +2,10 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.33] - 2026-01-11
+### Fixed
+- **Hotfix:** Resolved critical `TypeError` in `array_keys()` during SSR rendering when data rows are objects.
+
 ## [2.2.32] - 2026-01-11
 ### Added
 - **Block Builder:** Fixed re-initialization and proxy support for the Gutenberg editor.
