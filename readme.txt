@@ -79,6 +79,14 @@ Transform JSON APIs or CSVs into responsive WordPress tables. Features live sear
 
 == Usage ==
 
+### Visual Shortcode Builder (Recommended)
+Go to the **TableCrafter** admin menu to use the interactive builder.
+1. Enter your JSON URL.
+2. Toggle settings (Search, Filter, Export).
+3. Click **Preview Table** to verify data.
+4. Copy the generated shortcode.
+
+### Manual Shortcode Parameters
 The `[tablecrafter]` shortcode is highly flexible:
 
 *   `source`: (Required) The URL to your JSON API or file.
@@ -155,9 +163,9 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 == Screenshots ==
 
 1. **Welcome Screen & Quick Start Guide** - New user onboarding experience with one-click demo data loading. Shows the friendly "Get Started" interface that reduces setup time from minutes to seconds.
-2. **Admin Dashboard with Live Table Preview** - WordPress admin interface showing the shortcode generator with real-time preview of product inventory data. Demonstrates how JSON data transforms into responsive, searchable tables instantly.
+2. **Visual Shortcode Builder & Preview** - Use the Admin Builder to generate shortcodes and toggle options while previewing live data instantly. Demonstrates how JSON data transforms into responsive, searchable tables.
 3. **Auto-Detected Smart Filters** - Advanced filtering system that automatically detects data types (text, numbers, dates) and creates appropriate filter controls. Shows multi-select dropdowns, date ranges, and number ranges working on live data.
-4. **Gutenberg Block Editor Integration** - Native WordPress block editor with visual sidebar controls for configuring tables. Displays sales metrics demo with no coding required - just paste a JSON URL and customize settings.
+4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
 = 2.3.0 =
