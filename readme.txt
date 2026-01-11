@@ -1,9 +1,9 @@
-=== TableCrafter – Dynamic JSON & API Data Tables ===
+=== TableCrafter – Data to Beautiful Tables ===
 Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.2.24
+Stable tag: 2.2.31
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -70,55 +70,6 @@ Transform JSON APIs or CSVs into responsive WordPress tables. Features live sear
 *   **Shortcode API:** Flexible shortcode parameters for non-technical users
 *   **Debug Mode:** Comprehensive error reporting and troubleshooting tools
 
-== Changelog ==
-
-= 2.2.24 =
-* Fix: Updated `blueprint.json` to ensure the "Live Preview" in WordPress Playground (and WordPress.org) correctly redirects to the Welcome Screen.
-* Improvement: Smoothed out the onboarding flow for live demos.
-
-= 2.2.23 =
-* Fix: Solved "JSON links not working" issue by implementing Unified Data Fetcher.
-* Core: Improved local file resolution logic to prevent false positives in security checks.
-* Security: Enhanced SSRF protection while allow-listing local demo data paths.
-
-= 2.2.22 =
-* Feature: Added direct ConvertKit integration for lead generation.
-* Improvement: Activated Lead Magnet UI on Welcome Screen for new users.
-
-= 2.2.21 =
-* Improvement: Disabled global search by default for cleaner initial UI.
-* Improvement: Moved "Clear All Filters" button below filter inputs and improved spacing.
-
-= 2.2.20 =
-* Feature: Added "Welcome Screen" with quick-start guide and one-click demo data loading to improve onboarding.
-* Fix: Corrected "Learn More" link for Pro features.
-
-= 2.2.19 =
-* Fix: Shortened plugin description to comply with WordPress.org repository standards (max 150 chars).
-
-= 2.2.17 =
-* Enhancement: Completely rewrote README.md with comprehensive technical documentation for developers
-* Enhancement: Added SEO-optimized screenshot descriptions and WordPress.org plugin badges
-* Fix: Resolved Live Search toggle not working in Gutenberg block editor (critical hydration bug)
-* Enhancement: Updated screenshots with new contextual images showing key functionality
-* Improvement: Enhanced plugin description with targeted SEO keywords and use cases
-* Fix: Updated Gutenberg block icon to match WordPress design standards
-* Docs: Added extensive developer documentation including hooks, filters, and architecture details
-
-= 2.2.17 =
-* Fix: Added proper "== Description ==" section header for better WordPress.org formatting.
-
-= 2.2.16 =
-* Fix: Cleaned up readme.txt formatting issues - removed duplicate changelog entries and misplaced product description.
-
-= 2.2.15 =
-* Fix: Updated WordPress Playground blueprint.json with required meta fields and preferredVersions for Live Preview compatibility.
-* Improvement: Blueprint now includes proper title, author, and PHP/WordPress version preferences.
-
-= 2.2.14 =
-* Security: Fixed a critical SSRF vulnerability in the AJAX proxy by enforcing strict URL validation and safe remote requests.
-* Optimization: Improved error handling for proxy requests.
-
 == Installation ==
 
 1.  Search for **TableCrafter** in your WordPress dashboard or upload the folder to `/wp-content/plugins/`.
@@ -133,6 +84,7 @@ The `[tablecrafter]` shortcode is highly flexible:
 *   `source`: (Required) The URL to your JSON API or file.
 *   `root`: (Optional) Path to the data array in the JSON response (e.g., `root="data.results"`).
 *   `search`: (Optional) Toggle the live search bar (`true` or `false`).
+*   `filters`: (Optional) Toggle column filters (`true` or `false`).
 *   `per_page`: (Optional) Number of rows to show per page (e.g., `per_page="10"`).
 *   `include`: (Optional) Comma-separated list of keys you want to show.
 *   `exclude`: (Optional) Comma-separated list of keys you want to hide.
@@ -207,21 +159,83 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 3. **Auto-Detected Smart Filters** - Advanced filtering system that automatically detects data types (text, numbers, dates) and creates appropriate filter controls. Shows multi-select dropdowns, date ranges, and number ranges working on live data.
 4. **Gutenberg Block Editor Integration** - Native WordPress block editor with visual sidebar controls for configuring tables. Displays sales metrics demo with no coding required - just paste a JSON URL and customize settings.
 
-
 == Changelog ==
+= 2.2.31 =
+* Feature: Added dynamic preview button states (Red for unsaved changes, Green for synced).
+* Feature: Added auto-preview trigger when toggling checkboxes (Search, Filters, Export).
+* Feature: Enhanced Styling for Global Search and Clear Filters button.
+* Core: Updated to v1.4.3 with refined styling and debounced interactions.
+* Fix: Explicit shortcode attribute generation for boolean values.
+= 2.2.27 =
+* Feature: Visual Shortcode Builder in Admin Dashboard for rapid table creation.
+* Feature: Real-time shortcode generation with One-Click Copy and clipboard feedback.
+* Core: Updated to v2.2.27 with smart path processing (root) and column filtering (include/exclude).
+* Fix: Resolved critical data initialization bug in the core library.
+* Enhanced: Admin preview now accurately respects all config parameters for a true WYSIWYG experience.
+* Branding: Updated to "Data to Beautiful Tables" to reflect format-agnostic vision.
+
+= 2.2.26 =
+* Architecture: Refactored Lead Magnet (ConvertKit) logic into a standalone-ready `TableCrafter_Kit_Bridge` class.
+* Implementation: Decoupled API logic from the main plugin class to prepare for future standalone extension.
+
+= 2.2.25 =
+* Fix: Improved Gutenberg Block interactivity in the WordPress editor.
+* Feature: Added `filters="false"` attribute to shortcode to allow disabling column filters.
+* Feature: Added `search="false"` attribute to shortcode to allow disabling the global search bar.
+* Improvement: Synchronized Gutenberg Block controls with new filter/search toggles.
+
+= 2.2.24 =
+* Fix: Updated `blueprint.json` to ensure the "Live Preview" in WordPress Playground (and WordPress.org) correctly redirects to the Welcome Screen.
+* Improvement: Smoothed out the onboarding flow for live demos.
+
+= 2.2.23 =
+* Fix: Solved "JSON links not working" issue by implementing Unified Data Fetcher.
+* Core: Improved local file resolution logic to prevent false positives in security checks.
+* Security: Enhanced SSRF protection while allow-listing local demo data paths.
+
+= 2.2.22 =
+* Feature: Added direct ConvertKit integration for lead generation.
+* Improvement: Activated Lead Magnet UI on Welcome Screen for new users.
+
+= 2.2.21 =
+* Improvement: Disabled global search by default for cleaner initial UI.
+* Improvement: Moved "Clear All Filters" button below filter inputs and improved spacing.
+
+= 2.2.20 =
+* Feature: Added "Welcome Screen" with quick-start guide and one-click demo data loading to improve onboarding.
+* Fix: Corrected "Learn More" link for Pro features.
+
+= 2.2.19 =
+* Fix: Shortened plugin description to comply with WordPress.org repository standards (max 150 chars).
+
+= 2.2.17 =
+* Enhancement: Completely rewrote README.md with comprehensive technical documentation for developers.
+* Enhancement: Added SEO-optimized screenshot descriptions and WordPress.org plugin badges.
+* Fix: Resolved Live Search toggle not working in Gutenberg block editor (critical hydration bug).
+* Enhancement: Updated screenshots with new contextual images showing key functionality.
+* Improvement: Enhanced plugin description with targeted SEO keywords and use cases.
+* Fix: Updated Gutenberg block icon to match WordPress design standards.
+* Docs: Added extensive developer documentation including hooks, filters, and architecture details.
+
+= 2.2.16 =
+* Fix: Cleaned up readme.txt formatting issues - removed duplicate changelog entries and misplaced product description.
+
+= 2.2.15 =
+* Fix: Updated WordPress Playground blueprint.json with required meta fields and preferredVersions for Live Preview compatibility.
+* Improvement: Blueprint now includes proper title, author, and PHP/WordPress version preferences.
+
+= 2.2.14 =
+* Security: Fixed a critical SSRF vulnerability in the AJAX proxy by enforcing strict URL validation and safe remote requests.
+* Optimization: Improved error handling for proxy requests.
 
 = 2.2.13 =
 * Change: Switched "Live Demo" link to verify via TasteWP for guaranteed stability while WordPress Playground integration is being debugged.
-
 
 = 2.2.12 =
 * Fix: Addressed bad link for "Try Live Demo" which pointed to incorrect branch.
 
 = 2.2.11 =
 * Fix: Simplified Live Preview blueprint configuration for better compatibility.
-
-= 2.2.11 =
-Fix: Updated Live Preview blueprint for compatibility.
 
 = 2.2.10 =
 * Fix: Moved blueprint.json to correct assets/blueprints location for WordPress.org Live Preview support.

@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const source = container.getAttribute('data-source');
                 const id = container.getAttribute('id');
                 const search = container.getAttribute('data-search') === 'true' || container.getAttribute('data-search') === '1';
+                const filters = container.getAttribute('data-filters') !== 'false' && container.getAttribute('data-filters') !== '0';
                 const exportable = container.getAttribute('data-export') === 'true' || container.getAttribute('data-export') === '1';
                 const perPage = container.getAttribute('data-per-page') ? parseInt(container.getAttribute('data-per-page')) : 0;
 
@@ -32,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         pagination: perPage > 0,
                         pageSize: perPage > 0 ? perPage : 25,
                         globalSearch: search,
-                        filterable: search,
+                        filterable: filters,
                         exportable: exportable,
                         api: {
                             proxy: {

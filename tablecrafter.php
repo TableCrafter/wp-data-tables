@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: TableCrafter – Dynamic JSON & API Data Tables
+ * Plugin Name: TableCrafter – Data to Beautiful Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
- * Description: A lightweight WordPress wrapper for the TableCrafter JavaScript library. Creates dynamic data tables from a single data source.
- * Version: 2.2.24
+ * Description: Transform any data source into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
+ * Version: 2.2.31
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,9 +18,14 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.2.24');
+define('TABLECRAFTER_VERSION', '2.2.31');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
+
+/**
+ * Include Dependencies
+ */
+require_once TABLECRAFTER_PATH . 'includes/class-kit-bridge.php';
 
 /**
  * Main TableCrafter Class
@@ -35,6 +40,12 @@ class TableCrafter
      * @var TableCrafter|null
      */
     private static $instance = null;
+
+    /**
+     * Kit.com Bridge instance.
+     * @var TableCrafter_Kit_Bridge|null
+     */
+    private $kit_bridge = null;
 
     /**
      * Get singleton instance.
@@ -56,6 +67,8 @@ class TableCrafter
      */
     private function __construct()
     {
+        $this->kit_bridge = TableCrafter_Kit_Bridge::get_instance();
+
         add_action('init', array($this, 'register_assets'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
         add_action('init', array($this, 'register_block'));
@@ -147,6 +160,56 @@ class TableCrafter
                             <p class="description">
                                 <?php esc_html_e('Must be a publicly accessible JSON endpoint.', 'tablecrafter-wp-data-tables'); ?>
                             </p>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <label for="tc-data-root"
+                                style="font-weight: 600; display: block; margin-bottom: 5px;"><?php esc_html_e('Data Root (Optional)', 'tablecrafter-wp-data-tables'); ?></label>
+                            <input type="text" id="tc-data-root" class="widefat" placeholder="data.items">
+                            <p class="description">
+                                <?php esc_html_e('Path to the data array (e.g., results.items).', 'tablecrafter-wp-data-tables'); ?>
+                            </p>
+                        </div>
+
+                        <div style="margin-bottom: 15px; display: flex; gap: 20px;">
+                            <div style="flex: 1;">
+                                <label for="tc-per-page"
+                                    style="font-weight: 600; display: block; margin-bottom: 5px;"><?php esc_html_e('Rows Per Page', 'tablecrafter-wp-data-tables'); ?></label>
+                                <input type="number" id="tc-per-page" class="widefat" value="10" min="1">
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <label for="tc-include-cols"
+                                style="font-weight: 600; display: block; margin-bottom: 5px;"><?php esc_html_e('Include Columns', 'tablecrafter-wp-data-tables'); ?></label>
+                            <input type="text" id="tc-include-cols" class="widefat" placeholder="name, price, stock">
+                            <p class="description">
+                                <?php esc_html_e('Comma-separated list of keys to show.', 'tablecrafter-wp-data-tables'); ?>
+                            </p>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <label for="tc-exclude-cols"
+                                style="font-weight: 600; display: block; margin-bottom: 5px;"><?php esc_html_e('Exclude Columns', 'tablecrafter-wp-data-tables'); ?></label>
+                            <input type="text" id="tc-exclude-cols" class="widefat" placeholder="id, password_hash">
+                            <p class="description">
+                                <?php esc_html_e('Comma-separated list of keys to hide.', 'tablecrafter-wp-data-tables'); ?>
+                            </p>
+                        </div>
+
+                        <div style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 15px;">
+                            <label style="font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="tc-enable-search" checked>
+                                <?php esc_html_e('Enable Search', 'tablecrafter-wp-data-tables'); ?>
+                            </label>
+                            <label style="font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="tc-enable-filters" checked>
+                                <?php esc_html_e('Enable Filters', 'tablecrafter-wp-data-tables'); ?>
+                            </label>
+                            <label style="font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="tc-enable-export">
+                                <?php esc_html_e('Enable Export', 'tablecrafter-wp-data-tables'); ?>
+                            </label>
                         </div>
 
                         <div style="display: flex; gap: 10px; margin-top: 15px;">
@@ -325,6 +388,7 @@ class TableCrafter
                 'include' => array('type' => 'string', 'default' => ''),
                 'exclude' => array('type' => 'string', 'default' => ''), // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- User-facing parameter, not a query param
                 'search' => array('type' => 'boolean', 'default' => false),
+                'filters' => array('type' => 'boolean', 'default' => true),
                 'per_page' => array('type' => 'number', 'default' => 0),
                 'export' => array('type' => 'boolean', 'default' => false),
                 'id' => array('type' => 'string', 'default' => ''),
@@ -365,12 +429,13 @@ class TableCrafter
             'exclude' => '', // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- Shortcode attribute, not a query param
             'root' => '',
             'search' => false,
+            'filters' => true,
             'export' => false,
             'per_page' => 0
         ), $atts, 'tablecrafter');
 
         // Normalize boolean-ish attributes
-        foreach (array('search', 'export') as $bool_att) {
+        foreach (array('search', 'filters', 'export') as $bool_att) {
             if (is_string($atts[$bool_att])) {
                 $lower = strtolower($atts[$bool_att]);
                 $atts[$bool_att] = ($lower === 'true' || $lower === '1' || $lower === 'yes');
@@ -392,6 +457,7 @@ class TableCrafter
             $atts['include'] .
             $atts['exclude'] .
             ($atts['search'] ? '1' : '0') .
+            ($atts['filters'] ? '1' : '0') .
             ($atts['export'] ? '1' : '0') .
             $atts['per_page']
         );
@@ -438,6 +504,7 @@ class TableCrafter
             data-source="<?php echo esc_url($atts['source']); ?>" data-include="<?php echo esc_attr($atts['include']); ?>"
             data-exclude="<?php echo esc_attr($atts['exclude']); ?>" data-root="<?php echo esc_attr($atts['root']); ?>"
             data-search="<?php echo $atts['search'] ? 'true' : 'false'; ?>"
+            data-filters="<?php echo $atts['filters'] ? 'true' : 'false'; ?>"
             data-export="<?php echo $atts['export'] ? 'true' : 'false'; ?>"
             data-per-page="<?php echo esc_attr($atts['per_page']); ?>" data-ssr="true">
             <?php echo $html_content ? wp_kses_post($html_content) : '<div class="tc-loading">' . esc_html__('Loading TableCrafter...', 'tablecrafter-wp-data-tables') . '</div>'; ?>
@@ -1005,48 +1072,20 @@ class TableCrafter
             return;
         }
 
-        // ConvertKit API credentials
-        $api_secret = 'dRZ4dGm1KseJ4DF5kvdPrB0iZwBlrHe87WaYk1-wF3U';
-        $form_id = '8953939';
-
-        // Send to ConvertKit
-        $response = wp_remote_post("https://api.convertkit.com/v3/forms/{$form_id}/subscribe", array(
-            'body' => wp_json_encode(array(
-                'api_secret' => $api_secret,
-                'email' => $email,
-                'fields' => array(
-                    'plugin_version' => TABLECRAFTER_VERSION,
-                    'site_url' => get_site_url(),
-                    'source' => 'TableCrafter Welcome Screen'
-                )
-            )),
-            'headers' => array(
-                'Content-Type' => 'application/json'
-            ),
-            'timeout' => 15
+        // Delegate to the Kit Bridge
+        $result = $this->kit_bridge->subscribe($email, array(
+            'plugin_version' => TABLECRAFTER_VERSION,
+            'site_url' => get_site_url(),
+            'source' => 'TableCrafter Welcome Screen'
         ));
 
-        // Check for errors
-        if (is_wp_error($response)) {
-            // Fallback: send email if ConvertKit fails
-            wp_mail(
-                'info@fahdmurtaza.com',
-                'TableCrafter Lead (CK Failed): ' . $email,
-                "ConvertKit API failed. New subscriber:\n\nEmail: " . $email . "\nSite: " . get_site_url() . "\nError: " . $response->get_error_message()
-            );
-
+        if (is_wp_error($result)) {
+            // We still show success to the user to keep the UX smooth, 
+            // but the Bridge handles fallback logging/emails.
             wp_send_json_success(array(
-                'message' => 'Subscription successful'
+                'message' => 'Subscription processed (fallback)'
             ));
             return;
-        }
-
-        $body = json_decode(wp_remote_retrieve_body($response), true);
-
-        // Always show success to user (even if there's an API issue)
-        if (!isset($body['subscription'])) {
-            // Log error for debugging
-            error_log('ConvertKit API response: ' . print_r($body, true));
         }
 
         wp_send_json_success(array(

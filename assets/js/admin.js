@@ -6,6 +6,13 @@
  */
 document.addEventListener('DOMContentLoaded', function () {
     const urlInput = document.getElementById('tc-preview-url');
+    const rootInput = document.getElementById('tc-data-root');
+    const perPageInput = document.getElementById('tc-per-page');
+    const includeColsInput = document.getElementById('tc-include-cols');
+    const excludeColsInput = document.getElementById('tc-exclude-cols');
+    const searchToggle = document.getElementById('tc-enable-search');
+    const filterToggle = document.getElementById('tc-enable-filters');
+    const exportToggle = document.getElementById('tc-enable-export');
     const previewBtn = document.getElementById('tc-preview-btn');
     const copyBtn = document.getElementById('tc-copy-shortcode');
     const shortcodeDisplay = document.getElementById('tc-shortcode-display');
@@ -14,12 +21,72 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!urlInput || !previewBtn || !copyBtn) return; // Exit if not on the settings page
 
+    const BUTTON_COLORS = {
+        DEFAULT: '', // WordPress default
+        DIRTY: '#d63638', // WordPress error red
+        SYNCED: '#46b450' // WordPress success green
+    };
+
     /**
-     * Update shortcode display element when the URL input changes.
+     * Set the preview button state.
+     * @param {string} state 'dirty' or 'synced'
      */
-    urlInput.addEventListener('input', function () {
-        const url = this.value.trim() || 'URL';
-        shortcodeDisplay.textContent = `[tablecrafter source="${url}"]`;
+    function setButtonState(state) {
+        if (state === 'dirty') {
+            previewBtn.style.backgroundColor = BUTTON_COLORS.DIRTY;
+            previewBtn.style.borderColor = BUTTON_COLORS.DIRTY;
+            previewBtn.style.color = '#fff';
+        } else if (state === 'synced') {
+            previewBtn.style.backgroundColor = BUTTON_COLORS.SYNCED;
+            previewBtn.style.borderColor = BUTTON_COLORS.SYNCED;
+            previewBtn.style.color = '#fff';
+        }
+    }
+
+    /**
+     * Generate the shortcode based on all current inputs.
+     */
+    function generateShortcode() {
+        const url = urlInput.value.trim();
+        const root = rootInput.value.trim();
+        const perPage = perPageInput.value.trim();
+        const include = includeColsInput.value.trim();
+        const exclude = excludeColsInput.value.trim();
+        const search = searchToggle.checked;
+        const filters = filterToggle.checked;
+        const exportTable = exportToggle.checked;
+
+        let shortcode = `[tablecrafter source="${url || 'URL'}"`;
+        
+        if (root) shortcode += ` root="${root}"`;
+        if (perPage && perPage !== '10') shortcode += ` per_page="${perPage}"`;
+        if (include) shortcode += ` include="${include}"`;
+        if (exclude) shortcode += ` exclude="${exclude}"`;
+        
+        // Always be explicit with boolean attributes to avoid PHP/JS default mismatches
+        shortcode += ` search="${search ? 'true' : 'false'}"`;
+        shortcode += ` filters="${filters ? 'true' : 'false'}"`;
+        shortcode += ` export="${exportTable ? 'true' : 'false'}"`;
+        
+        shortcode += ']';
+        shortcodeDisplay.textContent = shortcode;
+    }
+
+    // Add listeners to all inputs for real-time generation and dirty state
+    [urlInput, rootInput, perPageInput, includeColsInput, excludeColsInput].forEach(el => {
+        el.addEventListener('input', () => {
+            generateShortcode();
+            setButtonState('dirty');
+        });
+    });
+
+    [searchToggle, filterToggle, exportToggle].forEach(el => {
+        el.addEventListener('change', () => {
+            generateShortcode();
+            setButtonState('dirty');
+            // Auto-trigger preview for toggles
+            previewBtn.click();
+        });
     });
 
     /**
@@ -29,8 +96,17 @@ document.addEventListener('DOMContentLoaded', function () {
     demoLinks.forEach(link => {
         link.addEventListener('click', function (e) {
             e.preventDefault();
-            urlInput.value = this.dataset.url;
-            urlInput.dispatchEvent(new Event('input'));
+            urlInput.value = this.dataset.url || '';
+            // Reset other fields for demos
+            if (rootInput) rootInput.value = '';
+            if (perPageInput) perPageInput.value = '10';
+            if (includeColsInput) includeColsInput.value = '';
+            if (excludeColsInput) excludeColsInput.value = '';
+            if (searchToggle) searchToggle.checked = true;
+            if (filterToggle) filterToggle.checked = true;
+            if (exportToggle) exportToggle.checked = false;
+            
+            generateShortcode();
             previewBtn.click();
         });
     });
@@ -57,16 +133,25 @@ document.addEventListener('DOMContentLoaded', function () {
             previewDiv.textContent = tablecrafterAdmin.i18n.loading;
             container.appendChild(previewDiv);
 
-            console.log('TableCrafter Admin: Initializing preview with URL:', url);
-            console.log('TableCrafter Admin: AJAX URL:', tablecrafterAdmin.ajaxUrl);
-            console.log('TableCrafter Admin: Nonce:', tablecrafterAdmin.nonce ? 'Present' : 'Missing');
+            const root = rootInput.value.trim();
+            const perPage = parseInt(perPageInput.value) || 10;
+            const include = includeColsInput.value.trim();
+            const exclude = excludeColsInput.value.trim();
+            const search = searchToggle.checked;
+            const filters = filterToggle.checked;
+            const exportData = exportToggle.checked;
 
             try {
-                // Initialize the TableCrafter instance with proxy support for admin preview
-                // Note: The constructor will automatically call loadData() when data is a URL string
-                const tableInstance = new TableCrafter('#' + tableId, {
+                const config = {
                     data: url,
+                    root: root || undefined,
+                    perPage: perPage,
                     pagination: true,
+                    globalSearch: search,
+                    filterable: filters,
+                    exportable: exportData,
+                    include: include || undefined,
+                    exclude: exclude || undefined,
                     responsive: true,
                     api: {
                         proxy: {
@@ -74,18 +159,11 @@ document.addEventListener('DOMContentLoaded', function () {
                             nonce: tablecrafterAdmin.nonce
                         }
                     }
-                });
+                };
+                const tableInstance = new TableCrafter('#' + tableId, config);
 
-                // Set up error monitoring - loadData is already called in constructor
-                // We'll monitor for errors by checking the container state after a delay
-                setTimeout(() => {
-                    const containerContent = previewDiv.innerHTML.trim();
-                    if (containerContent === tablecrafterAdmin.i18n.loading || 
-                        containerContent.includes('Loading')) {
-                        // Still loading after 10 seconds - might be stuck
-                        console.warn('TableCrafter Admin: Still loading after 10 seconds');
-                    }
-                }, 10000);
+                // Success! Set button to green
+                setButtonState('synced');
             } catch (error) {
                 console.error('TableCrafter Admin: Initialization error:', error);
                 previewDiv.innerHTML = `

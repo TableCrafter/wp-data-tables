@@ -2,6 +2,20 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.31] - 2026-01-11
+### Added
+- **UI:** Dynamic preview button states (Red/Green) based on configuration changes.
+- **UX:** Auto-preview functionality for checkboxes.
+- **Styling:** Premium margins and padding for Global Search and Clear Filters.
+- **Core:** Core library updated to v1.4.3.
+
+## [2.2.27] - 2026-01-11
+### Added
+- **Utility:** Visual Shortcode Builder in the admin dashboard. Generate complex [tablecrafter] tags with real-time UI toggles.
+- **UI:** One-Click Copy functionality for generated shortcodes with instant clipboard feedback.
+- **Branding:** Transitioned to "Data to Beautiful Tables" to align with the format-agnostic "Crafter Suite" vision.
+- **Preview:** Enhanced Admin Preview that respects all custom Shortcode Builder parameters (Data Root, Rows Per Page, etc.).
+
 ## [2.2.18] - 2026-01-08
 ### Enhanced
 - **Docs:** Completely rewrote README.md with comprehensive technical documentation, API reference, and developer hooks

@@ -26,6 +26,7 @@
             include: { type: 'string', default: '' },
             exclude: { type: 'string', default: '' },
             search: { type: 'boolean', default: false },
+            filters: { type: 'boolean', default: true },
             export: { type: 'boolean', default: false },
             per_page: { type: 'number', default: 0 },
             id: { type: 'string', default: '' }
@@ -70,10 +71,16 @@
                             help: 'Dot-notation path to the data array (e.g., data.items).'
                         }),
                         el(ToggleControl, {
-                            label: 'Enable Live Search',
+                            label: 'Enable Search',
                             checked: attributes.search,
-                            onChange: updateSearch,
+                            onChange: (val) => setAttributes({ search: val }),
                             help: 'Adds a real-time search bar above the table.'
+                        }),
+                        el(ToggleControl, {
+                            label: 'Enable Filters',
+                            checked: attributes.filters !== false,
+                            onChange: (val) => setAttributes({ filters: val }),
+                            help: 'Adds specific column filters (multiselect, ranges, etc.)'
                         }),
                         el(ToggleControl, {
                             label: 'Enable Export Tools',
@@ -137,6 +144,7 @@
 
         const source = container.getAttribute('data-source');
         const search = container.getAttribute('data-search') === 'true';
+        const filters = container.getAttribute('data-filters') !== 'false';
         const exportable = container.getAttribute('data-export') === 'true';
         const perPage = parseInt(container.getAttribute('data-per-page')) || 0;
 
@@ -161,10 +169,14 @@
             const TC = window.TableCrafter || container.ownerDocument.defaultView.TableCrafter;
 
             // Force re-init if settings changed
-            if (container.dataset.tcSearch !== search.toString() || container.dataset.tcInitialized !== 'true') {
+            if (container.dataset.tcSearch !== search.toString() || 
+                container.dataset.tcFilters !== filters.toString() || 
+                container.dataset.tcInitialized !== 'true') {
                 console.log('TableCrafter Block: (Re)Initializing instance', {
                     oldSearch: container.dataset.tcSearch,
                     newSearch: search.toString(),
+                    oldFilters: container.dataset.tcFilters,
+                    newFilters: filters.toString(),
                     wasInitialized: container.dataset.tcInitialized
                 });
 
@@ -184,7 +196,7 @@
                     pagination: perPage > 0,
                     pageSize: perPage > 0 ? perPage : 25,
                     globalSearch: search,
-                    filterable: search,
+                    filterable: filters,
                     exportable: exportable,
                     // Force a fresh render
                     forceRender: true
@@ -202,6 +214,7 @@
 
                 container.dataset.tcInitialized = 'true';
                 container.dataset.tcSearch = search.toString();
+                container.dataset.tcFilters = filters.toString();
                 
                 // Double check after a short delay
                 setTimeout(() => {
