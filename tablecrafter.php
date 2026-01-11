@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – Data to Beautiful Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: Transform any data source into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
- * Version: 2.2.31
+ * Version: 2.2.32
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.2.31');
+define('TABLECRAFTER_VERSION', '2.2.32');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -370,6 +370,8 @@ class TableCrafter
         );
 
         wp_localize_script('tablecrafter-block', 'tablecrafterData', array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('tc_proxy_nonce'),
             'demoUrls' => array(
                 array('label' => __('Select a demo...', 'tablecrafter-wp-data-tables'), 'value' => ''),
                 array('label' => __('User Directory', 'tablecrafter-wp-data-tables'), 'value' => TABLECRAFTER_URL . 'demo-data/users.json'),
@@ -655,7 +657,14 @@ class TableCrafter
 
         // Check if the first row is an object/array (Standard table expected)
         $first_row = reset($data);
-        if (!is_array($first_row)) {
+        if ($data && !is_array($first_row) && !is_object($first_row)) {
+            // Auto-convert simple list to table format for better UX
+            $new_data = array();
+            foreach ($data as $item) {
+                $new_data[] = array('Value' => $item);
+            }
+            $data = $new_data;
+        } elseif (empty($data) || (!is_array($first_row) && !is_object($first_row))) {
             return array('error' => 'Rendering Error: The data structure at this level is a simple list, not a table (list of objects).');
         }
 

@@ -152,10 +152,12 @@
             id: container.id,
             source,
             search,
+            filters,
             exportable,
             perPage,
             initialized: container.dataset.tcInitialized,
             tcSearch: container.dataset.tcSearch,
+            tcExport: container.dataset.tcExport,
             ssr: container.dataset.ssr,
             hasSearchUI: !!container.querySelector('.tc-global-search'),
             hasFiltersUI: !!container.querySelector('.tc-filters'),
@@ -171,12 +173,14 @@
             // Force re-init if settings changed
             if (container.dataset.tcSearch !== search.toString() || 
                 container.dataset.tcFilters !== filters.toString() || 
+                container.dataset.tcExport !== exportable.toString() ||
+                container.dataset.tcPerPage !== perPage.toString() ||
                 container.dataset.tcInitialized !== 'true') {
                 console.log('TableCrafter Block: (Re)Initializing instance', {
                     oldSearch: container.dataset.tcSearch,
                     newSearch: search.toString(),
-                    oldFilters: container.dataset.tcFilters,
-                    newFilters: filters.toString(),
+                    oldExport: container.dataset.tcExport,
+                    newExport: exportable.toString(),
                     wasInitialized: container.dataset.tcInitialized
                 });
 
@@ -198,6 +202,12 @@
                     globalSearch: search,
                     filterable: filters,
                     exportable: exportable,
+                    api: {
+                        proxy: {
+                            url: (window.tablecrafterData && window.tablecrafterData.ajaxUrl) ? window.tablecrafterData.ajaxUrl : undefined,
+                            nonce: (window.tablecrafterData && window.tablecrafterData.nonce) ? window.tablecrafterData.nonce : undefined
+                        }
+                    },
                     // Force a fresh render
                     forceRender: true
                 };
@@ -215,6 +225,8 @@
                 container.dataset.tcInitialized = 'true';
                 container.dataset.tcSearch = search.toString();
                 container.dataset.tcFilters = filters.toString();
+                container.dataset.tcExport = exportable.toString();
+                container.dataset.tcPerPage = perPage.toString();
                 
                 // Double check after a short delay
                 setTimeout(() => {

@@ -2,6 +2,12 @@
 
 All notable changes to TableCrafter will be documented in this file.
 
+## [2.2.32] - 2026-01-11
+### Added
+- **Block Builder:** Fixed re-initialization and proxy support for the Gutenberg editor.
+- **Robustness:** Added auto-conversion for simple lists to prevent "Rendering Error".
+- **Core:** Improved SSR compatibility for varied data.
+
 ## [2.2.31] - 2026-01-11
 ### Added
 - **UI:** Dynamic preview button states (Red/Green) based on configuration changes.
