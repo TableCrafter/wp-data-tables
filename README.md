@@ -95,7 +95,8 @@ Unlock the full potential of your data with **[Advanced Data Tables for Gravity 
 *   **🎯 API Integration:** Connect to any REST API, JSON endpoint, or CSV file with zero coding
 *   **⚡ Live Search & Filtering:** Real-time data filtering as users type, with debounced performance
 *   **📱 Responsive Design:** Mobile-optimized card view with automatic reflow for small screens  
-*   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls
+*   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls for data sources and display settings. Features live preview directly in the editor.
+*   **🛠️ Shortcode Builder:** Built-in generator in the admin dashboard. Configure your table visually, preview real-time results, and copy the ready-to-use shortcode with one click.
 *   **📄 Smart Pagination:** Client-side pagination for large datasets with customizable page sizes
 *   **🎨 Custom Styling:** CSS-friendly with variables and hooks for complete design control
 *   **🔒 Security First:** Built-in SSRF protection and WordPress capability-based authorization
@@ -129,7 +130,13 @@ Unlock the full potential of your data with **[Advanced Data Tables for Gravity 
 3. Configure display options (search, export, pagination)
 4. Publish and you're done!
 
-### Option 2: Shortcode
+### Option 2: Shortcode Builder (Admin Dashboard)
+1. Go to **Settings > TableCrafter**.
+2. Enter your Data URL and configure settings (Search, Filters, Export).
+3. Click **Preview Table** to verify your data.
+4. Click **Copy Shortcode** and paste it anywhere on your site.
+
+### Option 3: Manual Shortcode
 ```
 [tablecrafter source="https://api.example.com/data.json" search="true" export="true"]
 ```
