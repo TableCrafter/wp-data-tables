@@ -3,29 +3,10 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.3.5
+Stable tag: 2.3.6
 Requires PHP: 7.4
 License: GPLv2 or later
 
-Transform JSON APIs or CSVs into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
-
-== Changelog ==
-
-= 2.3.5 =
-*   **Fix:** Corrected placement of Short Description in `readme.txt` for WordPress.org directory.
-
-= 2.3.4 =
-*   **Accessibility:** Major ADA compliance updates (WCAG 2.1 AA).
-*   **Fix:** Added `scope="col"` to table headers.
-*   **Fix:** Added `aria-label` to search inputs.
-*   **Fix:** Added keyboard navigation support for sorting.
-*   **Fix:** Improved mobile view accessibility with list roles.
-
-= 2.3.3 =
-*   **Feature:** Added Smart Data Formatting for dates, URLs, and emails.
-*   **Fix:** Resolved `formatValue` error.
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Donate link: https://www.paypal.me/fahadmurtaza
 
 Transform JSON APIs or CSVs into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
 
@@ -190,10 +171,23 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+
+= 2.3.6 =
+*   **Fix:** Consolidated Changelog to the end of `readme.txt` standard location.
+
+= 2.3.5 =
+*   **Fix:** Corrected placement of Short Description in `readme.txt` for WordPress.org directory.
+
+= 2.3.4 =
+*   **Accessibility:** Major ADA compliance updates (WCAG 2.1 AA).
+*   **Fix:** Added `scope="col"` to table headers.
+*   **Fix:** Added `aria-label` to search inputs.
+*   **Fix:** Added keyboard navigation support for sorting.
+*   **Fix:** Improved mobile view accessibility with list roles.
+
 = 2.3.3 =
-* **Accessibility:** Added full Keyboard Navigation (tab sorting) and ARIA support for improved inclusive access (WCAG 2.1).
-* **Fix:** Added `aria-label`, `aria-sort`, and `role` attributes to table headers, filters, and pagination controls.
-* **UX:** Improved focus management and screen reader compatibility for all interactive elements.
+*   **Feature:** Added Smart Data Formatting for dates, URLs, and emails.
+*   **Fix:** Resolved `formatValue` error.
 
 = 2.3.2 =
 * **Feature:** Enhanced Reliability: Added visible "Unavailable" state on frontend when data sources fail (404, 500, etc.).
