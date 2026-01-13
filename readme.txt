@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.3.7
+Stable tag: 2.3.8
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -121,6 +121,7 @@ Limit data from heavy APIs:
 Unlock the full potential of your data with **[Advanced Data Tables for Gravity Forms](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)** — the ultimate solution for managing Gravity Forms entries.
 
 **Why Upgrade?**
+
 *   ✏️ **Frontend Editing:** Let users update their own entries directly from the table.
 *   🛡️ **Role-Based Permissions:** Control exactly who can view, edit, or delete data.
 *   ⚡ **Bulk Actions:** Delete, approve, or modify hundreds of entries in one click.
@@ -172,6 +173,9 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+
+= 2.3.8 =
+*   **Doc:** Minor formatting updates to readme.
 
 = 2.3.7 =
 *   **Doc:** Minor formatting updates to readme.
