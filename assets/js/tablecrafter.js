@@ -642,12 +642,27 @@ class TableCrafter {
           const td = document.createElement('td');
 
           // Format lookup values
-          let displayValue = row[column.field] || '';
-          if (column.lookup && displayValue) {
-            displayValue = await this.formatLookupValue(column, displayValue);
+          let displayValue = row[column.field];
+          
+          if (displayValue === null || displayValue === undefined) {
+             displayValue = '';
           }
 
-          td.textContent = displayValue;
+          if (column.lookup && displayValue) {
+            displayValue = await this.formatLookupValue(column, displayValue);
+            td.textContent = displayValue;
+          } else {
+             // Auto-format value
+             const formatted = this.formatValue(displayValue, column.type);
+             
+             // Check if formatted result is HTML (simple check: contains tags)
+             if (typeof formatted === 'string' && /<[a-z][\s\S]*>/i.test(formatted)) {
+                td.innerHTML = formatted;
+             } else {
+                td.textContent = formatted;
+             }
+          }
+          
           td.dataset.field = column.field;
 
           // Make cell editable if configured and user has permission
@@ -843,13 +858,22 @@ class TableCrafter {
           value.className = 'tc-card-value';
 
           // Format lookup values
-          let displayValue = row[column.field] || '';
+          let displayValue = row[column.field];
+           if (displayValue === null || displayValue === undefined) {
+             displayValue = '';
+          }
+
           if (column.lookup && displayValue) {
             this.formatLookupValue(column, displayValue).then(formatted => {
               value.textContent = formatted;
             });
           } else {
-            value.textContent = displayValue;
+             const formatted = this.formatValue(displayValue, column.type);
+             if (typeof formatted === 'string' && /<[a-z][\s\S]*>/i.test(formatted)) {
+                value.innerHTML = formatted;
+             } else {
+                value.textContent = formatted;
+             }
           }
 
           value.dataset.field = column.field;
@@ -884,13 +908,22 @@ class TableCrafter {
             value.className = 'tc-card-value';
 
             // Format lookup values
-            let displayValue = row[column.field] || '';
+            let displayValue = row[column.field];
+            if (displayValue === null || displayValue === undefined) {
+                displayValue = '';
+            }
+
             if (column.lookup && displayValue) {
               this.formatLookupValue(column, displayValue).then(formatted => {
                 value.textContent = formatted;
               });
             } else {
-              value.textContent = displayValue;
+               const formatted = this.formatValue(displayValue, column.type);
+               if (typeof formatted === 'string' && /<[a-z][\s\S]*>/i.test(formatted)) {
+                  value.innerHTML = formatted;
+               } else {
+                  value.textContent = formatted;
+               }
             }
 
             value.dataset.field = column.field;

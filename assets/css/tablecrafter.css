@@ -247,7 +247,48 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.2s, transform 0.2s;
 }
+/* Rich Data Types */
+.tc-badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    color: #fff;
+}
 
+.tc-badge-success {
+    background-color: #28a745;
+}
+
+.tc-badge-error {
+    background-color: #dc3545;
+}
+
+.tc-link {
+    color: #007bff;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.tc-link:hover {
+    color: #0056b3;
+    border-bottom-color: #0056b3;
+}
+
+.tc-cell-image {
+    transition: transform 0.2s;
+    cursor: zoom-in;
+}
+
+.tc-cell-image:hover {
+    transform: scale(1.5);
+}
 .tc-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(-1px);
