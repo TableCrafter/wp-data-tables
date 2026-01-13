@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.3.8
+Stable tag: 2.3.9
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -173,6 +173,10 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+
+= 2.3.9 =
+* New: Added graceful error handling with "Retry" button for failed data loads.
+* Fix: Improved data fetching reliability and error messages.
 
 = 2.3.8 =
 *   **Doc:** Minor formatting updates to readme.
