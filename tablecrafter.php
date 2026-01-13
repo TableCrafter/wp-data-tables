@@ -25,7 +25,7 @@ define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 /**
  * Include Dependencies
  */
-require_once TABLECRAFTER_PATH . 'includes/class-kit-bridge.php';
+
 
 /**
  * Main TableCrafter Class
@@ -41,11 +41,7 @@ class TableCrafter
      */
     private static $instance = null;
 
-    /**
-     * Kit.com Bridge instance.
-     * @var TableCrafter_Kit_Bridge|null
-     */
-    private $kit_bridge = null;
+
 
     /**
      * Get singleton instance.
@@ -67,7 +63,7 @@ class TableCrafter
      */
     private function __construct()
     {
-        $this->kit_bridge = TableCrafter_Kit_Bridge::get_instance();
+
 
         add_action('init', array($this, 'register_assets'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
@@ -93,8 +89,7 @@ class TableCrafter
             WP_CLI::add_command('tablecrafter', array($this, 'cli_commands'));
         }
 
-        // Lead Magnet AJAX Handler
-        add_action('wp_ajax_tc_subscribe_lead', array($this, 'handle_lead_subscription'));
+
     }
 
     /**
@@ -562,9 +557,40 @@ class TableCrafter
             }
 
             foreach ($possible_paths as $abs_path) {
-                $abs_path = realpath($abs_path);
-                if ($abs_path && file_exists($abs_path) && is_readable($abs_path)) {
-                    $content = @file_get_contents($abs_path);
+                // Security Fix: Prevent Directory Traversal
+                // 1. Resolve to absolute path
+                $real_path = realpath($abs_path);
+
+                // 2. Define Allowed Base Paths (Whitelist)
+                // We allow files within ABSPATH (Site Root)
+                $allowed_paths = array(
+                    realpath(ABSPATH),
+                    realpath(WP_CONTENT_DIR),
+                    realpath(TABLECRAFTER_PATH)
+                );
+
+                if ($real_path && file_exists($real_path) && is_readable($real_path)) {
+                    // 3. Check if the resolved path starts with any allowed path
+                    $is_allowed = false;
+                    foreach ($allowed_paths as $base_path) {
+                        if ($base_path && strpos($real_path, $base_path) === 0) {
+                            $is_allowed = true;
+                            break;
+                        }
+                    }
+
+                    if (!$is_allowed) {
+                        // Log attempt? 
+                        continue;
+                    }
+
+                    // 4. Content Type Check (Defense in Depth)
+                    // Only allow .json files to be read this way
+                    if (pathinfo($real_path, PATHINFO_EXTENSION) !== 'json') {
+                        continue;
+                    }
+
+                    $content = @file_get_contents($real_path);
                     if ($content !== false) {
                         $data = json_decode($content, true);
                         if ($data !== null && json_last_error() === JSON_ERROR_NONE) {
@@ -1062,51 +1088,13 @@ class TableCrafter
         add_option('tc_do_activation_redirect', true);
     }
 
+
+
     /**
-     * Handle lead magnet email subscription
-     * 
-     * @return void
+     * Initialize TableCrafter.
      */
-    public function handle_lead_subscription(): void
-    {
-        // Verify nonce
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'tc_lead_nonce')) {
-            wp_send_json_error('Invalid nonce');
-            return;
-        }
-
-        // Validate email
-        $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
-        if (!is_email($email)) {
-            wp_send_json_error('Invalid email address');
-            return;
-        }
-
-        // Delegate to the Kit Bridge
-        $result = $this->kit_bridge->subscribe($email, array(
-            'plugin_version' => TABLECRAFTER_VERSION,
-            'site_url' => get_site_url(),
-            'source' => 'TableCrafter Welcome Screen'
-        ));
-
-        if (is_wp_error($result)) {
-            // We still show success to the user to keep the UX smooth, 
-            // but the Bridge handles fallback logging/emails.
-            wp_send_json_success(array(
-                'message' => 'Subscription processed (fallback)'
-            ));
-            return;
-        }
-
-        wp_send_json_success(array(
-            'message' => 'Subscription successful'
-        ));
-    }
 }
 
-/**
- * Initialize TableCrafter.
- */
 /**
  * Initialize TableCrafter.
  */
