@@ -8,6 +8,13 @@
 [![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/r/tablecrafter-wp-data-tables?logo=wordpress)](https://wordpress.org/plugins/tablecrafter-wp-data-tables/)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2+-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
 
+### 🚀 Recent Updates
+- **v2.3.10:** Added Skeleton Loading states for better perceived performance.
+- **v2.3.9:** Added Graceful Error Handling with Retry button.
+- **v2.3.8:** Accessibility improvements (WCAG 2.1 AA Compliance).
+
+---
+
 ## 📸 Screenshots
 
 ### Gutenberg Block Editor
