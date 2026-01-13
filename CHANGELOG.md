@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.3.2] - 2026-01-13
+### Added
+- **Reliability:** Server-side error logging (`TC_Logger`) for easier troubleshooting of API failures.
+- **UX:** Visible "Data Unavailable" state for end-users when data sources fail (e.g., 404, 500, Bad JSON).
+
+## [2.3.1] - 2026-01-13
+### Security
+- **Critical Fix:** Resolved Arbitrary File Read vulnerability in local file resolution logic.
+- **Hardening:** Added strict whitelist for allowed paths (ABSPATH, Plugin Dir) and extension validation (.json).
+
 All notable changes to TableCrafter will be documented in this file.
 
 ## [2.3.0] - 2026-01-11
