@@ -46,16 +46,46 @@ Tables automatically transform into responsive card layouts on mobile devices, e
 
 Unlock the full potential of your data with **[Advanced Data Tables for Gravity Forms](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)** — the ultimate solution for managing Gravity Forms entries.
 
-**Why Upgrade?**
-*   ✏️ **Frontend Editing:** Let users update their own entries directly from the table.
-*   🛡️ **Role-Based Permissions:** Control exactly who can view, edit, or delete data.
-*   ⚡ **Bulk Actions:** Delete, approve, or modify hundreds of entries in one click.
-*   🔍 **Advanced Filtering:** Logic-based filters, date ranges, and multi-select dropdowns.
-*   🎨 **Conditional Formatting:** Highlight rows or cells based on their values (e.g., "Status = Overdue").
-*   📥 **Pro Export:** Export filtered views to Excel, CSV, or PDF.
-*   ♾️ **Unlimited Freedom:** No limits on tables, columns, or rows.
+### Why Upgrade?
 
-**[Start your 10-day free trial today!](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**
+- ✏️ **Frontend Editing:** Let users update their own entries directly from the table.
+- 🛡️ **Role-Based Permissions:** Control exactly who can view, edit, or delete data.
+- ⚡ **Bulk Actions:** Delete, approve, or modify hundreds of entries in one click.
+- 🔍 **Advanced Filtering:** Logic-based filters, date ranges, and multi-select dropdowns.
+- 🎨 **Conditional Formatting:** Highlight rows or cells based on their values (e.g., "Status = Overdue").
+- 📥 **Pro Export:** Export filtered views to Excel, CSV, or PDF.
+- ♾️ **Unlimited Freedom:** No limits on tables, columns, or rows.
+
+**Start your 10-day free trial today! You can cancel anytime before the trial ends to avoid being charged, and we'll send you an email reminder 2 days before it expires.**
+
+---
+
+## ❓ Frequently Asked Questions
+
+### Do you offer Gravity Form Integration?
+**Yes!** We have a dedicated premium solution called **Advanced Data Tables for Gravity Forms** (formerly Gravity Tables).
+
+---
+
+## 📦 About Advanced Data Tables for Gravity Forms
+
+**Advanced Data Tables** is a powerful WordPress plugin that creates beautiful, interactive tables from Gravity Forms entries with advanced frontend editing, bulk operations, filtering, and comprehensive customization options.
+
+### Key Features
+- ✅ **Spreadsheet-Like Editing**: Click anywhere in a cell to edit, just like Excel
+- ✅ **Advanced Filtering**: Field-specific filters with multi-select and date ranges
+- ✅ **Mobile-Responsive**: Complete card layout system for mobile devices
+- ✅ **Mixed Date Format Support**: Handles MM/DD/YYYY, M/D/YYYY, and YYYY-MM-DD automatically
+- ✅ **Role-Based Access**: Granular control over who can view and edit data
+- ✅ **Lookup Fields**: Full support for user, post, and custom table relationships
+- ✅ **Bulk Operations**: Delete, export, edit multiple entries at once
+- ✅ **Service-Oriented Architecture**: Modern PHP with dependency injection
+- ✅ **Vanilla JavaScript**: 59% faster performance, 73% smaller bundle size
+
+### 🚀 Recent Updates (v4.1.2)
+- **Shortcode Copy Button Fixed**: Improved clipboard detection.
+- **Modal Improvements**: Dynamic sizing and optimal layouts for entry forms.
+- **Native Thickbox Integration**: Unified distinct popup experience.
 
 ---
 
