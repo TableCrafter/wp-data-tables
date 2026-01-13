@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.3.0
+Stable tag: 2.3.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -168,6 +168,11 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 2.3.1 =
+* **Security:** Critical Fix: Resolved Arbitrary File Read vulnerability in local file resolution logic.
+* **Fix:** Enforced strict whitelist for allowed paths (Site Root, Plugin Dir) when fetching local JSON.
+* **Security:** Added strict `.json` extension validation for local file reads.
+
 = 2.3.0 =
 * Major Improvement: Consolidated Gutenberg Block Builder stability and reactivity.
 * Feature: Full proxy support for remote data URLs within the block editor.
