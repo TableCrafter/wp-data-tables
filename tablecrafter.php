@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.3.3');
+define('TABLECRAFTER_VERSION', '2.3.12');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -456,7 +456,8 @@ class TableCrafter
             ($atts['search'] ? '1' : '0') .
             ($atts['filters'] ? '1' : '0') .
             ($atts['export'] ? '1' : '0') .
-            $atts['per_page']
+            $atts['per_page'] .
+            TABLECRAFTER_VERSION
         );
         $cache_data = get_transient($cache_key);
         $html_content = '';
@@ -646,7 +647,7 @@ class TableCrafter
     private function fetch_and_render_php($atts)
     {
         // 1. Try Cache First
-        $cache_key = 'tc_cache_' . md5($atts['source']);
+        $cache_key = 'tc_cache_' . md5($atts['source'] . TABLECRAFTER_VERSION);
         $cached_data = get_transient($cache_key);
 
         if ($cached_data !== false) {
@@ -748,7 +749,7 @@ class TableCrafter
         $html .= '<thead><tr>';
         foreach ($headers as $header) {
             $label = isset($header_map[$header]) ? $header_map[$header] : $this->format_header_php($header);
-            $html .= '<th>' . esc_html($label) . '</th>';
+            $html .= '<th class="tc-sortable" tabindex="0" aria-sort="none" data-field="' . esc_attr($header) . '">' . esc_html($label) . '</th>';
         }
         $html .= '</tr></thead>';
         $html .= '<tbody>';
