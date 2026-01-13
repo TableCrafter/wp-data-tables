@@ -61,6 +61,7 @@ Unlock the full potential of your data with **[Advanced Data Tables for Gravity 
 
 ## 🛠️ Key Features for WordPress Developers
 
+*   **✨ Smart Data Formatting:** Automatically turns ugly raw data into beautiful content. ISO dates become readable (e.g., "Jan 1, 2024"), URLs become clickable links, and status fields get visual badges.
 *   **🎯 API Integration:** Connect to any REST API, JSON endpoint, or CSV file with zero coding
 *   **⚡ Live Search & Filtering:** Real-time data filtering as users type, with debounced performance
 *   **📱 Responsive Design:** Mobile-optimized card view with automatic reflow for small screens  

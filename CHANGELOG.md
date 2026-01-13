@@ -2,6 +2,7 @@
 
 ## [2.3.3] - 2026-01-13
 ### Added
+- **Smart Data Formatting:** New engine automatically detects and formats raw data types (Dates, URLs, Emails, Booleans) into user-friendly HTML.
 - **Accessibility:** Full Keyboard Navigation (tab sorting) and ARIA attributes for inclusive table interaction.
 - **UX:** Screen reader optimizations including labeled inputs and focus management.
 
