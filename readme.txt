@@ -174,6 +174,9 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 
 == Changelog ==
 
+= 2.3.13 =
+* Hotfix: Initialize internal state during SSR hydration to ensure sorting and filtering work correctly.
+
 = 2.3.12 =
 * Fix: Eliminated "flash of unstyled content" by preserving server-rendered table during hydration.
 
