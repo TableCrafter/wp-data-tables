@@ -3,11 +3,16 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.3.4
+Stable tag: 2.3.5
 Requires PHP: 7.4
 License: GPLv2 or later
 
+Transform JSON APIs or CSVs into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
+
 == Changelog ==
+
+= 2.3.5 =
+*   **Fix:** Corrected placement of Short Description in `readme.txt` for WordPress.org directory.
 
 = 2.3.4 =
 *   **Accessibility:** Major ADA compliance updates (WCAG 2.1 AA).
