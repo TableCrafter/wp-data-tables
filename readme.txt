@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.3.6
+Stable tag: 2.3.7
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -80,6 +80,7 @@ Transform JSON APIs or CSVs into responsive WordPress tables. Features live sear
 == Usage ==
 
 ### Visual Shortcode Builder (Recommended)
+
 Go to the **TableCrafter** admin menu to use the interactive builder.
 1. Enter your JSON URL.
 2. Toggle settings (Search, Filter, Export).
@@ -171,6 +172,9 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+
+= 2.3.7 =
+*   **Doc:** Minor formatting updates to readme.
 
 = 2.3.6 =
 *   **Fix:** Consolidated Changelog to the end of `readme.txt` standard location.
