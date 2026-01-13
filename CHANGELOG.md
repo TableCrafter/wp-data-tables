@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.3.3] - 2026-01-13
+### Added
+- **Accessibility:** Full Keyboard Navigation (tab sorting) and ARIA attributes for inclusive table interaction.
+- **UX:** Screen reader optimizations including labeled inputs and focus management.
+
 ## [2.3.2] - 2026-01-13
 ### Added
 - **Reliability:** Server-side error logging (`TC_Logger`) for easier troubleshooting of API failures.

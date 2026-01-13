@@ -584,7 +584,28 @@ class TableCrafter {
 
       if (this.config.sortable && column.sortable !== false) {
         th.className = 'tc-sortable';
-        th.addEventListener('click', () => this.sort(column.field));
+        th.setAttribute('tabindex', '0');
+        th.setAttribute('role', 'columnheader');
+        th.setAttribute('aria-label', `Sort by ${column.label}`);
+        
+        // Set current sort state
+        if (this.sortField === column.field) {
+            th.setAttribute('aria-sort', this.sortOrder === 'asc' ? 'ascending' : 'descending');
+            th.className += this.sortOrder === 'asc' ? ' tc-sort-asc' : ' tc-sort-desc';
+        } else {
+            th.setAttribute('aria-sort', 'none');
+        }
+
+        const handleSort = () => this.sort(column.field);
+        th.addEventListener('click', handleSort);
+        th.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleSort();
+            }
+        });
+      } else {
+          th.setAttribute('scope', 'col');
       }
 
       headerRow.appendChild(th);
@@ -779,12 +800,27 @@ class TableCrafter {
           const toggle = document.createElement('span');
           toggle.className = 'tc-card-toggle';
           toggle.textContent = '▼';
+          toggle.setAttribute('aria-hidden', 'true'); // Visual indicator only
           cardHeader.appendChild(toggle);
 
-          cardHeader.addEventListener('click', () => {
-            this.toggleCard(card);
-          });
+          // Make header interactive
+          cardHeader.setAttribute('tabindex', '0');
+          cardHeader.setAttribute('role', 'button');
+          cardHeader.setAttribute('aria-expanded', 'false');
           cardHeader.style.cursor = 'pointer';
+
+          const toggleAction = () => {
+             const isExpanded = this.toggleCard(card);
+             cardHeader.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+          };
+
+          cardHeader.addEventListener('click', toggleAction);
+          cardHeader.addEventListener('keydown', (e) => {
+             if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleAction();
+             }
+          });
         }
 
         card.appendChild(cardHeader);
@@ -888,8 +924,10 @@ class TableCrafter {
 
     if (isExpanded) {
       card.classList.remove('tc-card-expanded');
+      return false;
     } else {
       card.classList.add('tc-card-expanded');
+      return true;
     }
   }
 
@@ -1221,25 +1259,30 @@ class TableCrafter {
     const prevBtn = document.createElement('button');
     prevBtn.className = 'tc-prev-btn';
     prevBtn.textContent = 'Previous';
+    prevBtn.setAttribute('aria-label', 'Go to previous page');
     prevBtn.disabled = this.currentPage === 1;
     prevBtn.addEventListener('click', () => this.prevPage());
 
     // Current page info
     const currentPage = document.createElement('span');
     currentPage.className = 'tc-current-page';
+    currentPage.setAttribute('aria-current', 'page');
     currentPage.textContent = this.currentPage.toString();
 
     const separator = document.createElement('span');
     separator.textContent = ' of ';
+    separator.setAttribute('aria-hidden', 'true');
 
     const totalPagesSpan = document.createElement('span');
     totalPagesSpan.className = 'tc-total-pages';
     totalPagesSpan.textContent = totalPages.toString();
+    totalPagesSpan.setAttribute('aria-label', `Total pages: ${totalPages}`);
 
     // Next button
     const nextBtn = document.createElement('button');
     nextBtn.className = 'tc-next-btn';
     nextBtn.textContent = 'Next';
+    nextBtn.setAttribute('aria-label', 'Go to next page');
     nextBtn.disabled = this.currentPage === totalPages;
     nextBtn.addEventListener('click', () => this.nextPage());
 
@@ -1388,6 +1431,7 @@ class TableCrafter {
     const searchInput = document.createElement('input');
     searchInput.type = 'text';
     searchInput.className = 'tc-global-search';
+    searchInput.setAttribute('aria-label', 'Search table content');
     searchInput.placeholder = this.config.globalSearchPlaceholder || 'Search table...';
     searchInput.value = this.searchTerm;
 
@@ -1447,6 +1491,7 @@ class TableCrafter {
     const input = document.createElement('input');
     input.type = 'text';
     input.className = 'tc-filter-input';
+    input.setAttribute('aria-label', `Filter by ${column.label}`);
     input.placeholder = `Filter ${column.label}...`;
     input.dataset.field = column.field;
     input.value = this.filters[column.field] || '';
@@ -1464,6 +1509,8 @@ class TableCrafter {
   createMultiselectFilter(column) {
     const button = document.createElement('button');
     button.className = 'tc-multiselect-button';
+    button.setAttribute('aria-haspopup', 'listbox');
+    button.setAttribute('aria-expanded', 'false');
     button.textContent = 'Select values...';
     button.type = 'button';
 
@@ -1500,6 +1547,7 @@ class TableCrafter {
       document.querySelectorAll('.tc-multiselect-dropdown').forEach(d => d.style.display = 'none');
 
       if (isHidden) {
+        button.setAttribute('aria-expanded', 'true');
         dropdown.style.display = 'block';
         dropdown.style.position = 'fixed';
         dropdown.style.zIndex = '10000'; // High z-index
@@ -1520,6 +1568,7 @@ class TableCrafter {
 
     const closeDropdown = (e) => {
       if (e && (dropdown.contains(e.target) || e.target === button)) return;
+      button.setAttribute('aria-expanded', 'false');
       dropdown.style.display = 'none';
       document.removeEventListener('click', closeDropdown);
       window.removeEventListener('scroll', closeDropdown, { capture: true });

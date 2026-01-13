@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.3.2
+Stable tag: 2.3.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -168,6 +168,11 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 2.3.3 =
+* **Accessibility:** Added full Keyboard Navigation (tab sorting) and ARIA support for improved inclusive access (WCAG 2.1).
+* **Fix:** Added `aria-label`, `aria-sort`, and `role` attributes to table headers, filters, and pagination controls.
+* **UX:** Improved focus management and screen reader compatibility for all interactive elements.
+
 = 2.3.2 =
 * **Feature:** Enhanced Reliability: Added visible "Unavailable" state on frontend when data sources fail (404, 500, etc.).
 * **Improvement:** Added server-side error logging (`debug.log`) for failed API calls to help admins troubleshoot.
