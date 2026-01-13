@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – Data to Beautiful Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: Transform any data source into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
- * Version: 2.3.1
+ * Version: 2.3.2
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.3.1');
+define('TABLECRAFTER_VERSION', '2.3.2');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -485,8 +485,13 @@ class TableCrafter
                 ), HOUR_IN_SECONDS);
             } elseif (isset($render_result['error'])) {
                 // Return Error UI for Admins
+                // Return Error UI for Admins
                 if (current_user_can('manage_options')) {
                     return $this->render_admin_error_helper($render_result['error'], $atts);
+                } else {
+                    // Graceful Error for End Users
+                    $message = !empty($atts['error_message']) ? esc_html($atts['error_message']) : esc_html__('Unable to load data. Please check back later.', 'tablecrafter-wp-data-tables');
+                    return '<div class="tc-error-state" style="padding: 20px; background: #fafafa; border: 1px solid #ddd; border-radius: 4px; color: #666; text-align: center;">' . $message . '</div>';
                 }
             }
         }
@@ -603,6 +608,7 @@ class TableCrafter
 
         // 2. Security Check for Remote URLs
         if (!$this->is_safe_url($url)) {
+            $this->log_error('Security Block', array('url' => $url));
             return new WP_Error('security_error', 'The provided URL is blocked for safety (Local/Private IP).');
         }
 
@@ -615,11 +621,13 @@ class TableCrafter
         ));
 
         if (is_wp_error($response)) {
+            $this->log_error('HTTP Fetch Failed', array('url' => $url, 'error' => $response->get_error_message()));
             return $response;
         }
 
         $code = wp_remote_retrieve_response_code($response);
         if ($code !== 200) {
+            $this->log_error('HTTP Error Code', array('url' => $url, 'code' => $code));
             return new WP_Error('http_error', 'Source returned HTTP ' . $code);
         }
 
@@ -627,6 +635,7 @@ class TableCrafter
         $data = json_decode($body, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->log_error('JSON Parse Error', array('url' => $url, 'error' => json_last_error_msg()));
             return new WP_Error('json_error', 'The source did not return a valid JSON structure.');
         }
 
@@ -1050,6 +1059,21 @@ class TableCrafter
 
         return true;
     }
+    /**
+     * Internal Error Logger.
+     * 
+     * @param string $message The error message.
+     * @param array $context Additional context data.
+     * @return void
+     */
+    private function log_error(string $message, array $context = array()): void
+    {
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            $log = sprintf('[TableCrafter] %s | Context: %s', $message, json_encode($context));
+            error_log($log);
+        }
+    }
+
     /**
      * Render the Welcome Page.
      */
