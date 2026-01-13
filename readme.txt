@@ -3,9 +3,22 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.3.3
+Stable tag: 2.3.4
 Requires PHP: 7.4
 License: GPLv2 or later
+
+== Changelog ==
+
+= 2.3.4 =
+*   **Accessibility:** Major ADA compliance updates (WCAG 2.1 AA).
+*   **Fix:** Added `scope="col"` to table headers.
+*   **Fix:** Added `aria-label` to search inputs.
+*   **Fix:** Added keyboard navigation support for sorting.
+*   **Fix:** Improved mobile view accessibility with list roles.
+
+= 2.3.3 =
+*   **Feature:** Added Smart Data Formatting for dates, URLs, and emails.
+*   **Fix:** Resolved `formatValue` error.
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://www.paypal.me/fahadmurtaza
 
