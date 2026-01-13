@@ -32,7 +32,8 @@ Transform JSON APIs or CSVs into responsive WordPress tables. Features live sear
 *   **🎯 API Integration:** Connect to any REST API, JSON endpoint, or CSV file with zero coding
 *   **⚡ Live Search & Filtering:** Real-time data filtering as users type, with debounced performance
 *   **📱 Responsive Design:** Mobile-optimized card view with automatic reflow for small screens  
-*   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls
+*   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls for data sources and display settings. Features live preview directly in the editor.
+*   **🛠️ Shortcode Builder:** Built-in generator in the admin dashboard. Configure your table visually, preview real-time results, and copy the ready-to-use shortcode with one click.
 *   **📄 Smart Pagination:** Client-side pagination for large datasets with customizable page sizes
 *   **🎨 Custom Styling:** CSS-friendly with variables and hooks for complete design control
 *   **🔒 Security First:** Built-in SSRF protection and WordPress capability-based authorization
@@ -128,13 +129,16 @@ Unlock the full potential of your data with **[Advanced Data Tables for Gravity 
 *   📥 **Pro Export:** Export filtered views to Excel, CSV, or PDF.
 *   ♾️ **Unlimited Freedom:** No limits on tables, columns, or rows.
 
-**[Start your 10-day free trial today!](https://checkout.freemius.com/plugin/20996/plan/35031/?trial=paid)**
+**Start your 10-day free trial today! You can cancel anytime before the trial ends to avoid being charged, and we'll send you an email reminder 2 days before the trial ends.**
 
 ### 🛠️ Custom Customization
 Need a specific feature, a custom API integration, or a unique table layout? Contact me at **[info@fahdmurtaza.com](mailto:info@fahdmurtaza.com)** if you need to customise the plugin in any way for a fee. 
 
 
 == Frequently Asked Questions ==
+
+= Do you offer Gravity Form Integration? =
+Yes! We have a dedicated premium solution called **Advanced Data Tables for Gravity Forms** (formerly Gravity Tables). It adds frontend editing, advanced filtering, and bulk operations to your Gravity Forms entries.
 
 = Does this store data in my WordPress database? =
 No. TableCrafter is a lightweight viewer. It fetches data dynamically and caches it temporarily (SWR) to keep your database clean and your site fast.
