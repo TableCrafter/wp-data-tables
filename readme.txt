@@ -8,11 +8,11 @@ Requires PHP: 7.4
 License: GPLv2 or later
 
 
-Transform JSON APIs or CSVs into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
+Transform Google Sheets, JSON APIs, or CSVs into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
 
 == Description ==
 
-**TableCrafter** is the most powerful WordPress data table plugin for displaying dynamic content from external APIs, JSON files, and CSV data sources. Perfect for developers, agencies, and businesses who need to showcase real-time data without database bloat.
+**TableCrafter** is the most powerful WordPress data table plugin for displaying dynamic content from Google Sheets, external APIs, JSON files, and CSV data sources. Perfect for developers, agencies, and businesses who need to showcase real-time data without database bloat.
 
 [Try Live Demo](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
 
@@ -28,7 +28,7 @@ Transform JSON APIs or CSVs into responsive WordPress tables. Features live sear
 
 ### 🛠️ Key Features for WordPress Developers
 
-*   **🎯 API Integration:** Connect to any REST API, JSON endpoint, or CSV file with zero coding
+*   **🎯 Data Integration:** Connect to Google Sheets, REST APIs, JSON endpoints, or CSV files with zero coding
 *   **⚡ Live Search & Sorting:** Real-time data filtering and multi-column sorting that works instantly in both the **Gutenberg Block** and **Shortcodes**.
 *   **📱 Responsive Design:** Mobile-optimized card view with automatic reflow for small screens  
 *   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls for data sources and display settings. Features live preview directly in the editor.

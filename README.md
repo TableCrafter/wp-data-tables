@@ -1,6 +1,6 @@
 # 🚀 TableCrafter: WordPress Data Tables & Dynamic Content Plugin
 
-**Transform any JSON API or CSV into beautiful, responsive WordPress data tables. Features live search, pagination, sorting, mobile optimization, and SEO-friendly server-side rendering.**
+**Transform any Google Sheet, JSON API, or CSV into beautiful, responsive WordPress data tables. Features live search, pagination, sorting, mobile optimization, and SEO-friendly server-side rendering.**
 
 [![Try Live Demo](https://img.shields.io/badge/Try%20Live%20Demo-TasteWP-blue?logo=wordpress)](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
 [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/tablecrafter-wp-data-tables?logo=wordpress)](https://wordpress.org/plugins/tablecrafter-wp-data-tables/)
@@ -33,7 +33,7 @@
 
 ## 🚀 Why TableCrafter?
 
-**The most powerful WordPress data table plugin for displaying dynamic content from external APIs, JSON files, and CSV data sources. Perfect for developers, agencies, and businesses who need to showcase real-time data without database bloat.**
+**The most powerful WordPress data table plugin for displaying dynamic content from external APIs, Google Sheets, JSON files, and CSV data sources. Perfect for developers, agencies, and businesses who need to showcase real-time data without database bloat.**
 
 ### 🌟 Zero Database Impact
 Unlike other WordPress table plugins that store data in your database, TableCrafter fetches data directly from your sources, keeping your WordPress installation clean and fast.
@@ -99,7 +99,7 @@ Unlock the full potential of your data with **[Advanced Data Tables for Gravity 
 ## 🛠️ Key Features for WordPress Developers
 
 *   **✨ Smart Data Formatting:** Automatically turns ugly raw data into beautiful content. ISO dates become readable (e.g., "Jan 1, 2024"), URLs become clickable links, and status fields get visual badges.
-*   **🎯 API Integration:** Connect to any REST API, JSON endpoint, or CSV file with zero coding
+*   **🎯 Data Integration:** Connect to Google Sheets, REST APIs, JSON endpoints, or CSV files with zero coding
 *   **⚡ Live Search & Filtering:** Real-time data filtering as users type, with debounced performance
 *   **📱 Responsive Design:** Mobile-optimized card view with automatic reflow for small screens  
 *   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls for data sources and display settings. Features live preview directly in the editor.
