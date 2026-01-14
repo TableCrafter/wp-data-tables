@@ -8,7 +8,7 @@ Requires PHP: 7.4
 License: GPLv2 or later
 
 
-Transform Google Sheets, JSON APIs, or CSVs into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
+Transform Google Sheets, JSON & CSVs into responsive tables. Includes live search, pagination, sorting & SEO-friendly rendering.
 
 == Description ==
 
