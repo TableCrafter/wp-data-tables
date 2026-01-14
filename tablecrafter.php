@@ -442,7 +442,8 @@ class TableCrafter
             'search' => false,
             'filters' => true,
             'export' => false,
-            'per_page' => 0
+            'per_page' => 0,
+            'sort' => '' // New: column:direction format (e.g., "price:desc")
         ), $atts, 'tablecrafter');
 
         // Normalize boolean-ish attributes
@@ -462,7 +463,7 @@ class TableCrafter
         }
 
         // SWR (Stale-While-Revalidate) Logic
-        // Include search, export, and per_page in the cache key to prevent collision
+        // Include search, export, per_page, and sort in the cache key to prevent collision
         $cache_key = 'tc_html_' . md5(
             $atts['source'] .
             $atts['include'] .
@@ -471,6 +472,7 @@ class TableCrafter
             ($atts['filters'] ? '1' : '0') .
             ($atts['export'] ? '1' : '0') .
             $atts['per_page'] .
+            $atts['sort'] .
             TABLECRAFTER_VERSION
         );
         $cache_data = get_transient($cache_key);
@@ -523,7 +525,8 @@ class TableCrafter
             data-search="<?php echo $atts['search'] ? 'true' : 'false'; ?>"
             data-filters="<?php echo $atts['filters'] ? 'true' : 'false'; ?>"
             data-export="<?php echo $atts['export'] ? 'true' : 'false'; ?>"
-            data-per-page="<?php echo esc_attr($atts['per_page']); ?>" data-ssr="true">
+            data-per-page="<?php echo esc_attr($atts['per_page']); ?>"
+            data-sort="<?php echo esc_attr($atts['sort']); ?>" data-ssr="true">
             <?php echo $html_content ? wp_kses_post($html_content) : '<div class="tc-loading">' . esc_html__('Loading TableCrafter...', 'tablecrafter-wp-data-tables') . '</div>'; ?>
             <?php if (!empty($initial_data)): ?>
                 <script type="application/json" class="tc-initial-data"><?php echo wp_json_encode($initial_data); ?></script>
@@ -822,11 +825,33 @@ class TableCrafter
         if (empty($headers))
             return false;
 
+        // Parse sort parameter (format: "column:direction")
+        $sort_field = '';
+        $sort_direction = '';
+        if (!empty($sort)) {
+            $sort_parts = explode(':', $sort, 2);
+            if (count($sort_parts) === 2) {
+                $sort_field = trim($sort_parts[0]);
+                $sort_direction = strtolower(trim($sort_parts[1]));
+            }
+        }
+
         $html = '<table class="tc-table">';
         $html .= '<thead><tr>';
         foreach ($headers as $header) {
             $label = isset($header_map[$header]) ? $header_map[$header] : $this->format_header_php($header);
-            $html .= '<th class="tc-sortable" tabindex="0" aria-sort="none" data-field="' . esc_attr($header) . '">' . esc_html($label) . '</th>';
+            
+            // Set aria-sort based on current sort state
+            $aria_sort = 'none';
+            if ($sort_field === $header) {
+                if ($sort_direction === 'asc' || $sort_direction === 'ascending') {
+                    $aria_sort = 'ascending';
+                } elseif ($sort_direction === 'desc' || $sort_direction === 'descending') {
+                    $aria_sort = 'descending';
+                }
+            }
+            
+            $html .= '<th class="tc-sortable" tabindex="0" aria-sort="' . esc_attr($aria_sort) . '" data-field="' . esc_attr($header) . '">' . esc_html($label) . '</th>';
         }
         $html .= '</tr></thead>';
         $html .= '<tbody>';

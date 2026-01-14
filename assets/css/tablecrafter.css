@@ -48,16 +48,41 @@
   cursor: pointer;
   user-select: none;
   transition: background-color 0.2s;
+  position: relative;
 }
 
 .tc-sortable:hover {
   background-color: #e9ecef;
 }
 
+/* Default sorting indicator (unsorted) */
 .tc-sortable::after {
   content: ' ⇅';
   opacity: 0.5;
   font-size: 12px;
+  margin-left: 8px;
+  color: #6c757d;
+}
+
+/* Active sorting indicators */
+.tc-sortable[aria-sort="ascending"]::after {
+  content: ' ↑';
+  opacity: 1;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.tc-sortable[aria-sort="descending"]::after {
+  content: ' ↓';
+  opacity: 1;
+  color: #007bff;
+  font-weight: bold;
+}
+
+/* Enhanced hover state for sorted columns */
+.tc-sortable[aria-sort="ascending"]:hover,
+.tc-sortable[aria-sort="descending"]:hover {
+  background-color: #e3f2fd;
 }
 
 .tc-editable {
