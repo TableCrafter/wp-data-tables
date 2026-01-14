@@ -3,8 +3,20 @@
 This document tracks the release schedule, planned features, and future ideas for the TableCrafter WordPress plugin.
 
 ## 📦 Recent Releases
+### v2.4.2 (Rate Limiting Security) - Jan 14, 2026
+- **Security:** Rate Limiting on AJAX Proxy (30 req/min per user/IP).
+- **Security:** Proper HTTP 429 response with client identification.
+
+### v2.4.1 (Lead Magnet) - Jan 14, 2026
+- **Feature:** Lead Magnet Subscription handler.
+- **Integration:** External API + Email Fallback.
+
+### v2.4.0 (The "Data Everywhere" Update) - Jan 14, 2026
+- **Feature:** Native Google Sheets Integration (Proxy Fetch + CSV Parsing).
+- **Feature:** Frontend CORS Bypass.
+
 ### v2.3.14 (Hotfix) - Jan 14, 2026
-- **Fix:** Critical Hydration fix for Embedded Data + SSR (Dead Interaction Bug).
+- **Fix:** Critical Hydration fix for Embedded Data + SSR.
 
 ### v2.3.12 - v2.3.13 (Hotfixes)
 - **Fix:** Frontend Sorting & Flash of Unstyled Content (FOUC).
@@ -16,13 +28,13 @@ This document tracks the release schedule, planned features, and future ideas fo
 
 ## 🚀 Upcoming Roadmap
 
-### v2.4.0 (The "Data Everywhere" Update) - Q1 2026
-**Target Audience:** Non-technical users (Marketers, PMs).
-- **[High Priority] Google Sheets Integration:** Paste a Google Sheet URL, get a table. No API keys, no JSON conversion.
-- **[Medium Priority] CSV File Support:** Direct upload or URL support (auto-parsing CSV to JSON buffers).
-- **[Low Priority] Local Caching Strategy:** "Stale-While-Revalidate" with persistent fallback (if source fails, show last good cache).
+### v2.5.0 (Robust Data & Quality)
+**Focus:** Reliability, CSV Sourcing, and Visual Controls.
+- **[High Priority] Native CSV Upload:** Upload CSV files directly to Media Library or Block.
+- **[High Priority] Automated Testing:** Playwright E2E suite to prevent regressions.
+- **[Medium Priority] Visual Column Toggle:** Simple UI to show/hide columns in the block inspector.
 
-### v2.5.0 (The "Visual Builder" Update) - Q2 2026
+### v2.6.0 (The "Visual Builder" Update) - Q2 2026
 - **Feature:** Visual Table Builder (Drag & Drop Columns).
 - **Feature:** Advanced Custom Fields (ACF) Repeater Field Support.
 

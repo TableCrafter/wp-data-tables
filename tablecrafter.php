@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – Data to Beautiful Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: Transform any data source into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
- * Version: 2.4.0
+ * Version: 2.4.2
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,13 +18,14 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.4.0');
+define('TABLECRAFTER_VERSION', '2.4.2');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
 /**
  * Include Dependencies
  */
+require_once TABLECRAFTER_PATH . 'includes/sources/class-tc-csv-source.php';
 
 
 /**
@@ -79,6 +80,10 @@ class TableCrafter
         // Background Caching & Cron Logic
         add_action('tc_refresher_cron', array($this, 'automated_cache_refresh'));
         add_action('tc_refresh_single_source', array($this, 'refresh_source_cache'), 10, 1);
+
+        // Lead Magnet Handler
+        add_action('wp_ajax_tc_subscribe_lead', array($this, 'handle_lead_subscription'));
+        add_action('wp_ajax_nopriv_tc_subscribe_lead', array($this, 'handle_lead_subscription'));
 
         if (!wp_next_scheduled('tc_refresher_cron')) {
             wp_schedule_event(time(), 'hourly', 'tc_refresher_cron');
@@ -150,8 +155,13 @@ class TableCrafter
                         <div style="margin-bottom: 15px;">
                             <label for="tc-preview-url"
                                 style="font-weight: 600; display: block; margin-bottom: 5px;"><?php esc_html_e('Data Source URL', 'tablecrafter-wp-data-tables'); ?></label>
-                            <input type="text" id="tc-preview-url" class="widefat"
-                                placeholder="https://api.example.com/data.json">
+                            <div style="display: flex; gap: 5px;">
+                                <input type="text" id="tc-preview-url" class="widefat"
+                                    placeholder="https://api.example.com/data.json" style="flex: 1;">
+                                <button id="tc-upload-csv-btn" class="button button-secondary" type="button">
+                                    <span class="dashicons dashicons-upload" style="line-height: 28px;"></span>
+                                </button>
+                            </div>
                             <p class="description">
                                 <?php esc_html_e('Must be a publicly accessible JSON endpoint.', 'tablecrafter-wp-data-tables'); ?>
                             </p>
@@ -314,6 +324,8 @@ class TableCrafter
         if (strpos($hook, 'tablecrafter-wp-data-tables') === false) {
             return;
         }
+
+        wp_enqueue_media();
 
         wp_enqueue_script(
             'tablecrafter-admin',
@@ -591,16 +603,24 @@ class TableCrafter
                     }
 
                     // 4. Content Type Check (Defense in Depth)
-                    // Only allow .json files to be read this way
-                    if (pathinfo($real_path, PATHINFO_EXTENSION) !== 'json') {
-                        continue;
+                    $ext = pathinfo($real_path, PATHINFO_EXTENSION);
+
+                    // JSON Handling
+                    if ($ext === 'json') {
+                        $content = @file_get_contents($real_path);
+                        if ($content !== false) {
+                            $data = json_decode($content, true);
+                            if ($data !== null && json_last_error() === JSON_ERROR_NONE) {
+                                return $data;
+                            }
+                        }
                     }
 
-                    $content = @file_get_contents($real_path);
-                    if ($content !== false) {
-                        $data = json_decode($content, true);
-                        if ($data !== null && json_last_error() === JSON_ERROR_NONE) {
-                            return $data;
+                    // CSV Handling (New v2.5.0)
+                    if ($ext === 'csv') {
+                        $content = @file_get_contents($real_path);
+                        if ($content !== false) {
+                            return TC_CSV_Source::parse($content);
                         }
                     }
                 }
@@ -616,38 +636,24 @@ class TableCrafter
         // Define $original_url for potential usage if we modify $url
         $original_url = $url;
 
-        // --- Google Sheets Detection ---
-        $is_csv = false;
-        if (preg_match('/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/', $url, $matches)) {
-            $sheet_id = $matches[1];
-            // Transform to CSV export URL
-            // Default to 'gid=0' (first sheet) if no 'gid' is present in original URL, 
-            // but for now simple export is safest
-            $url = "https://docs.google.com/spreadsheets/d/{$sheet_id}/export?format=csv";
+        // --- CSV / Google Sheets Detection (v2.5.0) ---
+        // Enhanced to support generic CSV URLs as well
+        $is_google_sheet = preg_match('/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/', $url);
+        $is_csv_ext = (substr($url, -4) === '.csv');
 
-            // If the user provided a specific sheet ID (gid) in the URL, try to preserve it
-            // Parse query string of original URL
-            $url_parts = parse_url($original_url);
-            if (isset($url_parts['query'])) {
-                parse_str($url_parts['query'], $query_params);
-                if (isset($query_params['gid'])) {
-                    $url .= "&gid=" . $query_params['gid'];
-                }
-            }
-
-            $is_csv = true;
+        if ($is_google_sheet || $is_csv_ext) {
+            return TC_CSV_Source::fetch($url);
         }
         // -----------------------------
 
-        // 3. Remote HTTP Fetch
-        // Try raw cURL to match CLI behavior
+        // 3. Remote HTTP Fetch (Restored for JSON APIs)
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Match verify false
-        curl_setopt($ch, CURLOPT_USERAGENT, 'curl/8.7.1'); // Match working CLI agent
-        curl_setopt($ch, CURLOPT_COOKIEFILE, ""); // Enable cookie engine in memory
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'curl/8.7.1');
+        curl_setopt($ch, CURLOPT_COOKIEFILE, "");
 
         $body = curl_exec($ch);
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -659,23 +665,10 @@ class TableCrafter
             return new WP_Error('http_error', 'CURL Error: ' . $error);
         }
 
-        // Mock response array for compatibility with rest of function
-        $response = array(
-            'body' => $body,
-            'response' => array('code' => $code)
-        );
-
         if ($code !== 200) {
             $this->log_error('HTTP Error Code', array('url' => $url, 'code' => $code));
             return new WP_Error('http_error', 'Source returned HTTP ' . $code);
         }
-
-        // --- CSV Conversion ---
-        if (isset($is_csv) && $is_csv) {
-            $parsed_data = $this->parse_csv_to_json($body);
-            return $parsed_data;
-        }
-        // ---------------------
 
         $data = json_decode($body, true);
 
@@ -987,6 +980,14 @@ class TableCrafter
      * 
      * @return void
      */
+    /**
+     * Rate Limiting Constants.
+     * 
+     * Configurable limits for AJAX proxy abuse prevention.
+     */
+    private const RATE_LIMIT_MAX_REQUESTS = 30;      // Max requests per window
+    private const RATE_LIMIT_WINDOW_SECONDS = 60;    // Time window (1 minute)
+
     public function ajax_proxy_fetch(): void
     {
         check_ajax_referer('tc_proxy_nonce', 'nonce');
@@ -994,6 +995,15 @@ class TableCrafter
         // Allow both edit_posts (for frontend) and manage_options (for admin preview)
         if (!current_user_can('edit_posts') && !current_user_can('manage_options')) {
             wp_send_json_error(__('Unauthorized: You do not have permission to fetch remote data.', 'tablecrafter-wp-data-tables'));
+        }
+
+        // Rate Limiting Check (Problem #1 Fix - Security)
+        if ($this->is_rate_limited()) {
+            status_header(429);
+            wp_send_json_error(
+                __('Rate limit exceeded. Please wait before making more requests.', 'tablecrafter-wp-data-tables'),
+                429
+            );
         }
 
         $url = isset($_POST['url']) ? esc_url_raw(wp_unslash($_POST['url'])) : '';
@@ -1142,6 +1152,83 @@ class TableCrafter
 
         return true;
     }
+
+    /**
+     * Rate Limiting Helper.
+     * 
+     * Checks and increments the request count for the current user/IP.
+     * Uses WordPress transients for simple cross-request state.
+     * 
+     * @return bool True if rate limit exceeded, false if allowed.
+     */
+    private function is_rate_limited(): bool
+    {
+        // Build unique identifier: prefer user ID, fallback to IP
+        $identifier = get_current_user_id();
+        if ($identifier === 0) {
+            $identifier = $this->get_client_ip();
+        }
+
+        $transient_key = 'tc_rate_' . md5((string) $identifier);
+        $current_count = get_transient($transient_key);
+
+        if ($current_count === false) {
+            // First request in this window
+            set_transient($transient_key, 1, self::RATE_LIMIT_WINDOW_SECONDS);
+            return false;
+        }
+
+        if ((int) $current_count >= self::RATE_LIMIT_MAX_REQUESTS) {
+            // Rate limit exceeded
+            $this->log_error('Rate Limit Exceeded', array(
+                'identifier' => $identifier,
+                'count' => $current_count
+            ));
+            return true;
+        }
+
+        // Increment counter (preserve remaining TTL)
+        set_transient($transient_key, (int) $current_count + 1, self::RATE_LIMIT_WINDOW_SECONDS);
+        return false;
+    }
+
+    /**
+     * Get Client IP Address.
+     * 
+     * Handles proxies and load balancers safely.
+     * 
+     * @return string The client IP address.
+     */
+    private function get_client_ip(): string
+    {
+        $ip = '';
+
+        // Check for proxy headers (only trust if you control the proxy)
+        $headers = array(
+            'HTTP_CF_CONNECTING_IP',     // Cloudflare
+            'HTTP_X_FORWARDED_FOR',      // Standard proxy header
+            'HTTP_X_REAL_IP',            // Nginx proxy
+            'REMOTE_ADDR'                // Direct connection
+        );
+
+        foreach ($headers as $header) {
+            if (!empty($_SERVER[$header])) {
+                // X-Forwarded-For can contain multiple IPs, take the first
+                $ip = explode(',', sanitize_text_field(wp_unslash($_SERVER[$header])))[0];
+                $ip = trim($ip);
+
+                // Validate it's a proper IP
+                if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                    break;
+                }
+                $ip = '';
+            }
+        }
+
+        // Fallback to a hash if no valid IP found (shouldn't happen)
+        return $ip ?: 'unknown_' . md5(wp_json_encode($_SERVER));
+    }
+
     /**
      * Internal Error Logger.
      * 
@@ -1185,6 +1272,58 @@ class TableCrafter
         delete_option('tc_do_activation_redirect');
         wp_safe_redirect(admin_url('admin.php?page=tablecrafter-welcome'));
         exit;
+    }
+
+    /**
+     * Handle Lead Subscription (Lead Magnet).
+     * 
+     * Validates email and sends to external API.
+     * 
+     * @return void
+     */
+    public function handle_lead_subscription(): void
+    {
+        // Verify nonce
+        // Note: Using 'tc_lead_nonce' which should be localized in the frontend script
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'tc_lead_nonce')) {
+            wp_send_json_error('Invalid nonce');
+            return;
+        }
+
+        // Validate email
+        $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
+        if (!is_email($email)) {
+            wp_send_json_error('Invalid email address');
+            return;
+        }
+
+        // Send lead directly to YOUR server (not stored on user's site)
+        $response = wp_remote_post('https://fahdmurtaza.com/api/tablecrafter-lead', array(
+            'body' => array(
+                'email' => $email,
+                'plugin_version' => TABLECRAFTER_VERSION,
+                'site_url' => get_site_url(),
+                'timestamp' => current_time('mysql'),
+                'source' => 'welcome_screen'
+            ),
+            'timeout' => 15,
+            'headers' => array(
+                'Content-Type' => 'application/x-www-form-urlencoded'
+            )
+        ));
+
+        // Fallback: send email directly if API fails
+        if (is_wp_error($response)) {
+            wp_mail(
+                'info@fahdmurtaza.com',
+                'TableCrafter Lead: ' . $email,
+                "New subscriber from TableCrafter plugin:\n\nEmail: " . $email . "\nSite: " . get_site_url() . "\nDate: " . current_time('mysql') . "\n\nNote: API call failed, sent via email fallback."
+            );
+        }
+
+        wp_send_json_success(array(
+            'message' => 'Subscription successful'
+        ));
     }
 
     /**

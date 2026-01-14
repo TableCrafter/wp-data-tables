@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.4.0
+Stable tag: 2.4.2
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -173,6 +173,15 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+
+= 2.4.2 =
+* Security: Implemented rate limiting (30 requests/minute) on the AJAX proxy to prevent server resource exhaustion and abuse vectors.
+* Security: Added client identification via user ID or IP address with proper proxy header handling (Cloudflare, X-Forwarded-For).
+* Improvement: Returns proper HTTP 429 status code when rate limit is exceeded.
+
+= 2.4.1 =
+* New: Added Lead Magnet Subscription handler for better user onboarding.
+* Improvement: Enhanced validation for lead subscription endpoints.
 
 = 2.4.0 =
 * New: Native Google Sheets Integration! You can now paste a Google Sheets URL directly into the Data Source field.

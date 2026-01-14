@@ -1,0 +1,13 @@
+.git
+.gitignore
+.github
+node_modules
+README.md
+RELEASE_PLAN.md
+sync_svn.sh
+test_sheets_logic.php
+tests
+.DS_Store
+.vscode
+.idea
+*.zip

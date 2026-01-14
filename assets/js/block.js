@@ -57,6 +57,17 @@
                             onChange: updateSource,
                             help: 'The URL of your JSON data source (must be public).'
                         }),
+                        el(editor.MediaUpload, {
+                            onSelect: (media) => updateSource(media.url),
+                            allowedTypes: ['text/csv', 'application/vnd.ms-excel', 'text/plain'],
+                            value: attributes.source,
+                            render: ({ open }) => el(components.Button, {
+                                variant: 'secondary',
+                                onClick: open,
+                                icon: 'upload',
+                                style: { marginBottom: '15px', width: '100%', justifyContent: 'center' }
+                            }, 'Select CSV / Data Source')
+                        }),
                         el(SelectControl, {
                             label: 'Quick Demo',
                             value: attributes.source,
