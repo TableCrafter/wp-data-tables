@@ -836,6 +836,11 @@ class TableCrafter
             }
         }
 
+        // Apply sorting to data if sort parameter is provided
+        if (!empty($sort_field) && !empty($sort_direction) && in_array($sort_field, $headers)) {
+            $data = $this->sort_data($data, $sort_field, $sort_direction);
+        }
+
         $html = '<table class="tc-table">';
         $html .= '<thead><tr>';
         foreach ($headers as $header) {
@@ -872,6 +877,46 @@ class TableCrafter
             'html' => $html,
             'data' => $data
         );
+    }
+
+    /**
+     * Sort data array by specified field and direction.
+     *
+     * @param array $data The data to sort.
+     * @param string $field The field to sort by.
+     * @param string $direction Sort direction (asc/desc/ascending/descending).
+     * @return array Sorted data.
+     */
+    private function sort_data(array $data, string $field, string $direction): array
+    {
+        if (empty($data)) {
+            return $data;
+        }
+
+        // Determine sort direction
+        $is_ascending = in_array($direction, ['asc', 'ascending']);
+
+        // Sort data using usort with custom comparison function
+        usort($data, function($a, $b) use ($field, $is_ascending) {
+            $a = (array) $a;
+            $b = (array) $b;
+            
+            $val_a = isset($a[$field]) ? $a[$field] : '';
+            $val_b = isset($b[$field]) ? $b[$field] : '';
+            
+            // Handle numeric values
+            if (is_numeric($val_a) && is_numeric($val_b)) {
+                $result = floatval($val_a) <=> floatval($val_b);
+            } else {
+                // String comparison (case-insensitive)
+                $result = strcasecmp(strval($val_a), strval($val_b));
+            }
+            
+            // Reverse result for descending order
+            return $is_ascending ? $result : -$result;
+        });
+
+        return $data;
     }
 
     /**
