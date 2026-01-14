@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.4.4] - 2026-01-14
+### Added
+- **Enhanced Visual Sorting:** Added ascending (↑) and descending (↓) arrow indicators for active table sort states
+- **Shortcode Sort Parameter:** New `sort` parameter support in format "column:direction" (e.g., `sort="price:desc"`)
+- **Accessibility Enhancement:** Implemented proper `aria-sort` attributes for WCAG 2.1 compliance and screen reader support
+
+### Improved
+- **User Experience:** Clear visual feedback eliminates sorting confusion across all business use cases
+- **Server-Side Rendering:** Enhanced SEO with proper sort state in initial HTML output
+- **Keyboard Navigation:** Better accessibility for users navigating tables with keyboard
+
 ## [2.4.3] - 2026-01-14
 ### Fixed
 - **Fatal Error Prevention:** Added file existence check for CSV source dependency to prevent fatal errors during plugin activation

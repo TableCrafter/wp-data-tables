@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.4.3
+Stable tag: 2.4.4
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -178,6 +178,12 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+
+= 2.4.4 =
+* New: Enhanced visual sorting indicators with ascending/descending arrows for improved user experience
+* New: Added server-side sort parameter support in shortcode (format: sort="column:direction")
+* Improvement: Enhanced accessibility with proper aria-sort attributes for WCAG 2.1 compliance
+* Improvement: Better keyboard navigation and screen reader support for table sorting
 
 = 2.4.3 =
 * Fix: Added file existence check for CSV source dependency to prevent fatal errors during plugin activation

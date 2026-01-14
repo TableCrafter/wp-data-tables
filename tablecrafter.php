@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – Data to Beautiful Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: Transform any data source into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
- * Version: 2.4.3
+ * Version: 2.4.4
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.4.3');
+define('TABLECRAFTER_VERSION', '2.4.4');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
