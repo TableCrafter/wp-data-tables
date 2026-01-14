@@ -365,18 +365,52 @@ class TableCrafter {
 
     // Standard Client-Side Load
     try {
-      const response = await fetch(this.dataUrl);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      let data;
+      
+      // Check for Proxy Configuration
+      if (this.config.api && this.config.api.proxy && this.config.api.proxy.url) {
+        console.log('TableCrafter: Using Proxy', this.config.api.proxy);
+        
+        const formData = new FormData();
+        formData.append('action', 'tc_proxy_fetch');
+        formData.append('nonce', this.config.api.proxy.nonce);
+        formData.append('url', this.dataUrl);
+
+        const response = await fetch(this.config.api.proxy.url, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) throw new Error(`Proxy HTTP error! status: ${response.status}`);
+        
+        const jsonResponse = await response.json();
+        
+        if (!jsonResponse.success) {
+            throw new Error(jsonResponse.data || 'Proxy Error');
+        }
+        
+        data = jsonResponse.data;
+
+      } else {
+        // Direct Fetch (Fallback / Legacy)
+        const response = await fetch(this.dataUrl);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text();
+        // Debug: Log raw response to find HTML errors
+        console.log('TableCrafter Raw Response:', text.substring(0, 500)); 
+        
+        data = JSON.parse(text);
       }
-      const data = await response.json();
+
       this.data = this.processData(data); // Using processData for consistency
       
       this.autoDiscoverColumns();
       this.render();
     } catch (error) {
       console.error('TableCrafter: Load failed', error);
-      this.renderError('Unable to load data. The source may be unavailable.');
+      this.renderError(`Unable to load data. ${error.message}`);
       throw error;
     } finally {
       this.isLoading = false;

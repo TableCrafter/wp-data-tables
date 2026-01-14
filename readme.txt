@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.3.14
+Stable tag: 2.4.0
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -29,7 +29,7 @@ Transform JSON APIs or CSVs into responsive WordPress tables. Features live sear
 ### 🛠️ Key Features for WordPress Developers
 
 *   **🎯 API Integration:** Connect to any REST API, JSON endpoint, or CSV file with zero coding
-*   **⚡ Live Search & Filtering:** Real-time data filtering as users type, with debounced performance
+*   **⚡ Live Search & Sorting:** Real-time data filtering and multi-column sorting that works instantly in both the **Gutenberg Block** and **Shortcodes**.
 *   **📱 Responsive Design:** Mobile-optimized card view with automatic reflow for small screens  
 *   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls for data sources and display settings. Features live preview directly in the editor.
 *   **🛠️ Shortcode Builder:** Built-in generator in the admin dashboard. Configure your table visually, preview real-time results, and copy the ready-to-use shortcode with one click.
@@ -173,6 +173,12 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+
+= 2.4.0 =
+* New: Native Google Sheets Integration! You can now paste a Google Sheets URL directly into the Data Source field.
+* Enhancement: Added robust Proxy Fetching to bypass CORS restrictions for external data sources.
+* Enhancement: Added raw cURL fallback for reliable data retrieval from secured sources.
+* Fix: Resolved "Unable to load data" errors when fetching from redirects (like Google Sheets).
 
 = 2.3.14 =
 * Hotfix: Fix unresponsive sorting by ensuring hydration runs for embedded data initialization.

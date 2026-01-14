@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – Data to Beautiful Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: Transform any data source into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
- * Version: 2.3.12
+ * Version: 2.4.0
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.3.14');
+define('TABLECRAFTER_VERSION', '2.4.0');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -613,31 +613,113 @@ class TableCrafter
             return new WP_Error('security_error', 'The provided URL is blocked for safety (Local/Private IP).');
         }
 
-        // 3. Remote HTTP Fetch
-        $response = wp_safe_remote_get($url, array(
-            'timeout' => 15,
-            'redirection' => 5,
-            'reject_unsafe_urls' => true,
-            'sslverify' => false
-        ));
+        // Define $original_url for potential usage if we modify $url
+        $original_url = $url;
 
-        if (is_wp_error($response)) {
-            $this->log_error('HTTP Fetch Failed', array('url' => $url, 'error' => $response->get_error_message()));
-            return $response;
+        // --- Google Sheets Detection ---
+        $is_csv = false;
+        if (preg_match('/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/', $url, $matches)) {
+            $sheet_id = $matches[1];
+            // Transform to CSV export URL
+            // Default to 'gid=0' (first sheet) if no 'gid' is present in original URL, 
+            // but for now simple export is safest
+            $url = "https://docs.google.com/spreadsheets/d/{$sheet_id}/export?format=csv";
+
+            // If the user provided a specific sheet ID (gid) in the URL, try to preserve it
+            // Parse query string of original URL
+            $url_parts = parse_url($original_url);
+            if (isset($url_parts['query'])) {
+                parse_str($url_parts['query'], $query_params);
+                if (isset($query_params['gid'])) {
+                    $url .= "&gid=" . $query_params['gid'];
+                }
+            }
+
+            $is_csv = true;
+        }
+        // -----------------------------
+
+        // 3. Remote HTTP Fetch
+        // Try raw cURL to match CLI behavior
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Match verify false
+        curl_setopt($ch, CURLOPT_USERAGENT, 'curl/8.7.1'); // Match working CLI agent
+        curl_setopt($ch, CURLOPT_COOKIEFILE, ""); // Enable cookie engine in memory
+
+        $body = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+
+        if ($body === false) {
+            $this->log_error('CURL Fetch Failed', array('url' => $url, 'error' => $error));
+            return new WP_Error('http_error', 'CURL Error: ' . $error);
         }
 
-        $code = wp_remote_retrieve_response_code($response);
+        // Mock response array for compatibility with rest of function
+        $response = array(
+            'body' => $body,
+            'response' => array('code' => $code)
+        );
+
         if ($code !== 200) {
             $this->log_error('HTTP Error Code', array('url' => $url, 'code' => $code));
             return new WP_Error('http_error', 'Source returned HTTP ' . $code);
         }
 
-        $body = wp_remote_retrieve_body($response);
+        // --- CSV Conversion ---
+        if (isset($is_csv) && $is_csv) {
+            $parsed_data = $this->parse_csv_to_json($body);
+            return $parsed_data;
+        }
+        // ---------------------
+
         $data = json_decode($body, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             $this->log_error('JSON Parse Error', array('url' => $url, 'error' => json_last_error_msg()));
             return new WP_Error('json_error', 'The source did not return a valid JSON structure.');
+        }
+
+        return $data;
+    }
+
+    /**
+     * Helper: Convert CSV String to JSON (Array of Objects)
+     */
+    private function parse_csv_to_json($csv_string)
+    {
+        $lines = explode("\n", trim($csv_string));
+        if (empty($lines))
+            return [];
+
+        // Parse headers (Row 1)
+        // Fix for PHP 8.4+ deprecation: explicit escape parameter
+        $headers = str_getcsv(array_shift($lines), ",", "\"", "\\");
+
+        $data = [];
+        foreach ($lines as $line) {
+            if (empty(trim($line)))
+                continue;
+
+            $row = str_getcsv($line, ",", "\"", "\\");
+
+            // Skip rows that don't match header count
+            if (count($row) !== count($headers))
+                continue;
+
+            // Combine into associative array
+            $item = array();
+            foreach ($headers as $index => $key) {
+                // Sanitize key slightly to be a valid valid property? 
+                // Actually JSON keys can be anything, so raw is fine.
+                // Just utf8_encode if needed? WordPress handles UTF8 usually.
+                $item[$key] = isset($row[$index]) ? $row[$index] : null;
+            }
+            $data[] = $item;
         }
 
         return $data;
