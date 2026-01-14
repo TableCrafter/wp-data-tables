@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.4.2] - 2026-01-14
+### Security
+- **Rate Limiting:** Implemented transient-based rate limiting (30 requests/minute) on the AJAX proxy endpoint to prevent server resource exhaustion and abuse vectors.
+- **Abuse Prevention:** Added client identification via user ID or IP address with proper proxy header handling (Cloudflare, X-Forwarded-For).
+- **Error Handling:** Returns proper HTTP 429 status code when rate limit is exceeded.
+
 ## [2.3.3] - 2026-01-13
 ### Added
 - **Smart Data Formatting:** New engine automatically detects and formats raw data types (Dates, URLs, Emails, Booleans) into user-friendly HTML.

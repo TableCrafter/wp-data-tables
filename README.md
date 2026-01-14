@@ -187,7 +187,7 @@ echo tablecrafter_render([
 ### Core Parameters
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `source` | string | *required* | JSON API endpoint or file URL |
+| `source` | string | *required* | JSON API, CSV file, or **Google Sheet** URL |
 | `root` | string | `""` | JSONPath to data array (e.g., `data.results`) |
 | `search` | boolean | `false` | Enable live search functionality |
 | `export` | boolean | `false` | Enable CSV/clipboard export tools |
@@ -216,6 +216,12 @@ echo tablecrafter_render([
     export="true" 
     per_page="25"
 ]
+```
+
+### Google Sheets Integration
+Display data from a public Google Sheet (must be "Anyone with the link"):
+```
+[tablecrafter source="https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit"]
 ```
 
 ---

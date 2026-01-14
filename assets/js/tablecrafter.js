@@ -159,8 +159,19 @@ class TableCrafter {
     if (initialDataScript) {
       try {
         this.data = JSON.parse(initialDataScript.textContent);
+      console.log('TableCrafter: Initialized from embedded data payload');
+      
+      // If hydrating from SSR with embedded data, we must initialize state and listeners
+      if (this.container.dataset.ssr === "true") {
+        this.data = this.processData(this.data);
         this.autoDiscoverColumns();
-        console.log('TableCrafter: Initialized from embedded data payload');
+        this.detectFilterTypes();
+        this.container.dataset.ssr = "false";
+        this.hydrateListeners();
+      } else {
+        // Normal initialization from embedded data (no SSR/Hydration context)
+        this.autoDiscoverColumns();
+      }
       } catch (e) {
         console.error('TableCrafter: Failed to parse embedded data', e);
       }
@@ -323,11 +334,16 @@ class TableCrafter {
     if (this.container.dataset.ssr === "true") {
       // this.render(); // <-- REMOVED: Do not wipe server content yet!
       if (this.data && this.data.length > 0) {
-        this.container.dataset.ssr = "false";
-        this.hydrateListeners(); // Attach listeners to existing DOM
-        this.isLoading = false;
-        return Promise.resolve(this.data);
-      }
+      // Vital: Initialize internal state so future renders (sorting/filtering) work!
+      this.data = this.processData(this.data);
+      this.autoDiscoverColumns();
+      this.detectFilterTypes();
+      
+      this.container.dataset.ssr = "false";
+      this.hydrateListeners(); // Attach listeners to existing DOM
+      this.isLoading = false;
+      return Promise.resolve(this.data);
+    }
       if (this.dataUrl) {
          try {
            const response = await fetch(this.dataUrl);
@@ -349,18 +365,52 @@ class TableCrafter {
 
     // Standard Client-Side Load
     try {
-      const response = await fetch(this.dataUrl);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      let data;
+      
+      // Check for Proxy Configuration
+      if (this.config.api && this.config.api.proxy && this.config.api.proxy.url) {
+        console.log('TableCrafter: Using Proxy', this.config.api.proxy);
+        
+        const formData = new FormData();
+        formData.append('action', 'tc_proxy_fetch');
+        formData.append('nonce', this.config.api.proxy.nonce);
+        formData.append('url', this.dataUrl);
+
+        const response = await fetch(this.config.api.proxy.url, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) throw new Error(`Proxy HTTP error! status: ${response.status}`);
+        
+        const jsonResponse = await response.json();
+        
+        if (!jsonResponse.success) {
+            throw new Error(jsonResponse.data || 'Proxy Error');
+        }
+        
+        data = jsonResponse.data;
+
+      } else {
+        // Direct Fetch (Fallback / Legacy)
+        const response = await fetch(this.dataUrl);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text();
+        // Debug: Log raw response to find HTML errors
+        console.log('TableCrafter Raw Response:', text.substring(0, 500)); 
+        
+        data = JSON.parse(text);
       }
-      const data = await response.json();
+
       this.data = this.processData(data); // Using processData for consistency
       
       this.autoDiscoverColumns();
       this.render();
     } catch (error) {
       console.error('TableCrafter: Load failed', error);
-      this.renderError('Unable to load data. The source may be unavailable.');
+      this.renderError(`Unable to load data. ${error.message}`);
       throw error;
     } finally {
       this.isLoading = false;

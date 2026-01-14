@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.3.12
+Stable tag: 2.4.2
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -12,7 +12,7 @@ Transform JSON APIs or CSVs into responsive WordPress tables. Features live sear
 
 == Description ==
 
-**TableCrafter** is the most powerful WordPress data table plugin for displaying dynamic content from external APIs, JSON files, and CSV data sources. Perfect for developing, agencies, and businesses who need to showcase real-time data without database bloat.
+**TableCrafter** is the most powerful WordPress data table plugin for displaying dynamic content from external APIs, JSON files, and CSV data sources. Perfect for developers, agencies, and businesses who need to showcase real-time data without database bloat.
 
 [Try Live Demo](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
 
@@ -29,7 +29,7 @@ Transform JSON APIs or CSVs into responsive WordPress tables. Features live sear
 ### 🛠️ Key Features for WordPress Developers
 
 *   **🎯 API Integration:** Connect to any REST API, JSON endpoint, or CSV file with zero coding
-*   **⚡ Live Search & Filtering:** Real-time data filtering as users type, with debounced performance
+*   **⚡ Live Search & Sorting:** Real-time data filtering and multi-column sorting that works instantly in both the **Gutenberg Block** and **Shortcodes**.
 *   **📱 Responsive Design:** Mobile-optimized card view with automatic reflow for small screens  
 *   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls for data sources and display settings. Features live preview directly in the editor.
 *   **🛠️ Shortcode Builder:** Built-in generator in the admin dashboard. Configure your table visually, preview real-time results, and copy the ready-to-use shortcode with one click.
@@ -90,7 +90,7 @@ Go to the **TableCrafter** admin menu to use the interactive builder.
 ### Manual Shortcode Parameters
 The `[tablecrafter]` shortcode is highly flexible:
 
-*   `source`: (Required) The URL to your JSON API or file.
+*   `source`: (Required) The URL to your JSON API, CSV file, or **Google Sheet**.
 *   `root`: (Optional) Path to the data array in the JSON response (e.g., `root="data.results"`).
 *   `search`: (Optional) Toggle the live search bar (`true` or `false`).
 *   `filters`: (Optional) Toggle column filters (`true` or `false`).
@@ -114,6 +114,11 @@ Connect to an API where results are nested:
 Limit data from heavy APIs:
 
     [tablecrafter source="..." include="name,price,symbol"]
+
+**4. Google Sheets Integration**
+Display data from a public Google Sheet (must be "Anyone with the link"):
+
+    [tablecrafter source="https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit"]
 
 
 ### 🚀 Upgrade to Pro: Gravity Tables
@@ -173,6 +178,27 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+
+= 2.4.2 =
+* Security: Implemented rate limiting (30 requests/minute) on the AJAX proxy to prevent server resource exhaustion and abuse vectors.
+* Security: Added client identification via user ID or IP address with proper proxy header handling (Cloudflare, X-Forwarded-For).
+* Improvement: Returns proper HTTP 429 status code when rate limit is exceeded.
+
+= 2.4.1 =
+* New: Added Lead Magnet Subscription handler for better user onboarding.
+* Improvement: Enhanced validation for lead subscription endpoints.
+
+= 2.4.0 =
+* New: Native Google Sheets Integration! You can now paste a Google Sheets URL directly into the Data Source field.
+* Enhancement: Added robust Proxy Fetching to bypass CORS restrictions for external data sources.
+* Enhancement: Added raw cURL fallback for reliable data retrieval from secured sources.
+* Fix: Resolved "Unable to load data" errors when fetching from redirects (like Google Sheets).
+
+= 2.3.14 =
+* Hotfix: Fix unresponsive sorting by ensuring hydration runs for embedded data initialization.
+
+= 2.3.13 =
+* Hotfix: Initialize internal state during SSR hydration to ensure sorting and filtering work correctly.
 
 = 2.3.12 =
 * Fix: Eliminated "flash of unstyled content" by preserving server-rendered table during hydration.

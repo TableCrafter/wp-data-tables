@@ -18,8 +18,44 @@ document.addEventListener('DOMContentLoaded', function () {
     const shortcodeDisplay = document.getElementById('tc-shortcode-display');
     const container = document.getElementById('tc-preview-container');
     const demoLinks = document.querySelectorAll('.tc-demo-links a');
+    const uploadBtn = document.getElementById('tc-upload-csv-btn'); // [v2.5.0]
 
     if (!urlInput || !previewBtn || !copyBtn) return; // Exit if not on the settings page
+
+    // --- Media Library Upload Handler (v2.5.0) ---
+    if (uploadBtn) {
+        let fileFrame;
+        uploadBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (fileFrame) {
+                fileFrame.open();
+                return;
+            }
+
+            fileFrame = wp.media({
+                title: 'Select Data Source (CSV)',
+                button: {
+                    text: 'Use this Data Source'
+                },
+                multiple: false
+            });
+
+            fileFrame.on('select', function () {
+                const attachment = fileFrame.state().get('selection').first().toJSON();
+                urlInput.value = attachment.url;
+                
+                // Trigger events to update UI
+                urlInput.dispatchEvent(new Event('input'));
+                
+                // Auto-preview
+                setTimeout(() => previewBtn.click(), 100);
+            });
+
+            fileFrame.open();
+        });
+    }
+    // ---------------------------------------------
 
     const BUTTON_COLORS = {
         DEFAULT: '', // WordPress default
