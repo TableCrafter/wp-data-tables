@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.4.2
+Stable tag: 2.4.3
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -178,6 +178,10 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+
+= 2.4.3 =
+* Fix: Added file existence check for CSV source dependency to prevent fatal errors during plugin activation
+* Fix: Improved sync script to exclude development files from WordPress.org deployments
 
 = 2.4.2 =
 * Security: Implemented rate limiting (30 requests/minute) on the AJAX proxy to prevent server resource exhaustion and abuse vectors.

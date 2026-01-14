@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.4.3] - 2026-01-14
+### Fixed
+- **Fatal Error Prevention:** Added file existence check for CSV source dependency to prevent fatal errors during plugin activation
+- **Deployment:** Improved sync script to exclude development files from WordPress.org deployments
+
 ## [2.4.2] - 2026-01-14
 ### Security
 - **Rate Limiting:** Implemented transient-based rate limiting (30 requests/minute) on the AJAX proxy endpoint to prevent server resource exhaustion and abuse vectors.
