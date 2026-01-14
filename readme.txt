@@ -12,7 +12,7 @@ Transform JSON APIs or CSVs into responsive WordPress tables. Features live sear
 
 == Description ==
 
-**TableCrafter** is the most powerful WordPress data table plugin for displaying dynamic content from external APIs, JSON files, and CSV data sources. Perfect for developing, agencies, and businesses who need to showcase real-time data without database bloat.
+**TableCrafter** is the most powerful WordPress data table plugin for displaying dynamic content from external APIs, JSON files, and CSV data sources. Perfect for developers, agencies, and businesses who need to showcase real-time data without database bloat.
 
 [Try Live Demo](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
 
@@ -90,7 +90,7 @@ Go to the **TableCrafter** admin menu to use the interactive builder.
 ### Manual Shortcode Parameters
 The `[tablecrafter]` shortcode is highly flexible:
 
-*   `source`: (Required) The URL to your JSON API or file.
+*   `source`: (Required) The URL to your JSON API, CSV file, or **Google Sheet**.
 *   `root`: (Optional) Path to the data array in the JSON response (e.g., `root="data.results"`).
 *   `search`: (Optional) Toggle the live search bar (`true` or `false`).
 *   `filters`: (Optional) Toggle column filters (`true` or `false`).
@@ -114,6 +114,11 @@ Connect to an API where results are nested:
 Limit data from heavy APIs:
 
     [tablecrafter source="..." include="name,price,symbol"]
+
+**4. Google Sheets Integration**
+Display data from a public Google Sheet (must be "Anyone with the link"):
+
+    [tablecrafter source="https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit"]
 
 
 ### 🚀 Upgrade to Pro: Gravity Tables
