@@ -1,6 +1,6 @@
 === TableCrafter – Data to Beautiful Tables ===
 Contributors: fahdi
-Tags: table, json, api, accessibility, wcag, responsive
+Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
 Stable tag: 3.0.0
