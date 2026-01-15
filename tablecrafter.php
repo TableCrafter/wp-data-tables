@@ -406,9 +406,11 @@ class TableCrafter
             'nonce' => wp_create_nonce('tc_proxy_nonce'),
             'demoUrls' => array(
                 array('label' => __('Select a demo...', 'tablecrafter-wp-data-tables'), 'value' => ''),
-                array('label' => __('User Directory', 'tablecrafter-wp-data-tables'), 'value' => TABLECRAFTER_URL . 'demo-data/users.json'),
-                array('label' => __('Product Inventory', 'tablecrafter-wp-data-tables'), 'value' => TABLECRAFTER_URL . 'demo-data/products.json'),
-                array('label' => __('Sales Metrics', 'tablecrafter-wp-data-tables'), 'value' => TABLECRAFTER_URL . 'demo-data/metrics.json'),
+                array('label' => __('👤 User Directory (JSON)', 'tablecrafter-wp-data-tables'), 'value' => TABLECRAFTER_URL . 'demo-data/users.json'),
+                array('label' => __('📦 Product Inventory (JSON)', 'tablecrafter-wp-data-tables'), 'value' => TABLECRAFTER_URL . 'demo-data/products.json'),
+                array('label' => __('📈 Sales Metrics (JSON)', 'tablecrafter-wp-data-tables'), 'value' => TABLECRAFTER_URL . 'demo-data/metrics.json'),
+                array('label' => __('👥 Employee List (CSV)', 'tablecrafter-wp-data-tables'), 'value' => TABLECRAFTER_URL . 'demo-data/employees.csv'),
+                array('label' => __('📋 Google Sheets Example', 'tablecrafter-wp-data-tables'), 'value' => 'https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit#gid=0'),
             )
         ));
 
