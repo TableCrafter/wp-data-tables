@@ -8,7 +8,7 @@ Requires PHP: 7.4
 License: GPLv2 or later
 
 
-Transform JSON APIs, Google Sheets & CSV into responsive WordPress tables. Advanced export (Excel/PDF), 25,000+ row handling, intelligent optimization.
+Transform JSON APIs, Google Sheets & CSV into responsive WordPress tables. Advanced export (Excel/PDF), 25K+ rows, intelligent optimization.
 
 == Description ==
 

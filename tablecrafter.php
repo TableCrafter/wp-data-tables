@@ -2,7 +2,7 @@
 /**
  * Plugin Name: TableCrafter – Data to Beautiful Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
- * Description: Transform any data source into responsive WordPress tables. Features intelligent large dataset handling, advanced export (Excel/PDF), enhanced pagination, live search, sorting, and SEO-friendly server-side rendering.
+ * Description: Transform any data source into responsive WordPress tables. Advanced export (Excel/PDF), large datasets, live search, sorting, pagination.
  * Version: 2.9.0
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
