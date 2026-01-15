@@ -1,8 +1,8 @@
 # 🚀 TableCrafter: WordPress Data Tables & Dynamic Content Plugin
 
-**🚀 NEW v2.6.0: Interactive Welcome Screen with Live Feature Toggles!**
+**🔄 NEW v2.7.0: Smart Auto-Refresh for Live Dashboards!**
 
-**Transform any Google Sheet, JSON API, or CSV into beautiful, responsive WordPress data tables. Now with revolutionary interactive onboarding that lets users experience all features instantly.**
+**Transform any Google Sheet, JSON API, or CSV into beautiful, responsive WordPress data tables. Now with intelligent auto-refresh that transforms static tables into dynamic dashboards with configurable intervals and smart user interaction detection.**
 
 [![Try Live Demo](https://img.shields.io/badge/Try%20Live%20Demo-TasteWP-blue?logo=wordpress)](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
 [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/tablecrafter-wp-data-tables?logo=wordpress)](https://wordpress.org/plugins/tablecrafter-wp-data-tables/)
@@ -10,21 +10,28 @@
 [![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/r/tablecrafter-wp-data-tables?logo=wordpress)](https://wordpress.org/plugins/tablecrafter-wp-data-tables/)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2+-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
 
-## 🚀 **NEW v2.6.0: Interactive Welcome Screen Revolution!**
+## 🔄 **NEW v2.7.0: Smart Auto-Refresh System!**
 
-### 🎮 **Interactive Feature Playground**
-- **Live Demo Table:** See working tables with search, sorting, filters, and export within 30 seconds of activation
-- **Real-Time Feature Toggles:** Toggle search, filters, and export on/off to see immediate changes
-- **Smart Onboarding Flow:** Streamlined welcome → demo → customize experience
-- **Zero Learning Curve:** Users experience all capabilities before customizing
+### 🚀 **Live Dashboard Transformation**
+- **Configurable Auto-Refresh:** Set any interval from 10 seconds to 24 hours for real-time data updates
+- **Smart Interaction Pausing:** Automatically pauses refresh during user interactions (sorting, filtering, scrolling)
+- **Visual Refresh Controls:** Pause/resume buttons, countdown timers, and "last updated" timestamps
+- **State Preservation:** Maintains user's current page, filters, search terms, and sort order during refresh
 
-### ✨ **Enhanced User Experience**
-- **Instant Value Demonstration:** No more guessing what the plugin can do
-- **Interactive Learning:** Users learn by doing, not reading
-- **Mobile-Optimized Controls:** Responsive toggles and buttons for all devices
-- **Conversion Optimized:** Reduced time-to-value from minutes to seconds
+### 🎛️ **Complete Control & Integration**
+- **Gutenberg Block Controls:** Full auto-refresh configuration in block editor sidebar
+- **Shortcode Parameters:** Complete control via shortcode attributes for any page builder
+- **Error Handling:** Robust retry logic with exponential backoff and graceful degradation
+- **Performance Optimized:** Background refresh without disrupting user experience
+
+### 💼 **Perfect for Live Data**
+- **Financial Dashboards:** Stock prices, trading volumes, portfolio tracking
+- **E-Commerce Analytics:** Inventory levels, sales metrics, order statuses  
+- **IoT Monitoring:** Sensor data, equipment status, environmental readings
+- **SaaS Dashboards:** User analytics, system metrics, performance KPIs
 
 ### 🚀 Recent Updates
+- **v2.7.0:** Smart Auto-Refresh System with intelligent pausing and visual controls
 - **v2.6.0:** Interactive Welcome Screen with live feature toggles and instant demos
 - **v2.5.0:** Google Sheets Integration and CSV Data Source support
 - **v2.4.4:** Enhanced visual sorting with accessibility improvements
@@ -116,6 +123,7 @@ Unlock the full potential of your data with **[Advanced Data Tables for Gravity 
 
 *   **✨ Smart Data Formatting:** Automatically turns ugly raw data into beautiful content. ISO dates become readable (e.g., "Jan 1, 2024"), URLs become clickable links, and status fields get visual badges.
 *   **🎯 Data Integration:** Connect to Google Sheets, REST APIs, JSON endpoints, or CSV files with zero coding
+*   **🔄 Smart Auto-Refresh:** Live data updates with configurable intervals, smart interaction pausing, and visual indicators
 *   **⚡ Live Search & Filtering:** Real-time data filtering as users type, with debounced performance
 *   **📱 Responsive Design:** Mobile-optimized card view with automatic reflow for small screens  
 *   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls for data sources and display settings. Features live preview directly in the editor.
@@ -173,23 +181,63 @@ Unlock the full potential of your data with **[Advanced Data Tables for Gravity 
 
 ---
 
-## 🚀 Quick Start
+## 📦 Installation
 
-### Option 1: Gutenberg Block (Recommended)
-1. Add the **TableCrafter** block to any page/post
-2. Enter your JSON URL in the sidebar
-3. Configure display options (search, export, pagination)
-4. Publish and you're done!
+### 🚀 Quick Install (Recommended)
+1. **Install from WordPress Admin:**
+   - Go to **Plugins > Add New** in your WordPress admin
+   - Search for "TableCrafter" and click **Install Now**
+   - Click **Activate Plugin** after installation
+   - Follow the automatic redirect to the welcome screen with interactive demos
 
-### Option 2: Shortcode Builder (Admin Dashboard)
-1. Go to **Settings > TableCrafter**.
-2. Enter your Data URL and configure settings (Search, Filters, Export).
-3. Click **Preview Table** to verify your data.
-4. Click **Copy Shortcode** and paste it anywhere on your site.
+2. **Manual Installation:**
+   - Download the plugin ZIP from WordPress.org or GitHub
+   - Go to **Plugins > Add New > Upload Plugin**
+   - Select the ZIP file and click **Install Now**
+   - Click **Activate Plugin** and visit **TableCrafter** in admin sidebar
 
-### Option 3: Manual Shortcode
+### ✨ First Steps After Installation
+1. **Try Interactive Demos:** Use the welcome screen to explore features with live data
+2. **Connect Your Data:** Paste any public JSON URL, Google Sheet link, or CSV file URL
+3. **Choose Your Method:**
+   - **Block Editor Users:** Add "TableCrafter" block to pages/posts
+   - **Shortcode Users:** Use visual shortcode builder in admin dashboard
+
+---
+
+## 🚀 Usage Examples
+
+### Live Dashboard with Auto-Refresh
+Create real-time dashboards that update automatically:
 ```
-[tablecrafter source="https://api.example.com/data.json" search="true" export="true"]
+[tablecrafter 
+  source="https://api.example.com/live-data.json" 
+  auto_refresh="true" 
+  refresh_interval="30000" 
+  refresh_countdown="true"]
+```
+
+### Financial Data with Smart Pausing
+Display live financial data with user-friendly controls:
+```
+[tablecrafter 
+  source="https://api.example.com/stocks.json" 
+  auto_refresh="true" 
+  refresh_interval="60000" 
+  refresh_indicator="true" 
+  refresh_last_updated="true" 
+  search="true" 
+  export="true"]
+```
+
+### Basic Table with Search and Filters
+```
+[tablecrafter source="https://api.example.com/data.json" search="true" filters="true"]
+```
+
+### Google Sheets Integration
+```
+[tablecrafter source="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"]
 ```
 
 ### Option 3: PHP Function

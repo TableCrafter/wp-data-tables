@@ -3,12 +3,12 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.6.0
+Stable tag: 2.7.0
 Requires PHP: 7.4
 License: GPLv2 or later
 
 
-🚀 NEW: Interactive Welcome Screen! Transform Google Sheets, JSON & CSVs into responsive tables with live feature toggles & instant demos.
+🔄 NEW: Smart Auto-Refresh! Live data updates with intelligent pausing, visual indicators, and configurable intervals. Transform static tables into dynamic dashboards!
 
 == Description ==
 
@@ -29,9 +29,10 @@ License: GPLv2 or later
 ### 🛠️ Key Features for WordPress Developers
 
 *   **🎯 Data Integration:** Connect to Google Sheets, REST APIs, JSON endpoints, or CSV files with zero coding
+*   **🔄 Smart Auto-Refresh:** Live data updates with configurable intervals, smart interaction pausing, and visual indicators
 *   **⚡ Live Search & Sorting:** Real-time data filtering and multi-column sorting that works instantly in both the **Gutenberg Block** and **Shortcodes**.
 *   **📱 Responsive Design:** Mobile-optimized card view with automatic reflow for small screens  
-*   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls for data sources and display settings. Features live preview directly in the editor.
+*   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls for data sources, auto-refresh settings, and display options. Features live preview directly in the editor.
 *   **🛠️ Shortcode Builder:** Built-in generator in the admin dashboard. Configure your table visually, preview real-time results, and copy the ready-to-use shortcode with one click.
 *   **📄 Smart Pagination:** Client-side pagination for large datasets with customizable page sizes
 *   **🎨 Custom Styling:** CSS-friendly with variables and hooks for complete design control
@@ -108,10 +109,31 @@ License: GPLv2 or later
 
 == Installation ==
 
-1. **Upload or Search**: Search for `TableCrafter` in **Plugins > Add New** or upload the plugin folder to `/wp-content/plugins/`.
-2. **Activate**: Click **Activate** on the Plugins page.
-3. **Configure**: Visit the **TableCrafter** menu in your sidebar to test JSON URLs and generate shortcodes.
-4. **Embed**: Use the **TableCrafter Block** in Gutenberg for visual control, or use the built-in **Shortcode Builder** (TableCrafter menu) to generate specialized shortcodes for any page builder. See the **Usage** section below for advanced manual parameters.
+### 🚀 Quick Start (Recommended)
+1. **Install**: Go to **Plugins > Add New** in your WordPress admin, search for `TableCrafter`, and click **Install Now**.
+2. **Activate**: Click **Activate Plugin** on the confirmation screen.
+3. **Welcome Screen**: You'll be automatically redirected to the TableCrafter welcome screen with interactive demos.
+4. **Try It Out**: Click any demo link to see TableCrafter in action with live data, search, and filtering.
+
+### 📥 Manual Installation
+1. **Download**: Download the plugin ZIP file from WordPress.org or GitHub.
+2. **Upload**: Go to **Plugins > Add New > Upload Plugin** and select the ZIP file.
+3. **Activate**: Click **Activate Plugin** after successful upload.
+4. **Getting Started**: Visit **TableCrafter** in your admin sidebar for tutorials and shortcode generation.
+
+### ✨ Next Steps After Installation
+1. **Interactive Learning**: Use the welcome screen to explore features with live demo data.
+2. **Create Your First Table**: 
+   - **Block Editor Users**: Add a "TableCrafter" block to any page/post
+   - **Shortcode Users**: Visit **TableCrafter > Settings** to use the visual shortcode builder
+3. **Connect Your Data**: Paste any public JSON URL, Google Sheet link, or CSV file URL as your data source.
+4. **Customize**: Enable search, filters, auto-refresh, and export options to match your needs.
+
+### 🔧 For Developers
+- **Theme Integration**: Use `[tablecrafter]` shortcodes in template files with PHP: `echo do_shortcode('[tablecrafter source="..."]');`
+- **Custom Styling**: Override CSS classes starting with `.tc-` to match your theme design
+- **API Integration**: Connect to any REST API endpoint that returns JSON arrays
+- **Hooks & Filters**: Use WordPress hooks like `tablecrafter_before_render` for advanced customization
 
 == Usage ==
 
@@ -126,6 +148,7 @@ Go to the **TableCrafter** admin menu to use the interactive builder.
 ### Manual Shortcode Parameters
 The `[tablecrafter]` shortcode is highly flexible:
 
+**Core Parameters:**
 *   `source`: (Required) The URL to your JSON API, CSV file, or **Google Sheet**.
 *   `root`: (Optional) Path to the data array in the JSON response (e.g., `root="data.results"`).
 *   `search`: (Optional) Toggle the live search bar (`true` or `false`).
@@ -133,6 +156,14 @@ The `[tablecrafter]` shortcode is highly flexible:
 *   `per_page`: (Optional) Number of rows to show per page (e.g., `per_page="10"`).
 *   `include`: (Optional) Comma-separated list of keys you want to show.
 *   `exclude`: (Optional) Comma-separated list of keys you want to hide.
+*   `export`: (Optional) Enable CSV/clipboard export tools (`true` or `false`).
+
+**Smart Auto-Refresh Parameters:**
+*   `auto_refresh`: (Optional) Enable automatic data updates (`true` or `false`).
+*   `refresh_interval`: (Optional) How often to refresh in milliseconds (default: 300000 = 5 minutes).
+*   `refresh_indicator`: (Optional) Show visual refresh controls (`true` or `false`, default: `true`).
+*   `refresh_countdown`: (Optional) Display countdown to next refresh (`true` or `false`).
+*   `refresh_last_updated`: (Optional) Show "Updated X minutes ago" timestamp (`true` or `false`, default: `true`).
 
 ### Examples:
 
@@ -155,6 +186,16 @@ Limit data from heavy APIs:
 Display data from a public Google Sheet (must be "Anyone with the link"):
 
     [tablecrafter source="https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit"]
+
+**5. Live Dashboard with Auto-Refresh**
+Create a real-time dashboard that updates every 30 seconds:
+
+    [tablecrafter source="https://api.example.com/live-data.json" auto_refresh="true" refresh_interval="30000" refresh_countdown="true"]
+
+**6. Financial Dashboard with Smart Pausing**
+Display live stock prices with user-friendly refresh controls:
+
+    [tablecrafter source="https://api.example.com/stocks.json" auto_refresh="true" refresh_interval="60000" refresh_indicator="true" refresh_last_updated="true"]
 
 
 ### 🚀 Upgrade to Pro: Gravity Tables
@@ -195,7 +236,9 @@ Yes. We implement SSRF protection to prevent access to internal networks and use
 The free version is designed for public or key-based APIs (where the key is in the URL). For advanced OAuth or header-based authentication, please check out the Pro version or contact us for a custom solution.
 
 = How often does the data refresh? =
-By default, TableCrafter uses Stale-While-Revalidate (SWR) caching. It serves cached data instantly and refreshes from the source in the background. You can control the cache duration via filters or wait for the Pro version which includes a visual cache manager.
+TableCrafter supports two refresh methods:
+1. **Auto-Refresh**: Set `auto_refresh="true"` with custom intervals (e.g., `refresh_interval="60000"` for 1 minute). Perfect for live dashboards and real-time data.
+2. **Background Caching**: Uses Stale-While-Revalidate (SWR) caching to serve cached data instantly while refreshing from the source in the background.
 
 = Is it possible to customize the table styling? =
 Absolutely! TableCrafter uses standard HTML table structures. You can add your own CSS to your theme to override any styles. We also use CSS variables for many common properties like colors and padding.
@@ -214,6 +257,16 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 2.7.0 =
+* 🔄 **MAJOR FEATURE: Smart Auto-Refresh System!**
+* **Live Data Updates:** Tables now automatically refresh with configurable intervals (10 seconds to 24 hours)
+* **Smart Interaction Pausing:** Auto-refresh intelligently pauses during user interactions (sorting, filtering, scrolling)
+* **Visual Refresh Controls:** Pause/resume buttons, refresh indicators, countdown timers, and "last updated" timestamps
+* **State Preservation:** Maintains user's current page, filters, search terms, and sort order during refresh
+* **Block Editor Integration:** Full auto-refresh controls available in Gutenberg block sidebar
+* **Robust Error Handling:** Exponential backoff, retry limits, and graceful degradation for failed refreshes
+* **Business Impact:** Transforms static tables into dynamic dashboards - perfect for financial data, inventory, analytics, and IoT monitoring
+
 = 2.6.0 =
 * 🚀 **MAJOR UPDATE: Interactive Welcome Screen Revolution!**
 * **Interactive Feature Playground:** Brand new welcome screen with live demo table and real-time feature toggles
