@@ -11,11 +11,54 @@
 
     blocks.registerBlockType('tablecrafter/data-table', {
         title: 'TableCrafter',
-        description: 'Create dynamic, SEO-friendly data tables from any JSON source.',
-        icon: el('svg', { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'currentColor' },
-            el('path', { d: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z' }),
-            el('circle', { cx: 18.5, cy: 5.5, r: 2.5, fill: '#0073aa' }),
-            el('path', { d: 'M18.5 7c.8 0 1.5-.7 1.5-1.5S19.3 4 18.5 4 17 4.7 17 5.5 17.7 7 18.5 7z', fill: 'white' })
+        description: 'Transform JSON APIs, CSV files, and Google Sheets into dynamic, auto-refreshing data tables.',
+        icon: el('svg', { 
+            width: 24, 
+            height: 24, 
+            viewBox: '0 0 24 24', 
+            fill: 'none',
+            style: { color: '#1e40af' }
+        },
+            // Background grid pattern
+            el('rect', { 
+                x: 2, y: 6, width: 20, height: 12, 
+                rx: 2, 
+                fill: 'currentColor', 
+                fillOpacity: 0.1, 
+                stroke: 'currentColor', 
+                strokeWidth: 1.5 
+            }),
+            
+            // Table grid lines
+            el('line', { x1: 2, y1: 10, x2: 22, y2: 10, stroke: 'currentColor', strokeWidth: 0.8, opacity: 0.4 }),
+            el('line', { x1: 2, y1: 14, x2: 22, y2: 14, stroke: 'currentColor', strokeWidth: 0.8, opacity: 0.4 }),
+            el('line', { x1: 8, y1: 6, x2: 8, y2: 18, stroke: 'currentColor', strokeWidth: 0.8, opacity: 0.4 }),
+            el('line', { x1: 14, y1: 6, x2: 14, y2: 18, stroke: 'currentColor', strokeWidth: 0.8, opacity: 0.4 }),
+            
+            // Dynamic data transformation arrow
+            el('path', { 
+                d: 'M3 3 L8 3 M6 1 L8 3 L6 5',
+                stroke: 'currentColor',
+                strokeWidth: 2,
+                strokeLinecap: 'round',
+                strokeLinejoin: 'round',
+                fill: 'none'
+            }),
+            
+            // Auto-refresh indicator (spinning dots)
+            el('circle', { cx: 19, cy: 4, r: 1.5, fill: 'currentColor' }),
+            el('circle', { cx: 19, cy: 4, r: 3, fill: 'none', stroke: 'currentColor', strokeWidth: 1, opacity: 0.3, strokeDasharray: '1 2' }),
+            
+            // Data bars in cells (representing dynamic content)
+            el('rect', { x: 4, y: 8, width: 2, height: 1, fill: 'currentColor', opacity: 0.6 }),
+            el('rect', { x: 10, y: 7.5, width: 2, height: 2, fill: 'currentColor', opacity: 0.6 }),
+            el('rect', { x: 16, y: 8.5, width: 2, height: 1, fill: 'currentColor', opacity: 0.6 }),
+            el('rect', { x: 4, y: 12, width: 3, height: 1, fill: 'currentColor', opacity: 0.6 }),
+            el('rect', { x: 10, y: 11.5, width: 1.5, height: 2, fill: 'currentColor', opacity: 0.6 }),
+            el('rect', { x: 16, y: 12.5, width: 2.5, height: 1, fill: 'currentColor', opacity: 0.6 }),
+            el('rect', { x: 4, y: 16, width: 1.5, height: 1, fill: 'currentColor', opacity: 0.6 }),
+            el('rect', { x: 10, y: 15.5, width: 3, height: 2, fill: 'currentColor', opacity: 0.6 }),
+            el('rect', { x: 16, y: 16, width: 1, height: 1, fill: 'currentColor', opacity: 0.6 })
         ),
         category: 'widgets',
 
