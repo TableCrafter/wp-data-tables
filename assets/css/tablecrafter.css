@@ -466,6 +466,121 @@
   color: #212529;
 }
 
+/* === Enhanced Pagination for Large Datasets === */
+.tc-pagination {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tc-pagination-info[title] {
+  cursor: help;
+  position: relative;
+}
+
+.tc-pagination-info[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  background: #333;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+}
+
+.tc-pagination-controls {
+  gap: 8px;
+}
+
+/* Enhanced pagination buttons */
+.tc-first-btn,
+.tc-last-btn {
+  padding: 8px 10px;
+  border: 1px solid #007bff;
+  background: white;
+  color: #007bff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.2s;
+  min-width: 36px;
+  text-align: center;
+}
+
+.tc-first-btn:hover:not(:disabled),
+.tc-last-btn:hover:not(:disabled) {
+  background: #007bff;
+  color: white;
+}
+
+.tc-first-btn:disabled,
+.tc-last-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Page jump controls for large datasets */
+.tc-page-jump {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 8px;
+}
+
+.tc-page-input {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 13px;
+  width: 60px;
+  font-family: inherit;
+}
+
+.tc-page-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Page size controls for large datasets */
+.tc-page-size-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+.tc-page-size-label {
+  font-size: 13px;
+  color: #6c757d;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.tc-page-size-select {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  background: white;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.tc-page-size-select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
 /* === Export Controls === */
 .tc-export-controls {
   margin-bottom: 16px;
