@@ -58,10 +58,10 @@
                 el(InspectorControls, { key: 'controls' },
                     el(PanelBody, { title: 'Data Settings', initialOpen: true },
                         el(TextControl, {
-                            label: 'JSON Source URL',
+                            label: 'Data Source URL',
                             value: attributes.source,
                             onChange: updateSource,
-                            help: 'The URL of your JSON data source (must be public).'
+                            help: 'URL to your data source: JSON API, CSV file, or Google Sheet (must be publicly accessible).'
                         }),
                         el(editor.MediaUpload, {
                             onSelect: (media) => updateSource(media.url),
@@ -72,57 +72,57 @@
                                 onClick: open,
                                 icon: 'upload',
                                 style: { marginBottom: '15px', width: '100%', justifyContent: 'center' }
-                            }, 'Select CSV / Data Source')
+                            }, 'Upload CSV/JSON File')
                         }),
                         el(SelectControl, {
-                            label: 'Quick Demo',
+                            label: 'Demo Data Sources',
                             value: attributes.source,
                             options: window.tablecrafterData ? window.tablecrafterData.demoUrls : [],
                             onChange: updateSource,
-                            help: 'Select a demo dataset to quickly see how TableCrafter works.'
+                            help: 'Try different data formats: JSON APIs, CSV files, and Google Sheets with sample data.'
                         }),
                         el(TextControl, {
-                            label: 'JSON Root Path (Optional)',
+                            label: 'Data Root Path (Optional)',
                             value: attributes.root,
                             onChange: updateRoot,
-                            help: 'Dot-notation path to the data array (e.g., data.items).'
+                            help: 'For nested JSON: dot-notation path to the data array (e.g., data.items, response.results).'
                         }),
                         el(ToggleControl, {
                             label: 'Enable Search',
                             checked: attributes.search,
                             onChange: (val) => setAttributes({ search: val }),
-                            help: 'Adds a real-time search bar above the table.'
+                            help: 'Adds a real-time global search bar that filters all table data as users type.'
                         }),
                         el(ToggleControl, {
-                            label: 'Enable Filters',
+                            label: 'Enable Column Filters',
                             checked: attributes.filters !== false,
                             onChange: (val) => setAttributes({ filters: val }),
-                            help: 'Adds specific column filters (multiselect, ranges, etc.)'
+                            help: 'Adds smart column-specific filters: dropdowns for text, ranges for numbers, date pickers for dates.'
                         }),
                         el(ToggleControl, {
                             label: 'Enable Export Tools',
                             checked: attributes.export,
                             onChange: (val) => setAttributes({ export: val }),
-                            help: 'Adds CSV export and Copy to Clipboard buttons.'
+                            help: 'Adds CSV download and copy-to-clipboard buttons that respect current filters and search.'
                         }),
                         el(TextControl, {
                             label: 'Rows Per Page',
                             value: attributes.per_page,
                             type: 'number',
                             onChange: updatePerPage,
-                            help: 'Number of rows to show per page (0 for all).'
+                            help: 'Enable pagination: number of rows per page (0 = show all rows, 10-50 recommended for large datasets).'
                         }),
                         el(TextControl, {
                             label: 'Include Columns (Optional)',
                             value: attributes.include,
                             onChange: updateInclude,
-                            help: 'Comma-separated list of keys to show.'
+                            help: 'Show only specific columns: comma-separated list of field names (e.g., name,email,status).'
                         }),
                         el(TextControl, {
                             label: 'Exclude Columns (Optional)',
                             value: attributes.exclude,
                             onChange: updateExclude,
-                            help: 'Comma-separated list of keys to hide.'
+                            help: 'Hide specific columns: comma-separated list of field names to exclude (e.g., id,password,internal_notes).'
                         })
                     ),
                     el(PanelBody, { title: 'Auto-Refresh Settings', initialOpen: false },
@@ -130,32 +130,32 @@
                             label: 'Enable Auto-Refresh',
                             checked: attributes.auto_refresh,
                             onChange: (val) => setAttributes({ auto_refresh: val }),
-                            help: 'Automatically refresh table data at specified intervals.'
+                            help: 'Transform your table into a live dashboard: automatically fetch fresh data at custom intervals.'
                         }),
                         attributes.auto_refresh && el(TextControl, {
                             label: 'Refresh Interval (milliseconds)',
                             value: attributes.refresh_interval,
                             type: 'number',
                             onChange: (val) => setAttributes({ refresh_interval: parseInt(val) || 300000 }),
-                            help: 'How often to refresh data (default: 300000 = 5 minutes).'
+                            help: 'Refresh frequency in milliseconds: 30000 = 30s, 300000 = 5min (default), 3600000 = 1hr.'
                         }),
                         attributes.auto_refresh && el(ToggleControl, {
                             label: 'Show Refresh Indicator',
                             checked: attributes.refresh_indicator,
                             onChange: (val) => setAttributes({ refresh_indicator: val }),
-                            help: 'Display visual indicator with pause/resume controls.'
+                            help: 'Show visual controls: spinning refresh icon, pause/resume buttons, and manual refresh trigger.'
                         }),
                         attributes.auto_refresh && el(ToggleControl, {
                             label: 'Show Countdown Timer',
                             checked: attributes.refresh_countdown,
                             onChange: (val) => setAttributes({ refresh_countdown: val }),
-                            help: 'Display countdown to next refresh.'
+                            help: 'Display live countdown showing time remaining until next automatic data refresh.'
                         }),
                         attributes.auto_refresh && el(ToggleControl, {
                             label: 'Show Last Updated',
                             checked: attributes.refresh_last_updated,
                             onChange: (val) => setAttributes({ refresh_last_updated: val }),
-                            help: 'Display when data was last updated.'
+                            help: 'Show timestamp of last data refresh (e.g., "Updated 3 minutes ago") for data freshness confidence.'
                         }),
                         el('div', { className: 'tc-block-help', style: { marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' } },
                             el('p', null, 'Need help? Check the '),
