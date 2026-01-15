@@ -8,7 +8,7 @@ Requires PHP: 7.4
 License: GPLv2 or later
 
 
-🔄 NEW: Smart Auto-Refresh! Live data updates with intelligent pausing, visual indicators, and configurable intervals. Transform static tables into dynamic dashboards!
+🔄 NEW: Smart Auto-Refresh! Transform Google Sheets, JSON APIs, and CSV files into dynamic tables with live data updates and smart pausing.
 
 == Description ==
 
