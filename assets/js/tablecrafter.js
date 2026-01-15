@@ -149,6 +149,37 @@ class TableCrafter {
         storage: 'localStorage',
         key: 'tablecrafter_state'
       },
+      // Accessibility configuration for WCAG 2.1 compliance
+      accessibility: {
+        enabled: true,
+        announcements: true,
+        keyboardNavigation: true,
+        focusManagement: true,
+        highContrast: false,
+        reducedMotion: false,
+        announcer: {
+          politeness: 'polite', // 'polite' or 'assertive'
+          delay: 150 // ms delay before announcements
+        },
+        keyboard: {
+          navigation: true,
+          shortcuts: true,
+          tabIndex: true,
+          focusVisible: true
+        },
+        labels: {
+          table: 'Data table',
+          search: 'Search table data',
+          pagination: 'Table pagination',
+          sort: 'Sort by {column}',
+          filter: 'Filter {column}',
+          edit: 'Edit cell',
+          export: 'Export table data',
+          noResults: 'No data found',
+          loading: 'Loading data',
+          error: 'Error loading data'
+        }
+      },
       // Smart Auto-Refresh configuration
       autoRefresh: {
         enabled: false,
@@ -206,6 +237,9 @@ class TableCrafter {
 
     // Initialize rich cell types system
     this.initializeCellTypes();
+
+    // Initialize accessibility system
+    this.initializeAccessibility();
 
     // Initialize if data provided or embedded in HTML
     const initialDataScript = this.container.querySelector('.tc-initial-data');
@@ -953,6 +987,11 @@ class TableCrafter {
     table.appendChild(tbody);
     tableContainer.appendChild(table);
 
+    // Enhance table with accessibility features
+    if (this.config.accessibility.enabled) {
+      this.enhanceTableAccessibility(table);
+    }
+
     return tableContainer;
   }
 
@@ -1660,6 +1699,11 @@ class TableCrafter {
     pagination.appendChild(paginationInfo);
     pagination.appendChild(paginationControls);
 
+    // Enhance pagination with accessibility features
+    if (this.config.accessibility.enabled) {
+      this.enhancePaginationAccessibility(pagination);
+    }
+
     return pagination;
   }
 
@@ -1815,6 +1859,12 @@ class TableCrafter {
     searchInput.style.borderRadius = '4px';
 
     searchContainer.appendChild(searchInput);
+
+    // Enhance search with accessibility features
+    if (this.config.accessibility.enabled) {
+      this.enhanceSearchAccessibility(searchContainer);
+    }
+
     return searchContainer;
   }
 
@@ -2643,6 +2693,9 @@ class TableCrafter {
     this.currentPage = 1;
     this.saveState();
     this.render();
+
+    // Announce sort change for accessibility
+    this.announceDataChange('sorted');
   }
 
   /**
@@ -4555,6 +4608,582 @@ class TableCrafter {
     }
     
     console.log('TableCrafter: Auto-refresh destroyed');
+  }
+
+  /**
+   * ===== ACCESSIBILITY SYSTEM =====
+   * Comprehensive WCAG 2.1 compliance implementation
+   */
+
+  /**
+   * Initialize accessibility features
+   */
+  initializeAccessibility() {
+    if (!this.config.accessibility.enabled) return;
+
+    // Create screen reader announcer
+    this.createAccessibilityAnnouncer();
+
+    // Detect user preferences
+    this.detectAccessibilityPreferences();
+
+    // Initialize keyboard navigation
+    if (this.config.accessibility.keyboardNavigation) {
+      this.initializeKeyboardNavigation();
+    }
+
+    // Set up focus management
+    if (this.config.accessibility.focusManagement) {
+      this.setupFocusManagement();
+    }
+
+    console.log('TableCrafter: Accessibility features initialized');
+  }
+
+  /**
+   * Create invisible ARIA live region for screen reader announcements
+   */
+  createAccessibilityAnnouncer() {
+    const announcer = document.createElement('div');
+    announcer.id = `tc-announcer-${Date.now()}`;
+    announcer.className = 'tc-sr-only';
+    announcer.setAttribute('aria-live', this.config.accessibility.announcer.politeness);
+    announcer.setAttribute('aria-atomic', 'true');
+    announcer.style.cssText = `
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    `;
+    
+    document.body.appendChild(announcer);
+    this.announcer = announcer;
+  }
+
+  /**
+   * Announce text to screen readers
+   */
+  announce(message, priority = 'polite') {
+    if (!this.config.accessibility.announcements || !this.announcer) return;
+
+    // Clear previous announcement
+    this.announcer.textContent = '';
+    
+    // Set priority
+    this.announcer.setAttribute('aria-live', priority);
+    
+    // Announce with slight delay to ensure it's heard
+    setTimeout(() => {
+      this.announcer.textContent = message;
+    }, this.config.accessibility.announcer.delay);
+  }
+
+  /**
+   * Detect user accessibility preferences
+   */
+  detectAccessibilityPreferences() {
+    // Detect reduced motion preference
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.config.accessibility.reducedMotion = true;
+      this.container.classList.add('tc-reduced-motion');
+    }
+
+    // Detect high contrast preference
+    if (window.matchMedia('(prefers-contrast: high)').matches) {
+      this.config.accessibility.highContrast = true;
+      this.container.classList.add('tc-high-contrast');
+    }
+
+    // Listen for changes
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+      this.config.accessibility.reducedMotion = e.matches;
+      this.container.classList.toggle('tc-reduced-motion', e.matches);
+    });
+
+    window.matchMedia('(prefers-contrast: high)').addEventListener('change', (e) => {
+      this.config.accessibility.highContrast = e.matches;
+      this.container.classList.toggle('tc-high-contrast', e.matches);
+    });
+  }
+
+  /**
+   * Initialize comprehensive keyboard navigation
+   */
+  initializeKeyboardNavigation() {
+    this.container.addEventListener('keydown', (e) => {
+      this.handleKeyboardNavigation(e);
+    });
+
+    // Make container focusable for keyboard entry
+    if (this.config.accessibility.keyboard.tabIndex) {
+      this.container.setAttribute('tabindex', '0');
+    }
+  }
+
+  /**
+   * Handle keyboard navigation events
+   */
+  handleKeyboardNavigation(e) {
+    if (!this.config.accessibility.keyboard.navigation) return;
+
+    const focusableElements = this.getFocusableElements();
+    const currentIndex = Array.from(focusableElements).indexOf(document.activeElement);
+
+    switch (e.key) {
+      case 'Tab':
+        // Let default tab behavior handle most cases
+        this.handleTabNavigation(e, focusableElements, currentIndex);
+        break;
+      
+      case 'ArrowDown':
+      case 'ArrowUp':
+        if (this.isInTable(e.target)) {
+          this.handleArrowNavigation(e, 'vertical');
+        }
+        break;
+      
+      case 'ArrowLeft':
+      case 'ArrowRight':
+        if (this.isInTable(e.target)) {
+          this.handleArrowNavigation(e, 'horizontal');
+        }
+        break;
+      
+      case 'Home':
+        if (this.isInTable(e.target)) {
+          e.preventDefault();
+          this.focusFirstCellInRow();
+        }
+        break;
+      
+      case 'End':
+        if (this.isInTable(e.target)) {
+          e.preventDefault();
+          this.focusLastCellInRow();
+        }
+        break;
+      
+      case 'PageUp':
+        if (e.target.closest('.tc-pagination')) {
+          e.preventDefault();
+          this.goToPreviousPage();
+        }
+        break;
+      
+      case 'PageDown':
+        if (e.target.closest('.tc-pagination')) {
+          e.preventDefault();
+          this.goToNextPage();
+        }
+        break;
+      
+      case 'Escape':
+        this.handleEscapeKey(e);
+        break;
+      
+      case 'Enter':
+      case ' ':
+        this.handleActivationKey(e);
+        break;
+      
+      case 'f':
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          this.focusSearchInput();
+        }
+        break;
+    }
+  }
+
+  /**
+   * Get all focusable elements in the table
+   */
+  getFocusableElements() {
+    const selector = `
+      input:not([disabled]),
+      button:not([disabled]),
+      select:not([disabled]),
+      textarea:not([disabled]),
+      a[href],
+      [tabindex]:not([tabindex="-1"]),
+      .tc-sortable,
+      .tc-editable
+    `;
+    return this.container.querySelectorAll(selector);
+  }
+
+  /**
+   * Check if element is within the table
+   */
+  isInTable(element) {
+    return element.closest('.tc-table') !== null;
+  }
+
+  /**
+   * Handle arrow key navigation within table cells
+   */
+  handleArrowNavigation(e, direction) {
+    e.preventDefault();
+    
+    const currentCell = e.target.closest('td, th');
+    if (!currentCell) return;
+
+    let targetCell = null;
+
+    if (direction === 'vertical') {
+      const row = currentCell.closest('tr');
+      const cellIndex = Array.from(row.children).indexOf(currentCell);
+      
+      if (e.key === 'ArrowDown') {
+        const nextRow = row.nextElementSibling;
+        if (nextRow) {
+          targetCell = nextRow.children[cellIndex];
+        }
+      } else { // ArrowUp
+        const prevRow = row.previousElementSibling;
+        if (prevRow) {
+          targetCell = prevRow.children[cellIndex];
+        }
+      }
+    } else { // horizontal
+      if (e.key === 'ArrowRight') {
+        targetCell = currentCell.nextElementSibling;
+      } else { // ArrowLeft
+        targetCell = currentCell.previousElementSibling;
+      }
+    }
+
+    if (targetCell) {
+      this.focusCell(targetCell);
+    }
+  }
+
+  /**
+   * Focus a table cell properly
+   */
+  focusCell(cell) {
+    // If cell is editable, focus it directly
+    if (cell.classList.contains('tc-editable') || cell.hasAttribute('tabindex')) {
+      cell.focus();
+    } else {
+      // Find focusable element within cell
+      const focusable = cell.querySelector('input, button, select, textarea, a[href], [tabindex]:not([tabindex="-1"])');
+      if (focusable) {
+        focusable.focus();
+      } else {
+        // Make cell temporarily focusable
+        cell.setAttribute('tabindex', '0');
+        cell.focus();
+        cell.addEventListener('blur', () => {
+          cell.removeAttribute('tabindex');
+        }, { once: true });
+      }
+    }
+  }
+
+  /**
+   * Focus first cell in current row
+   */
+  focusFirstCellInRow() {
+    const currentCell = document.activeElement.closest('td, th');
+    if (!currentCell) return;
+    
+    const row = currentCell.closest('tr');
+    const firstCell = row.querySelector('td, th');
+    if (firstCell) {
+      this.focusCell(firstCell);
+    }
+  }
+
+  /**
+   * Focus last cell in current row
+   */
+  focusLastCellInRow() {
+    const currentCell = document.activeElement.closest('td, th');
+    if (!currentCell) return;
+    
+    const row = currentCell.closest('tr');
+    const cells = row.querySelectorAll('td, th');
+    const lastCell = cells[cells.length - 1];
+    if (lastCell) {
+      this.focusCell(lastCell);
+    }
+  }
+
+  /**
+   * Handle escape key for canceling operations
+   */
+  handleEscapeKey(e) {
+    // Cancel editing
+    if (this.editingCell) {
+      this.cancelEdit();
+      e.preventDefault();
+    }
+    
+    // Close modals
+    const modal = this.container.querySelector('.tc-modal.open');
+    if (modal) {
+      this.closeModal();
+      e.preventDefault();
+    }
+    
+    // Clear search
+    if (e.target.matches('.tc-search-input')) {
+      e.target.value = '';
+      this.handleSearch();
+      e.preventDefault();
+    }
+  }
+
+  /**
+   * Handle Enter/Space activation keys
+   */
+  handleActivationKey(e) {
+    const target = e.target;
+    
+    // Sort headers
+    if (target.classList.contains('tc-sortable')) {
+      e.preventDefault();
+      this.sort(target.dataset.field);
+      return;
+    }
+    
+    // Edit cells
+    if (target.classList.contains('tc-editable')) {
+      e.preventDefault();
+      this.startEdit(target);
+      return;
+    }
+    
+    // Pagination buttons
+    if (target.closest('.tc-pagination-btn')) {
+      e.preventDefault();
+      target.click();
+      return;
+    }
+  }
+
+  /**
+   * Focus the search input
+   */
+  focusSearchInput() {
+    const searchInput = this.container.querySelector('.tc-search-input');
+    if (searchInput) {
+      searchInput.focus();
+      this.announce('Search focused');
+    }
+  }
+
+  /**
+   * Set up focus management
+   */
+  setupFocusManagement() {
+    // Track focus for better accessibility
+    this.container.addEventListener('focusin', (e) => {
+      this.handleFocusIn(e);
+    });
+    
+    this.container.addEventListener('focusout', (e) => {
+      this.handleFocusOut(e);
+    });
+  }
+
+  /**
+   * Handle focus entering elements
+   */
+  handleFocusIn(e) {
+    const target = e.target;
+    
+    // Add visual focus indicator
+    target.classList.add('tc-focused');
+    
+    // Announce context for screen readers
+    if (target.classList.contains('tc-sortable')) {
+      const column = target.textContent;
+      const sortState = target.getAttribute('aria-sort');
+      const message = `${column} column header, ${sortState === 'none' ? 'not sorted' : sortState}. Press Enter or Space to sort.`;
+      this.announce(message);
+    }
+    
+    if (target.classList.contains('tc-editable')) {
+      this.announce('Editable cell. Press Enter or Space to edit.');
+    }
+  }
+
+  /**
+   * Handle focus leaving elements
+   */
+  handleFocusOut(e) {
+    const target = e.target;
+    target.classList.remove('tc-focused');
+  }
+
+  /**
+   * Enhance table with accessibility attributes
+   */
+  enhanceTableAccessibility(table) {
+    // Add table role and description
+    table.setAttribute('role', 'table');
+    table.setAttribute('aria-label', this.config.accessibility.labels.table);
+    
+    // Add table summary if we have data
+    if (this.data.length > 0) {
+      const summary = `Table with ${this.data.length} rows and ${this.config.columns.length} columns. ${this.config.sortable ? 'Sortable columns available.' : ''} ${this.config.globalSearch ? 'Search available.' : ''}`;
+      table.setAttribute('aria-describedby', this.createTableDescription(summary));
+    }
+    
+    // Enhance headers
+    const headers = table.querySelectorAll('th');
+    headers.forEach((th, index) => {
+      th.setAttribute('scope', 'col');
+      th.setAttribute('role', 'columnheader');
+      
+      if (th.classList.contains('tc-sortable')) {
+        const column = this.config.columns[index];
+        const sortLabel = this.config.accessibility.labels.sort.replace('{column}', column.label);
+        th.setAttribute('aria-label', sortLabel);
+        th.setAttribute('title', sortLabel);
+      }
+    });
+    
+    // Enhance data cells
+    const cells = table.querySelectorAll('td');
+    cells.forEach(cell => {
+      cell.setAttribute('role', 'gridcell');
+      
+      if (cell.classList.contains('tc-editable')) {
+        cell.setAttribute('aria-label', this.config.accessibility.labels.edit);
+        cell.setAttribute('tabindex', '0');
+      }
+    });
+  }
+
+  /**
+   * Create table description element
+   */
+  createTableDescription(text) {
+    const id = `tc-table-desc-${Date.now()}`;
+    const desc = document.createElement('div');
+    desc.id = id;
+    desc.className = 'tc-sr-only';
+    desc.textContent = text;
+    desc.style.cssText = `
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    `;
+    
+    this.container.appendChild(desc);
+    return id;
+  }
+
+  /**
+   * Enhance pagination with accessibility
+   */
+  enhancePaginationAccessibility(pagination) {
+    pagination.setAttribute('role', 'navigation');
+    pagination.setAttribute('aria-label', this.config.accessibility.labels.pagination);
+    
+    const buttons = pagination.querySelectorAll('button, a');
+    buttons.forEach(button => {
+      const page = button.dataset.page;
+      if (page) {
+        button.setAttribute('aria-label', `Go to page ${page}`);
+      }
+      
+      if (button.classList.contains('tc-pagination-current')) {
+        button.setAttribute('aria-current', 'page');
+      }
+    });
+  }
+
+  /**
+   * Enhance search with accessibility
+   */
+  enhanceSearchAccessibility(searchContainer) {
+    const input = searchContainer.querySelector('input');
+    if (input) {
+      input.setAttribute('aria-label', this.config.accessibility.labels.search);
+      input.setAttribute('role', 'searchbox');
+      
+      // Add search results announcement
+      input.addEventListener('input', () => {
+        clearTimeout(this.searchAnnounceTimeout);
+        this.searchAnnounceTimeout = setTimeout(() => {
+          const resultCount = this.getFilteredData().length;
+          this.announce(`${resultCount} results found`);
+        }, 500);
+      });
+    }
+  }
+
+  /**
+   * Announce data changes
+   */
+  announceDataChange(type, count = null) {
+    if (!this.config.accessibility.announcements) return;
+
+    let message = '';
+    switch (type) {
+      case 'loaded':
+        message = `Table data loaded. ${count || this.data.length} rows available.`;
+        break;
+      case 'sorted':
+        message = `Table sorted by ${this.sortField}, ${this.sortOrder}ending order.`;
+        break;
+      case 'filtered':
+        message = `Table filtered. ${count} rows shown.`;
+        break;
+      case 'page-changed':
+        message = `Page ${this.currentPage} of ${this.getTotalPages()} loaded.`;
+        break;
+      case 'editing':
+        message = 'Editing mode activated.';
+        break;
+      case 'edit-cancelled':
+        message = 'Edit cancelled.';
+        break;
+      case 'edit-saved':
+        message = 'Changes saved.';
+        break;
+      case 'error':
+        message = 'An error occurred. Please try again.';
+        break;
+    }
+
+    if (message) {
+      this.announce(message);
+    }
+  }
+
+  /**
+   * Clean up accessibility features
+   */
+  destroyAccessibility() {
+    if (this.announcer) {
+      this.announcer.remove();
+      this.announcer = null;
+    }
+    
+    if (this.searchAnnounceTimeout) {
+      clearTimeout(this.searchAnnounceTimeout);
+    }
+    
+    // Remove accessibility event listeners
+    this.container.removeEventListener('keydown', this.handleKeyboardNavigation);
+    this.container.removeEventListener('focusin', this.handleFocusIn);
+    this.container.removeEventListener('focusout', this.handleFocusOut);
   }
 }
 

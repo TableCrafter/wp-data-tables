@@ -1649,3 +1649,285 @@
     border-color: #374151;
   }
 }
+
+/* === ACCESSIBILITY STYLES === */
+/* WCAG 2.1 Compliant Accessibility Enhancements */
+
+/* Screen reader only content */
+.tc-sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Focus indicators - WCAG 2.1 AA compliant */
+.tc-wrapper *:focus,
+.tc-wrapper .tc-focused {
+  outline: 3px solid #005fcc !important;
+  outline-offset: 2px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Enhanced focus for specific elements */
+.tc-table th.tc-sortable:focus,
+.tc-table th.tc-sortable.tc-focused {
+  background-color: #e3f2fd !important;
+  outline-color: #1976d2 !important;
+}
+
+.tc-table td.tc-editable:focus,
+.tc-table td.tc-editable.tc-focused {
+  background-color: #fff3e0 !important;
+  outline-color: #ff9800 !important;
+}
+
+.tc-global-search:focus {
+  border-color: #1976d2 !important;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2) !important;
+}
+
+/* Pagination button focus */
+.tc-pagination button:focus {
+  background-color: #e3f2fd !important;
+  border-color: #1976d2 !important;
+}
+
+/* High contrast mode support */
+.tc-wrapper.tc-high-contrast {
+  --tc-border-color: #000000;
+  --tc-text-color: #000000;
+  --tc-bg-color: #ffffff;
+  --tc-focus-color: #ff0000;
+}
+
+.tc-high-contrast .tc-table {
+  border: 2px solid var(--tc-border-color) !important;
+}
+
+.tc-high-contrast .tc-table th,
+.tc-high-contrast .tc-table td {
+  border: 1px solid var(--tc-border-color) !important;
+  color: var(--tc-text-color) !important;
+  background-color: var(--tc-bg-color) !important;
+}
+
+.tc-high-contrast *:focus,
+.tc-high-contrast .tc-focused {
+  outline: 3px solid var(--tc-focus-color) !important;
+  background-color: yellow !important;
+  color: black !important;
+}
+
+/* Reduced motion support */
+.tc-wrapper.tc-reduced-motion,
+.tc-wrapper.tc-reduced-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Validation error styles */
+.tc-validation-error {
+  border: 2px solid #d32f2f !important;
+  background-color: #ffebee !important;
+  position: relative !important;
+}
+
+.tc-validation-tooltip {
+  position: absolute !important;
+  background: #d32f2f !important;
+  color: white !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+  z-index: 1000 !important;
+  max-width: 200px !important;
+  word-wrap: break-word !important;
+}
+
+.tc-validation-tooltip::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -4px !important;
+  left: 8px !important;
+  border-left: 4px solid transparent !important;
+  border-right: 4px solid transparent !important;
+  border-bottom: 4px solid #d32f2f !important;
+}
+
+/* Keyboard navigation helpers */
+.tc-table th[tabindex]:not([tabindex="-1"])::after {
+  content: " (Press Enter to sort)" !important;
+  font-size: 11px !important;
+  font-weight: normal !important;
+  opacity: 0 !important;
+  transition: opacity 0.2s !important;
+}
+
+.tc-table th[tabindex]:focus::after,
+.tc-table th[tabindex]:hover::after {
+  opacity: 0.7 !important;
+}
+
+.tc-table td.tc-editable[tabindex]:not([tabindex="-1"])::after {
+  content: " (Press Enter to edit)" !important;
+  font-size: 11px !important;
+  opacity: 0 !important;
+  transition: opacity 0.2s !important;
+}
+
+.tc-table td.tc-editable:focus::after,
+.tc-table td.tc-editable:hover::after {
+  opacity: 0.7 !important;
+}
+
+/* Loading state accessibility */
+.tc-loading[aria-busy="true"] {
+  position: relative !important;
+}
+
+.tc-loading[aria-busy="true"]::before {
+  content: "Loading data..." !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  padding: 10px !important;
+  border-radius: 4px !important;
+  z-index: 10 !important;
+}
+
+/* Text scaling support up to 200% */
+@media screen and (min-width: 1280px) {
+  .tc-wrapper {
+    min-width: 0 !important;
+    word-wrap: break-word !important;
+  }
+  
+  .tc-table th,
+  .tc-table td {
+    word-wrap: break-word !important;
+    max-width: 0 !important;
+    overflow: visible !important;
+  }
+}
+
+/* Color contrast improvements */
+.tc-sortable {
+  color: #1565c0 !important;
+}
+
+.tc-sortable:hover,
+.tc-sortable:focus {
+  color: #0d47a1 !important;
+  background-color: #e3f2fd !important;
+}
+
+.tc-editable {
+  color: #e65100 !important;
+}
+
+.tc-editable:hover,
+.tc-editable:focus {
+  color: #bf360c !important;
+  background-color: #fff3e0 !important;
+}
+
+/* Pagination accessibility improvements */
+.tc-pagination [aria-current="page"] {
+  background-color: #1976d2 !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+.tc-pagination button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* Error state styling */
+.tc-error-container {
+  background-color: #ffebee !important;
+  border: 2px solid #d32f2f !important;
+  color: #d32f2f !important;
+  padding: 16px !important;
+  border-radius: 4px !important;
+  margin: 16px 0 !important;
+}
+
+.tc-error-message {
+  font-weight: 600 !important;
+  margin-bottom: 8px !important;
+}
+
+/* Search accessibility improvements */
+.tc-global-search-container {
+  position: relative !important;
+}
+
+.tc-global-search[role="searchbox"] {
+  border: 2px solid #ddd !important;
+}
+
+.tc-global-search[role="searchbox"]:focus {
+  border-color: #1976d2 !important;
+}
+
+/* Mobile accessibility improvements */
+@media screen and (max-width: 768px) {
+  /* Ensure touch targets are at least 44x44px */
+  .tc-table th.tc-sortable,
+  .tc-table td.tc-editable,
+  .tc-pagination button,
+  .tc-global-search {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+  
+  /* Improve text readability on small screens */
+  .tc-table th,
+  .tc-table td {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+  }
+  
+  /* Focus indicators need to be more prominent on touch devices */
+  .tc-wrapper *:focus,
+  .tc-wrapper .tc-focused {
+    outline-width: 4px !important;
+    outline-offset: 3px !important;
+  }
+}
+
+/* Print accessibility */
+@media print {
+  .tc-wrapper {
+    color: black !important;
+    background: white !important;
+  }
+  
+  .tc-table th,
+  .tc-table td {
+    border: 1px solid black !important;
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* Hide interactive elements in print */
+  .tc-pagination,
+  .tc-global-search-container,
+  .tc-filters,
+  .tc-bulk-controls,
+  .tc-export-controls {
+    display: none !important;
+  }
+}
