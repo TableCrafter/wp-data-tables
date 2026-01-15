@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – Data to Beautiful Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: Transform any data source into responsive WordPress tables. Features intelligent large dataset handling, enhanced pagination, live search, sorting, and SEO-friendly server-side rendering.
- * Version: 2.8.0
+ * Version: 2.9.0
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.8.0');
+define('TABLECRAFTER_VERSION', '2.9.0');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -27,6 +27,10 @@ define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
  */
 if (file_exists(TABLECRAFTER_PATH . 'includes/sources/class-tc-csv-source.php')) {
     require_once TABLECRAFTER_PATH . 'includes/sources/class-tc-csv-source.php';
+}
+
+if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-export-handler.php')) {
+    require_once TABLECRAFTER_PATH . 'includes/class-tc-export-handler.php';
 }
 
 
@@ -86,6 +90,12 @@ class TableCrafter
         // Lead Magnet Handler
         add_action('wp_ajax_tc_subscribe_lead', array($this, 'handle_lead_subscription'));
         add_action('wp_ajax_nopriv_tc_subscribe_lead', array($this, 'handle_lead_subscription'));
+        
+        // Advanced Export Handlers
+        add_action('wp_ajax_tc_export_data', array($this, 'ajax_export_data'));
+        add_action('wp_ajax_nopriv_tc_export_data', array($this, 'ajax_export_data'));
+        add_action('wp_ajax_tc_download_export', array($this, 'ajax_download_export'));
+        add_action('wp_ajax_nopriv_tc_download_export', array($this, 'ajax_download_export'));
 
         if (!wp_next_scheduled('tc_refresher_cron')) {
             wp_schedule_event(time(), 'hourly', 'tc_refresher_cron');
@@ -327,7 +337,9 @@ class TableCrafter
 
         wp_localize_script('tablecrafter-frontend', 'tablecrafterData', array(
             'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('tc_proxy_nonce')
+            'nonce' => wp_create_nonce('tc_proxy_nonce'),
+            'exportNonce' => wp_create_nonce('tc_export_nonce'),
+            'downloadNonce' => wp_create_nonce('tc_download_nonce')
         ));
 
         wp_register_style(
@@ -1442,6 +1454,158 @@ class TableCrafter
         wp_send_json_success(array(
             'message' => 'Subscription successful'
         ));
+    }
+
+    /**
+     * Handle Advanced Export AJAX Request
+     * 
+     * Processes export requests for CSV, Excel, and PDF formats.
+     * 
+     * @return void
+     */
+    public function ajax_export_data(): void
+    {
+        // Verify nonce
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'tc_export_nonce')) {
+            wp_send_json_error('Invalid nonce');
+            return;
+        }
+
+        // Check permissions
+        if (!current_user_can('read')) {
+            wp_send_json_error('Insufficient permissions');
+            return;
+        }
+
+        // Get export parameters
+        $source = isset($_POST['source']) ? esc_url_raw(wp_unslash($_POST['source'])) : '';
+        $format = isset($_POST['format']) ? sanitize_text_field(wp_unslash($_POST['format'])) : 'csv';
+        $filename = isset($_POST['filename']) ? sanitize_file_name(wp_unslash($_POST['filename'])) : 'tablecrafter-export';
+        $template = isset($_POST['template']) ? sanitize_text_field(wp_unslash($_POST['template'])) : 'default';
+        $include_metadata = isset($_POST['include_metadata']) ? (bool) $_POST['include_metadata'] : false;
+
+        // Validate required fields
+        if (empty($source)) {
+            wp_send_json_error('Source URL is required');
+            return;
+        }
+
+        // Fetch data using existing method
+        $data_result = $this->fetch_data_from_source($source);
+        
+        if (is_wp_error($data_result)) {
+            wp_send_json_error('Data fetch failed: ' . $data_result->get_error_message());
+            return;
+        }
+
+        if (empty($data_result) || !is_array($data_result)) {
+            wp_send_json_error('No data available for export');
+            return;
+        }
+
+        // Process data similar to render method
+        $data = $data_result;
+        $headers = array_keys((array) reset($data));
+
+        // Apply column filtering if specified
+        $include_cols = isset($_POST['include_cols']) ? array_map('trim', explode(',', sanitize_text_field(wp_unslash($_POST['include_cols'])))) : [];
+        $exclude_cols = isset($_POST['exclude_cols']) ? array_map('trim', explode(',', sanitize_text_field(wp_unslash($_POST['exclude_cols'])))) : [];
+
+        if (!empty($include_cols)) {
+            $headers = array_intersect($headers, $include_cols);
+        }
+
+        if (!empty($exclude_cols)) {
+            $headers = array_diff($headers, $exclude_cols);
+        }
+
+        // Get template settings
+        $templates = TC_Export_Handler::get_export_templates();
+        $template_settings = isset($templates[$template]) ? $templates[$template] : $templates['default'];
+
+        // Export options
+        $export_options = array_merge($template_settings, [
+            'format' => $format,
+            'filename' => $filename,
+            'include_metadata' => $include_metadata,
+            'filters_applied' => isset($_POST['filters_applied']) ? json_decode(wp_unslash($_POST['filters_applied']), true) : [],
+            'sort_applied' => isset($_POST['sort_applied']) ? sanitize_text_field(wp_unslash($_POST['sort_applied'])) : '',
+            'total_records' => count($data),
+            'export_timestamp' => current_time('mysql')
+        ]);
+
+        // Generate export
+        $export_result = TC_Export_Handler::export_data($data, $headers, $export_options);
+
+        if (isset($export_result['error'])) {
+            wp_send_json_error('Export failed: ' . $export_result['error']);
+            return;
+        }
+
+        // Store export file temporarily with unique identifier
+        $export_id = uniqid('tc_export_', true);
+        set_transient('tc_export_' . $export_id, $export_result, 300); // 5 minutes
+
+        wp_send_json_success([
+            'export_id' => $export_id,
+            'filename' => $export_result['filename'],
+            'format' => $format,
+            'size' => $export_result['size'],
+            'download_url' => admin_url('admin-ajax.php?action=tc_download_export&export_id=' . $export_id . '&nonce=' . wp_create_nonce('tc_download_nonce'))
+        ]);
+    }
+
+    /**
+     * Handle Export Download
+     * 
+     * Serves the generated export file for download.
+     * 
+     * @return void
+     */
+    public function ajax_download_export(): void
+    {
+        // Verify nonce
+        if (!isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'tc_download_nonce')) {
+            wp_die('Invalid nonce');
+        }
+
+        // Get export ID
+        $export_id = isset($_GET['export_id']) ? sanitize_text_field($_GET['export_id']) : '';
+        
+        if (empty($export_id)) {
+            wp_die('Invalid export ID');
+        }
+
+        // Retrieve export data
+        $export_data = get_transient('tc_export_' . $export_id);
+        
+        if (!$export_data) {
+            wp_die('Export not found or expired');
+        }
+
+        // Verify file exists
+        if (!isset($export_data['file_path']) || !file_exists($export_data['file_path'])) {
+            wp_die('Export file not found');
+        }
+
+        // Set headers for download
+        $filename = $export_data['filename'];
+        $mime_type = $export_data['mime_type'];
+        
+        header('Content-Type: ' . $mime_type);
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Length: ' . $export_data['size']);
+        header('Cache-Control: no-cache, must-revalidate');
+        header('Expires: 0');
+
+        // Output file content
+        readfile($export_data['file_path']);
+
+        // Clean up
+        TC_Export_Handler::cleanup_temp_file($export_data['file_path']);
+        delete_transient('tc_export_' . $export_id);
+
+        exit;
     }
 
     /**

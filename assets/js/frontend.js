@@ -35,6 +35,21 @@ document.addEventListener('DOMContentLoaded', function () {
                         globalSearch: search,
                         filterable: filters,
                         exportable: exportable,
+                        advancedExport: {
+                            enabled: exportable,
+                            formats: ['csv', 'xlsx', 'pdf'],
+                            templates: {
+                                'default': { name: 'Standard Export', include_metadata: false },
+                                'business': { name: 'Business Report', include_metadata: true },
+                                'data_analysis': { name: 'Data Analysis', include_metadata: true }
+                            },
+                            api: {
+                                exportUrl: tablecrafterData.ajaxUrl,
+                                downloadUrl: tablecrafterData.ajaxUrl,
+                                exportNonce: tablecrafterData.exportNonce || tablecrafterData.nonce,
+                                downloadNonce: tablecrafterData.downloadNonce || tablecrafterData.nonce
+                            }
+                        },
                         api: {
                             proxy: {
                                 url: tablecrafterData.ajaxUrl,

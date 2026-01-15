@@ -105,9 +105,9 @@ class TableCrafterTestRunner
         $memory_used = $end_memory - $start_memory;
         
         if ($execution_time < 3.0 && $memory_used < 50 * 1024 * 1024) {
-            $this->pass("Large dataset handling (2000 records in {$execution_time:.2f}s, " . $this->format_bytes($memory_used) . ")");
+            $this->pass("Large dataset handling (2000 records in " . number_format($execution_time, 2) . "s, " . $this->format_bytes($memory_used) . ")");
         } else {
-            $this->fail("Large dataset performance issue: {$execution_time:.2f}s, " . $this->format_bytes($memory_used));
+            $this->fail("Large dataset performance issue: " . number_format($execution_time, 2) . "s, " . $this->format_bytes($memory_used));
         }
         
         unlink($temp_file);
@@ -246,9 +246,9 @@ class TableCrafterTestRunner
         $sort_time = microtime(true) - $start_time;
         
         if ($sort_time < 1.0 && $sorted[0]['id'] > $sorted[1]['id']) {
-            $this->pass("Sort performance (5000 records in {$sort_time:.3f}s)");
+            $this->pass("Sort performance (5000 records in " . number_format($sort_time, 3) . "s)");
         } else {
-            $this->fail("Sort performance issue: {$sort_time:.3f}s");
+            $this->fail("Sort performance issue: " . number_format($sort_time, 3) . "s");
         }
     }
     
