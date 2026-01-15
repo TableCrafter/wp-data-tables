@@ -426,6 +426,12 @@ class TableCrafter
                 'per_page' => array('type' => 'number', 'default' => 0),
                 'export' => array('type' => 'boolean', 'default' => false),
                 'id' => array('type' => 'string', 'default' => ''),
+                // Auto-refresh attributes
+                'auto_refresh' => array('type' => 'boolean', 'default' => false),
+                'refresh_interval' => array('type' => 'number', 'default' => 300000),
+                'refresh_indicator' => array('type' => 'boolean', 'default' => true),
+                'refresh_countdown' => array('type' => 'boolean', 'default' => false),
+                'refresh_last_updated' => array('type' => 'boolean', 'default' => true),
             ),
         ));
     }

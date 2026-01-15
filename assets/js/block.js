@@ -29,7 +29,13 @@
             filters: { type: 'boolean', default: true },
             export: { type: 'boolean', default: false },
             per_page: { type: 'number', default: 0 },
-            id: { type: 'string', default: '' }
+            id: { type: 'string', default: '' },
+            // Auto-refresh attributes
+            auto_refresh: { type: 'boolean', default: false },
+            refresh_interval: { type: 'number', default: 300000 },
+            refresh_indicator: { type: 'boolean', default: true },
+            refresh_countdown: { type: 'boolean', default: false },
+            refresh_last_updated: { type: 'boolean', default: true }
         },
 
         /**
@@ -117,6 +123,39 @@
                             value: attributes.exclude,
                             onChange: updateExclude,
                             help: 'Comma-separated list of keys to hide.'
+                        })
+                    ),
+                    el(PanelBody, { title: 'Auto-Refresh Settings', initialOpen: false },
+                        el(ToggleControl, {
+                            label: 'Enable Auto-Refresh',
+                            checked: attributes.auto_refresh,
+                            onChange: (val) => setAttributes({ auto_refresh: val }),
+                            help: 'Automatically refresh table data at specified intervals.'
+                        }),
+                        attributes.auto_refresh && el(TextControl, {
+                            label: 'Refresh Interval (milliseconds)',
+                            value: attributes.refresh_interval,
+                            type: 'number',
+                            onChange: (val) => setAttributes({ refresh_interval: parseInt(val) || 300000 }),
+                            help: 'How often to refresh data (default: 300000 = 5 minutes).'
+                        }),
+                        attributes.auto_refresh && el(ToggleControl, {
+                            label: 'Show Refresh Indicator',
+                            checked: attributes.refresh_indicator,
+                            onChange: (val) => setAttributes({ refresh_indicator: val }),
+                            help: 'Display visual indicator with pause/resume controls.'
+                        }),
+                        attributes.auto_refresh && el(ToggleControl, {
+                            label: 'Show Countdown Timer',
+                            checked: attributes.refresh_countdown,
+                            onChange: (val) => setAttributes({ refresh_countdown: val }),
+                            help: 'Display countdown to next refresh.'
+                        }),
+                        attributes.auto_refresh && el(ToggleControl, {
+                            label: 'Show Last Updated',
+                            checked: attributes.refresh_last_updated,
+                            onChange: (val) => setAttributes({ refresh_last_updated: val }),
+                            help: 'Display when data was last updated.'
                         }),
                         el('div', { className: 'tc-block-help', style: { marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' } },
                             el('p', null, 'Need help? Check the '),
@@ -182,10 +221,15 @@
             const TC = window.TableCrafter || container.ownerDocument.defaultView.TableCrafter;
 
             // Force re-init if settings changed
+            const autoRefresh = container.getAttribute('data-auto-refresh') === 'true';
+            const refreshInterval = parseInt(container.getAttribute('data-refresh-interval')) || 300000;
+            
             if (container.dataset.tcSearch !== search.toString() || 
                 container.dataset.tcFilters !== filters.toString() || 
                 container.dataset.tcExport !== exportable.toString() ||
                 container.dataset.tcPerPage !== perPage.toString() ||
+                container.dataset.tcAutoRefresh !== autoRefresh.toString() ||
+                container.dataset.tcRefreshInterval !== refreshInterval.toString() ||
                 container.dataset.tcInitialized !== 'true') {
                 console.log('TableCrafter Block: (Re)Initializing instance', {
                     oldSearch: container.dataset.tcSearch,
@@ -205,6 +249,13 @@
                 console.log('TableCrafter Block: Removing existing UI elements', existingUI.length);
                 existingUI.forEach(el => el.remove());
 
+                // Get auto-refresh settings from data attributes
+                const autoRefresh = container.getAttribute('data-auto-refresh') === 'true';
+                const refreshInterval = parseInt(container.getAttribute('data-refresh-interval')) || 300000;
+                const refreshIndicator = container.getAttribute('data-refresh-indicator') !== 'false';
+                const refreshCountdown = container.getAttribute('data-refresh-countdown') === 'true';
+                const refreshLastUpdated = container.getAttribute('data-refresh-last-updated') !== 'false';
+
                 const config = {
                     data: source,
                     responsive: true,
@@ -213,6 +264,17 @@
                     globalSearch: search,
                     filterable: filters,
                     exportable: exportable,
+                    autoRefresh: {
+                        enabled: autoRefresh,
+                        interval: refreshInterval,
+                        showIndicator: refreshIndicator,
+                        showCountdown: refreshCountdown,
+                        showLastUpdated: refreshLastUpdated,
+                        pauseOnInteraction: true,
+                        pauseOnVisibilityChange: true,
+                        retryOnFailure: true,
+                        maxRetries: 3
+                    },
                     api: {
                         proxy: {
                             url: (window.tablecrafterData && window.tablecrafterData.ajaxUrl) ? window.tablecrafterData.ajaxUrl : undefined,
@@ -238,6 +300,8 @@
                 container.dataset.tcFilters = filters.toString();
                 container.dataset.tcExport = exportable.toString();
                 container.dataset.tcPerPage = perPage.toString();
+                container.dataset.tcAutoRefresh = autoRefresh.toString();
+                container.dataset.tcRefreshInterval = refreshInterval.toString();
                 
                 // Double check after a short delay
                 setTimeout(() => {
@@ -320,7 +384,7 @@
                 childList: true,
                 subtree: true,
                 attributes: true,
-                attributeFilter: ['data-search', 'data-source', 'data-export', 'data-per-page']
+                attributeFilter: ['data-search', 'data-source', 'data-export', 'data-per-page', 'data-auto-refresh', 'data-refresh-interval']
             });
             observedDocs.add(doc);
 
