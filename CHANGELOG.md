@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.7.1] - 2026-01-15
+### 🎨 UX IMPROVEMENTS: Block Editor Enhancement
+- **Redesigned Block Icon:** Clean, professional table icon with simple grid lines and WordPress standard blue color
+- **Updated Block Description:** Now accurately reflects JSON APIs, CSV files, and Google Sheets support with auto-refresh capabilities
+- **Improved Visual Recognition:** Icon is now instantly recognizable and scales perfectly at all sizes (16px to 64px)
+
 ## [2.7.0] - 2026-01-15
 ### 🔄 MAJOR FEATURE: Smart Auto-Refresh System
 - **Live Data Updates:** Tables now automatically refresh with configurable intervals from 10 seconds to 24 hours

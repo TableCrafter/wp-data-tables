@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.7.0
+Stable tag: 2.7.1
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -257,6 +257,12 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 2.7.1 =
+* 🎨 **UX IMPROVEMENT: Enhanced Block Editor Experience**
+* **Redesigned Block Icon:** Clean, professional table icon with simple grid lines and WordPress blue color
+* **Updated Block Description:** Now accurately describes JSON APIs, CSV files, and Google Sheets support
+* **Improved Visual Recognition:** Icon scales perfectly and is instantly recognizable in block inserter
+
 = 2.7.0 =
 * 🔄 **MAJOR FEATURE: Smart Auto-Refresh System!**
 * **Live Data Updates:** Tables now automatically refresh with configurable intervals (10 seconds to 24 hours)

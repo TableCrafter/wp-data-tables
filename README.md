@@ -31,6 +31,7 @@
 - **SaaS Dashboards:** User analytics, system metrics, performance KPIs
 
 ### 🚀 Recent Updates
+- **v2.7.1:** Enhanced block editor experience with redesigned professional icon and improved descriptions
 - **v2.7.0:** Smart Auto-Refresh System with intelligent pausing and visual controls
 - **v2.6.0:** Interactive Welcome Screen with live feature toggles and instant demos
 - **v2.5.0:** Google Sheets Integration and CSV Data Source support
