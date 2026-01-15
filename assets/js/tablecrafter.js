@@ -122,8 +122,23 @@ class TableCrafter {
         storage: 'localStorage',
         key: 'tablecrafter_state'
       },
+      // Smart Auto-Refresh configuration
+      autoRefresh: {
+        enabled: false,
+        interval: 300000, // 5 minutes default
+        pauseOnInteraction: true,
+        pauseOnVisibilityChange: true,
+        showIndicator: true,
+        showCountdown: false,
+        showLastUpdated: true,
+        retryOnFailure: true,
+        maxRetries: 3
+      },
       ...config
     };
+
+    // Parse data attributes from container and merge with config
+    this.parseDataAttributes();
 
     // Internal state
     this.data = [];
@@ -144,6 +159,17 @@ class TableCrafter {
     this.validationRules = new Map(); // Compiled validation rules
     this.cellTypeRegistry = new Map(); // Rich cell type handlers
     this.activeEditors = new Map(); // Track active rich editors
+    
+    // Auto-refresh state
+    this.refreshInterval = null;
+    this.countdownInterval = null;
+    this.isPaused = false;
+    this.lastRefresh = null;
+    this.nextRefresh = null;
+    this.refreshAttempts = 0;
+    this.refreshIndicator = null;
+    this.userIsInteracting = false;
+    this.interactionTimeout = null;
 
     // Load state if persistence enabled
     this.loadState();
@@ -203,6 +229,11 @@ class TableCrafter {
     if (this.config.responsive) {
       this.handleResize = this.handleResize.bind(this);
       window.addEventListener('resize', this.handleResize);
+    }
+
+    // Initialize auto-refresh if enabled and data URL available
+    if (this.config.autoRefresh.enabled && this.dataUrl) {
+      this.initializeAutoRefresh();
     }
   }
 
@@ -3524,6 +3555,483 @@ class TableCrafter {
       this.dropdowns.forEach(dropdown => dropdown.remove());
       this.dropdowns = [];
     }
+  }
+
+  // ==================== DATA ATTRIBUTE PARSING ====================
+
+  /**
+   * Parse data attributes from container and merge with config
+   */
+  parseDataAttributes() {
+    if (!this.container) return;
+
+    const dataset = this.container.dataset;
+
+    // Parse basic attributes
+    if (dataset.source) this.config.data = dataset.source;
+    if (dataset.include) this.config.include = dataset.include;
+    if (dataset.exclude) this.config.exclude = dataset.exclude;
+    if (dataset.root) this.config.root = dataset.root;
+    if (dataset.perPage && dataset.perPage !== '0') {
+      this.config.pageSize = parseInt(dataset.perPage);
+      this.config.pagination = true;
+    }
+    if (dataset.sort) this.config.sort = dataset.sort;
+
+    // Parse boolean attributes
+    if (dataset.search !== undefined) {
+      this.config.globalSearch = dataset.search === 'true';
+    }
+    if (dataset.filters !== undefined) {
+      this.config.filterable = dataset.filters === 'true';
+    }
+    if (dataset.export !== undefined) {
+      this.config.exportable = dataset.export === 'true';
+    }
+
+    // Parse auto-refresh attributes
+    if (dataset.autoRefresh !== undefined) {
+      this.config.autoRefresh.enabled = dataset.autoRefresh === 'true';
+    }
+    if (dataset.refreshInterval) {
+      this.config.autoRefresh.interval = parseInt(dataset.refreshInterval);
+    }
+    if (dataset.refreshIndicator !== undefined) {
+      this.config.autoRefresh.showIndicator = dataset.refreshIndicator === 'true';
+    }
+    if (dataset.refreshCountdown !== undefined) {
+      this.config.autoRefresh.showCountdown = dataset.refreshCountdown === 'true';
+    }
+    if (dataset.refreshLastUpdated !== undefined) {
+      this.config.autoRefresh.showLastUpdated = dataset.refreshLastUpdated === 'true';
+    }
+
+    console.log('TableCrafter: Parsed data attributes', {
+      autoRefreshEnabled: this.config.autoRefresh.enabled,
+      interval: this.config.autoRefresh.interval,
+      showIndicator: this.config.autoRefresh.showIndicator
+    });
+  }
+
+  // ==================== AUTO-REFRESH METHODS ====================
+
+  /**
+   * Initialize the Smart Auto-Refresh system
+   */
+  initializeAutoRefresh() {
+    if (!this.dataUrl) {
+      console.warn('TableCrafter: Auto-refresh requires a data URL');
+      return;
+    }
+
+    console.log('TableCrafter: Initializing Smart Auto-Refresh');
+    
+    // Create refresh indicator if configured
+    if (this.config.autoRefresh.showIndicator) {
+      this.createRefreshIndicator();
+    }
+    
+    // Set up interaction detection for smart pausing
+    if (this.config.autoRefresh.pauseOnInteraction) {
+      this.setupInteractionDetection();
+    }
+    
+    // Set up visibility change detection
+    if (this.config.autoRefresh.pauseOnVisibilityChange) {
+      this.setupVisibilityDetection();
+    }
+    
+    // Start the refresh cycle
+    this.startAutoRefresh();
+  }
+
+  /**
+   * Create visual refresh indicator
+   */
+  createRefreshIndicator() {
+    this.refreshIndicator = document.createElement('div');
+    this.refreshIndicator.className = 'tc-refresh-indicator';
+    this.refreshIndicator.innerHTML = `
+      <div class="tc-refresh-status">
+        <span class="tc-refresh-icon">🔄</span>
+        <span class="tc-refresh-text">Auto-refresh active</span>
+        ${this.config.autoRefresh.showCountdown ? '<span class="tc-countdown"></span>' : ''}
+        ${this.config.autoRefresh.showLastUpdated ? '<span class="tc-last-updated"></span>' : ''}
+      </div>
+      <button class="tc-refresh-toggle" title="Toggle auto-refresh">⏸️</button>
+      <button class="tc-refresh-manual" title="Refresh now">↻</button>
+    `;
+
+    // Add styling if not already present
+    if (!document.querySelector('#tc-refresh-styles')) {
+      const style = document.createElement('style');
+      style.id = 'tc-refresh-styles';
+      style.textContent = `
+        .tc-refresh-indicator {
+          position: relative;
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
+          border-radius: 6px;
+          padding: 8px 12px;
+          margin-bottom: 16px;
+          font-size: 14px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          color: #475569;
+        }
+        .tc-refresh-status {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .tc-refresh-icon {
+          display: inline-block;
+          animation: tc-spin 2s linear infinite;
+        }
+        .tc-refresh-indicator.paused .tc-refresh-icon {
+          animation: none;
+          opacity: 0.5;
+        }
+        .tc-refresh-toggle, .tc-refresh-manual {
+          background: none;
+          border: none;
+          padding: 4px 8px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 16px;
+          margin-left: 4px;
+        }
+        .tc-refresh-toggle:hover, .tc-refresh-manual:hover {
+          background: #e2e8f0;
+        }
+        .tc-countdown {
+          font-weight: 600;
+          color: #3b82f6;
+        }
+        .tc-last-updated {
+          color: #64748b;
+          font-size: 12px;
+        }
+        @keyframes tc-spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // Insert before table
+    this.container.insertBefore(this.refreshIndicator, this.container.firstChild);
+
+    // Add event listeners
+    const toggleBtn = this.refreshIndicator.querySelector('.tc-refresh-toggle');
+    const manualBtn = this.refreshIndicator.querySelector('.tc-refresh-manual');
+    
+    toggleBtn?.addEventListener('click', () => this.toggleAutoRefresh());
+    manualBtn?.addEventListener('click', () => this.refreshNow());
+
+    this.updateRefreshIndicator();
+  }
+
+  /**
+   * Update refresh indicator display
+   */
+  updateRefreshIndicator() {
+    if (!this.refreshIndicator) return;
+
+    const icon = this.refreshIndicator.querySelector('.tc-refresh-icon');
+    const text = this.refreshIndicator.querySelector('.tc-refresh-text');
+    const countdown = this.refreshIndicator.querySelector('.tc-countdown');
+    const lastUpdated = this.refreshIndicator.querySelector('.tc-last-updated');
+    const toggle = this.refreshIndicator.querySelector('.tc-refresh-toggle');
+
+    // Update status
+    if (this.isPaused) {
+      this.refreshIndicator.classList.add('paused');
+      text.textContent = 'Auto-refresh paused';
+      toggle.textContent = '▶️';
+      toggle.title = 'Resume auto-refresh';
+    } else {
+      this.refreshIndicator.classList.remove('paused');
+      text.textContent = 'Auto-refresh active';
+      toggle.textContent = '⏸️';
+      toggle.title = 'Pause auto-refresh';
+    }
+
+    // Update last updated
+    if (lastUpdated && this.lastRefresh) {
+      const timeAgo = this.formatTimeAgo(this.lastRefresh);
+      lastUpdated.textContent = `Updated ${timeAgo}`;
+    }
+  }
+
+  /**
+   * Set up interaction detection for smart pausing
+   */
+  setupInteractionDetection() {
+    const events = ['mouseenter', 'mousemove', 'click', 'scroll', 'keydown'];
+    
+    const handleInteraction = () => {
+      if (!this.userIsInteracting) {
+        this.userIsInteracting = true;
+        if (!this.isPaused) {
+          this.pauseAutoRefresh(true); // Smart pause
+        }
+      }
+
+      // Reset interaction timeout
+      clearTimeout(this.interactionTimeout);
+      this.interactionTimeout = setTimeout(() => {
+        this.userIsInteracting = false;
+        if (this.isPaused) {
+          this.resumeAutoRefresh(true); // Smart resume
+        }
+      }, 5000); // Resume after 5 seconds of inactivity
+    };
+
+    events.forEach(event => {
+      this.container.addEventListener(event, handleInteraction, { passive: true });
+    });
+  }
+
+  /**
+   * Set up visibility change detection
+   */
+  setupVisibilityDetection() {
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        this.pauseAutoRefresh(true);
+      } else {
+        this.resumeAutoRefresh(true);
+      }
+    });
+  }
+
+  /**
+   * Start auto-refresh cycle
+   */
+  startAutoRefresh() {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
+
+    this.lastRefresh = new Date();
+    this.nextRefresh = new Date(Date.now() + this.config.autoRefresh.interval);
+    this.refreshAttempts = 0;
+    
+    this.refreshInterval = setInterval(() => {
+      if (!this.isPaused) {
+        this.performRefresh();
+      }
+    }, this.config.autoRefresh.interval);
+
+    // Start countdown if enabled
+    if (this.config.autoRefresh.showCountdown) {
+      this.startCountdown();
+    }
+
+    this.updateRefreshIndicator();
+  }
+
+  /**
+   * Stop auto-refresh
+   */
+  stopAutoRefresh() {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = null;
+    }
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+      this.countdownInterval = null;
+    }
+    this.isPaused = false;
+    this.updateRefreshIndicator();
+  }
+
+  /**
+   * Pause auto-refresh
+   */
+  pauseAutoRefresh(smart = false) {
+    this.isPaused = true;
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+      this.countdownInterval = null;
+    }
+    this.updateRefreshIndicator();
+    
+    if (!smart) {
+      console.log('TableCrafter: Auto-refresh paused manually');
+    }
+  }
+
+  /**
+   * Resume auto-refresh
+   */
+  resumeAutoRefresh(smart = false) {
+    this.isPaused = false;
+    if (this.config.autoRefresh.showCountdown) {
+      this.startCountdown();
+    }
+    this.updateRefreshIndicator();
+    
+    if (!smart) {
+      console.log('TableCrafter: Auto-refresh resumed manually');
+    }
+  }
+
+  /**
+   * Toggle auto-refresh state
+   */
+  toggleAutoRefresh() {
+    if (this.isPaused) {
+      this.resumeAutoRefresh();
+    } else {
+      this.pauseAutoRefresh();
+    }
+  }
+
+  /**
+   * Manually trigger refresh
+   */
+  refreshNow() {
+    console.log('TableCrafter: Manual refresh triggered');
+    this.performRefresh();
+    
+    // Reset the interval
+    this.startAutoRefresh();
+  }
+
+  /**
+   * Perform the actual data refresh
+   */
+  async performRefresh() {
+    console.log('TableCrafter: Performing auto-refresh');
+    
+    try {
+      // Store current state before refresh
+      const currentPage = this.currentPage;
+      const currentFilters = {...this.filters};
+      const currentSearch = this.searchTerm;
+      const currentSort = { field: this.sortField, order: this.sortOrder };
+
+      // Fetch fresh data
+      await this.loadData(true); // Pass true to indicate this is a refresh
+
+      // Restore user state
+      this.currentPage = currentPage;
+      this.filters = currentFilters;
+      this.searchTerm = currentSearch;
+      this.sortField = currentSort.field;
+      this.sortOrder = currentSort.order;
+
+      // Re-render with preserved state
+      this.render();
+
+      // Update refresh tracking
+      this.lastRefresh = new Date();
+      this.nextRefresh = new Date(Date.now() + this.config.autoRefresh.interval);
+      this.refreshAttempts = 0;
+      
+      this.updateRefreshIndicator();
+      console.log('TableCrafter: Auto-refresh completed successfully');
+
+    } catch (error) {
+      console.error('TableCrafter: Auto-refresh failed', error);
+      this.refreshAttempts++;
+
+      if (this.config.autoRefresh.retryOnFailure && 
+          this.refreshAttempts < this.config.autoRefresh.maxRetries) {
+        console.log(`TableCrafter: Retrying refresh (${this.refreshAttempts}/${this.config.autoRefresh.maxRetries})`);
+        
+        // Exponential backoff: retry after 2^attempt seconds
+        const retryDelay = Math.pow(2, this.refreshAttempts) * 1000;
+        setTimeout(() => this.performRefresh(), retryDelay);
+      } else {
+        console.error('TableCrafter: Auto-refresh failed after max retries, stopping auto-refresh');
+        this.stopAutoRefresh();
+      }
+    }
+  }
+
+  /**
+   * Start countdown display
+   */
+  startCountdown() {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
+
+    this.countdownInterval = setInterval(() => {
+      if (this.isPaused) return;
+
+      const countdown = this.refreshIndicator?.querySelector('.tc-countdown');
+      if (countdown && this.nextRefresh) {
+        const remaining = Math.max(0, this.nextRefresh.getTime() - Date.now());
+        const seconds = Math.ceil(remaining / 1000);
+        
+        if (seconds > 0) {
+          countdown.textContent = `Next: ${this.formatDuration(seconds * 1000)}`;
+        } else {
+          countdown.textContent = 'Refreshing...';
+        }
+      }
+    }, 1000);
+  }
+
+  /**
+   * Format time duration for display
+   */
+  formatDuration(ms) {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+
+    if (hours > 0) {
+      return `${hours}h ${minutes % 60}m`;
+    } else if (minutes > 0) {
+      return `${minutes}m ${seconds % 60}s`;
+    } else {
+      return `${seconds}s`;
+    }
+  }
+
+  /**
+   * Format time ago for display
+   */
+  formatTimeAgo(date) {
+    const now = new Date();
+    const diff = now - date;
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+
+    if (hours > 0) {
+      return `${hours}h ago`;
+    } else if (minutes > 0) {
+      return `${minutes}m ago`;
+    } else {
+      return 'just now';
+    }
+  }
+
+  /**
+   * Clean up auto-refresh when instance is destroyed
+   */
+  destroyAutoRefresh() {
+    this.stopAutoRefresh();
+    
+    if (this.refreshIndicator) {
+      this.refreshIndicator.remove();
+      this.refreshIndicator = null;
+    }
+    
+    if (this.interactionTimeout) {
+      clearTimeout(this.interactionTimeout);
+    }
+    
+    console.log('TableCrafter: Auto-refresh destroyed');
   }
 }
 

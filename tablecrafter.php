@@ -466,11 +466,16 @@ class TableCrafter
             'filters' => true,
             'export' => false,
             'per_page' => 0,
-            'sort' => '' // New: column:direction format (e.g., "price:desc")
+            'sort' => '', // column:direction format (e.g., "price:desc")
+            'auto_refresh' => false,
+            'refresh_interval' => 300000, // 5 minutes default (milliseconds)
+            'refresh_indicator' => true,
+            'refresh_countdown' => false,
+            'refresh_last_updated' => true
         ), $atts, 'tablecrafter');
 
         // Normalize boolean-ish attributes
-        foreach (array('search', 'filters', 'export') as $bool_att) {
+        foreach (array('search', 'filters', 'export', 'auto_refresh', 'refresh_indicator', 'refresh_countdown', 'refresh_last_updated') as $bool_att) {
             if (is_string($atts[$bool_att])) {
                 $lower = strtolower($atts[$bool_att]);
                 $atts[$bool_att] = ($lower === 'true' || $lower === '1' || $lower === 'yes');
@@ -549,6 +554,11 @@ class TableCrafter
             data-filters="<?php echo $atts['filters'] ? 'true' : 'false'; ?>"
             data-export="<?php echo $atts['export'] ? 'true' : 'false'; ?>"
             data-per-page="<?php echo esc_attr($atts['per_page']); ?>" data-sort="<?php echo esc_attr($atts['sort']); ?>"
+            data-auto-refresh="<?php echo $atts['auto_refresh'] ? 'true' : 'false'; ?>"
+            data-refresh-interval="<?php echo esc_attr($atts['refresh_interval']); ?>"
+            data-refresh-indicator="<?php echo $atts['refresh_indicator'] ? 'true' : 'false'; ?>"
+            data-refresh-countdown="<?php echo $atts['refresh_countdown'] ? 'true' : 'false'; ?>"
+            data-refresh-last-updated="<?php echo $atts['refresh_last_updated'] ? 'true' : 'false'; ?>"
             data-ssr="true">
             <?php echo $html_content ? wp_kses_post($html_content) : '<div class="tc-loading">' . esc_html__('Loading TableCrafter...', 'tablecrafter-wp-data-tables') . '</div>'; ?>
             <?php if (!empty($initial_data)): ?>
