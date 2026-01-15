@@ -142,6 +142,8 @@ class TableCrafter
         $users_url = TABLECRAFTER_URL . 'demo-data/users.json';
         $products_url = TABLECRAFTER_URL . 'demo-data/products.json';
         $metrics_url = TABLECRAFTER_URL . 'demo-data/metrics.json';
+        $employees_url = TABLECRAFTER_URL . 'demo-data/employees.csv';
+        $sheets_url = 'https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit#gid=0';
         ?>
         <div class="wrap">
             <h1 class="wp-heading-inline"><?php esc_html_e('TableCrafter', 'tablecrafter-wp-data-tables'); ?></h1>
@@ -157,15 +159,26 @@ class TableCrafter
                         <div style="margin-bottom: 15px;">
                             <label for="tc-preview-url"
                                 style="font-weight: 600; display: block; margin-bottom: 5px;"><?php esc_html_e('Data Source URL', 'tablecrafter-wp-data-tables'); ?></label>
-                            <div style="display: flex; gap: 5px;">
+                            
+                            <div style="display: flex; gap: 5px; margin-bottom: 8px;">
                                 <input type="text" id="tc-preview-url" class="widefat"
                                     placeholder="https://api.example.com/data.json" style="flex: 1;">
-                                <button id="tc-upload-csv-btn" class="button button-secondary" type="button">
-                                    <span class="dashicons dashicons-upload" style="line-height: 28px;"></span>
+                            </div>
+                            
+                            <div style="display: flex; gap: 5px;">
+                                <button id="tc-upload-csv-btn" class="button button-secondary" type="button" style="flex: 1;">
+                                    <span class="dashicons dashicons-upload" style="margin-right: 4px; vertical-align: middle;"></span>
+                                    <?php esc_html_e('Upload File (CSV/JSON)', 'tablecrafter-wp-data-tables'); ?>
+                                </button>
+                                <button id="tc-google-sheet-btn" class="button button-secondary" type="button" style="flex: 1;"
+                                    title="<?php esc_attr_e('Paste a Google Sheet URL', 'tablecrafter-wp-data-tables'); ?>">
+                                    <span class="dashicons dashicons-media-spreadsheet" style="margin-right: 4px; vertical-align: middle;"></span>
+                                    <?php esc_html_e('Google Sheets', 'tablecrafter-wp-data-tables'); ?>
                                 </button>
                             </div>
-                            <p class="description">
-                                <?php esc_html_e('Must be a publicly accessible JSON endpoint.', 'tablecrafter-wp-data-tables'); ?>
+
+                            <p class="description" style="margin-top: 5px;">
+                                <?php esc_html_e('Enter a remote URL, upload a file, or paste a public Google Sheet link.', 'tablecrafter-wp-data-tables'); ?>
                             </p>
                         </div>
 
@@ -245,9 +258,16 @@ class TableCrafter
                             <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;"
                                     data-url="<?php echo esc_url($products_url); ?>">📦
                                     <?php esc_html_e('Product Inventory (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
-                            <li style="margin-bottom: 0;"><a href="#" class="button" style="width: 100%; text-align: left;"
+                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;"
                                     data-url="<?php echo esc_url($metrics_url); ?>">📈
                                     <?php esc_html_e('Sales Metrics (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;"
+                                    data-url="<?php echo esc_url($employees_url); ?>">📊
+                                    <?php esc_html_e('Employee List (CSV)', 'tablecrafter-wp-data-tables'); ?></a></li>
+                            <li style="margin-bottom: 0;"><a href="#" class="button" style="width: 100%; text-align: left;"
+                                    data-url="<?php echo esc_url($sheets_url); ?>">📑
+                                    <?php esc_html_e('Project Status (Google Sheet)', 'tablecrafter-wp-data-tables'); ?></a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -525,8 +545,8 @@ class TableCrafter
             data-search="<?php echo $atts['search'] ? 'true' : 'false'; ?>"
             data-filters="<?php echo $atts['filters'] ? 'true' : 'false'; ?>"
             data-export="<?php echo $atts['export'] ? 'true' : 'false'; ?>"
-            data-per-page="<?php echo esc_attr($atts['per_page']); ?>"
-            data-sort="<?php echo esc_attr($atts['sort']); ?>" data-ssr="true">
+            data-per-page="<?php echo esc_attr($atts['per_page']); ?>" data-sort="<?php echo esc_attr($atts['sort']); ?>"
+            data-ssr="true">
             <?php echo $html_content ? wp_kses_post($html_content) : '<div class="tc-loading">' . esc_html__('Loading TableCrafter...', 'tablecrafter-wp-data-tables') . '</div>'; ?>
             <?php if (!empty($initial_data)): ?>
                 <script type="application/json" class="tc-initial-data"><?php echo wp_json_encode($initial_data); ?></script>
@@ -845,7 +865,7 @@ class TableCrafter
         $html .= '<thead><tr>';
         foreach ($headers as $header) {
             $label = isset($header_map[$header]) ? $header_map[$header] : $this->format_header_php($header);
-            
+
             // Set aria-sort based on current sort state
             $aria_sort = 'none';
             if ($sort_field === $header) {
@@ -855,7 +875,7 @@ class TableCrafter
                     $aria_sort = 'descending';
                 }
             }
-            
+
             $html .= '<th class="tc-sortable" tabindex="0" aria-sort="' . esc_attr($aria_sort) . '" data-field="' . esc_attr($header) . '">' . esc_html($label) . '</th>';
         }
         $html .= '</tr></thead>';
@@ -897,13 +917,13 @@ class TableCrafter
         $is_ascending = in_array($direction, ['asc', 'ascending']);
 
         // Sort data using usort with custom comparison function
-        usort($data, function($a, $b) use ($field, $is_ascending) {
+        usort($data, function ($a, $b) use ($field, $is_ascending) {
             $a = (array) $a;
             $b = (array) $b;
-            
+
             $val_a = isset($a[$field]) ? $a[$field] : '';
             $val_b = isset($b[$field]) ? $b[$field] : '';
-            
+
             // Handle numeric values
             if (is_numeric($val_a) && is_numeric($val_b)) {
                 $result = floatval($val_a) <=> floatval($val_b);
@@ -911,7 +931,7 @@ class TableCrafter
                 // String comparison (case-insensitive)
                 $result = strcasecmp(strval($val_a), strval($val_b));
             }
-            
+
             // Reverse result for descending order
             return $is_ascending ? $result : -$result;
         });

@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!urlInput || !previewBtn || !copyBtn) return; // Exit if not on the settings page
 
     // --- Media Library Upload Handler (v2.5.0) ---
+    // --- Media Library Upload Handler (v2.5.0) ---
     if (uploadBtn) {
         let fileFrame;
         uploadBtn.addEventListener('click', function (e) {
@@ -34,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             fileFrame = wp.media({
-                title: 'Select Data Source (CSV)',
+                title: 'Select Data Source (CSV/JSON)',
                 button: {
                     text: 'Use this Data Source'
                 },
@@ -53,6 +54,19 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             fileFrame.open();
+        });
+    }
+
+    const sheetBtn = document.getElementById('tc-google-sheet-btn');
+    if (sheetBtn) {
+        sheetBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = prompt('Paste your Google Sheet URL (Must be "Anyone with the link can view"):', '');
+            if (url) {
+                urlInput.value = url.trim();
+                urlInput.dispatchEvent(new Event('input'));
+                setTimeout(() => previewBtn.click(), 100);
+            }
         });
     }
     // ---------------------------------------------
