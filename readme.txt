@@ -3,12 +3,12 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.8.0
+Stable tag: 2.9.0
 Requires PHP: 7.4
 License: GPLv2 or later
 
 
-Transform JSON APIs, Google Sheets & CSV into responsive WordPress tables. Now handles 25,000+ rows with intelligent optimization & enhanced pagination.
+Transform JSON APIs, Google Sheets & CSV into responsive WordPress tables. Advanced export (Excel/PDF), 25,000+ row handling, intelligent optimization.
 
 == Description ==
 
@@ -257,6 +257,16 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 2.9.0 =
+* 📊 **MAJOR FEATURE: Advanced Export Functionality!**
+* **Excel Export with Formatting:** Professional .xls files with styled headers, number formatting, and custom sheet names
+* **PDF Export with Professional Layouts:** Beautiful reports with headers, footers, company branding, and landscape/portrait modes
+* **Enhanced Export Dropdown:** Intuitive multi-format selection with icons and descriptions for CSV, Excel, and PDF
+* **Enterprise Export Features:** Large dataset handling (up to 1000 rows in PDF), filtered data export, and custom filenames
+* **Security Hardened:** XSS-prevention with HTML escaping and secure file generation for business environments
+* **Business Impact:** Enables enterprise adoption by providing report generation capabilities that customers expect
+* **Developer Friendly:** Extensive configuration options, export events, and backward compatibility maintained
+
 = 2.8.0 =
 * 🧠 **MAJOR FEATURE: Intelligent Large Dataset Handling!**
 * **Enterprise Performance:** Handles 10,000+ records with sub-2-second load times and 60% reduced memory usage
