@@ -3,12 +3,12 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.5.0
+Stable tag: 2.6.0
 Requires PHP: 7.4
 License: GPLv2 or later
 
 
-Transform Google Sheets, JSON & CSVs into responsive tables. Includes live search, pagination, sorting & SEO-friendly rendering.
+🚀 NEW: Interactive Welcome Screen! Transform Google Sheets, JSON & CSVs into responsive tables with live feature toggles & instant demos.
 
 == Description ==
 
@@ -40,19 +40,55 @@ Transform Google Sheets, JSON & CSVs into responsive tables. Includes live searc
 *   **🗂️ Column Management:** Show/hide specific columns with include/exclude parameters
 *   **🔗 Auto-Linking:** Automatically converts URLs and email addresses to clickable links
 
-### 💼 Perfect for These Business Use Cases
+### 💼 Powerful Use Cases Across Industries
 
-**Financial Services:** Display live cryptocurrency prices, stock data, or exchange rates from APIs like CoinGecko, Alpha Vantage, or custom trading platforms.
+**🏦 Financial Services & FinTech**
+* Live cryptocurrency prices and trading data (CoinGecko, Binance, Alpha Vantage APIs)
+* Stock market performance, portfolio tracking, and investment analytics
+* Exchange rates, currency converters, and financial calculators
+* Banking transaction histories and account summaries
 
-**E-Commerce:** Show real-time inventory levels, price comparisons, or product catalogs from external suppliers and marketplaces.
+**🛒 E-Commerce & Retail**
+* Real-time inventory levels and product catalogs from external suppliers
+* Price comparison tables from multiple vendors and marketplaces
+* Customer order histories, shipping tracking, and return statuses
+* Dropshipping product feeds and affiliate marketing data
 
-**SaaS Dashboards:** Create client portals displaying usage metrics, billing information, or performance data from your application's API.
+**⚗️ Scientific & Research**
+* Laboratory data analysis, experiment results, and research findings
+* Clinical trial data, patient records, and medical research statistics
+* Environmental monitoring data (weather, air quality, sensor readings)
+* Academic publication databases and citation tracking
 
-**Real Estate:** Display property listings, market data, or rental information from MLS feeds or real estate APIs.
+**🏢 Enterprise & SaaS**
+* Client portals with usage metrics, billing information, and analytics dashboards
+* Employee directories, organizational charts, and HR management systems
+* Project management data, task tracking, and team performance metrics
+* Customer support ticket systems and knowledge base integration
 
-**News & Media:** Showcase live sports scores, weather data, or social media metrics from external feeds.
+**🏘️ Real Estate & Property**
+* MLS property listings with live market data and pricing trends
+* Rental property management, tenant information, and lease tracking
+* Commercial real estate portfolios and investment property analysis
+* Mortgage calculators and financing option comparisons
 
-**Corporate Directories:** Display employee information, contact lists, or organizational data from HR systems.
+**📺 Media & Publishing**
+* Live sports scores, player statistics, and league standings
+* Social media metrics, engagement analytics, and influencer data
+* News feeds, article databases, and content management systems
+* Event listings, conference schedules, and registration data
+
+**🎓 Education & Training**
+* Student grade books, attendance records, and academic progress tracking
+* Course catalogs, class schedules, and enrollment management
+* Educational resource databases and curriculum planning tools
+* Certification tracking and professional development records
+
+**🚀 Startups & Agencies**
+* Client project portfolios, case studies, and testimonial databases
+* Freelancer marketplaces, service provider directories, and vendor listings
+* Marketing campaign data, lead tracking, and conversion analytics
+* Partnership networks and affiliate program management
 
 ### 🎯 SEO Benefits for Your WordPress Site
 
@@ -178,6 +214,15 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 2.6.0 =
+* 🚀 **MAJOR UPDATE: Interactive Welcome Screen Revolution!**
+* **Interactive Feature Playground:** Brand new welcome screen with live demo table and real-time feature toggles
+* **Instant Value Demo:** See working tables with search, sorting, filters, and export within 30 seconds of activation
+* **Live Feature Toggles:** Toggle search, filters, and export on/off to see immediate changes in the demo table
+* **Smart Onboarding:** Streamlined welcome → demo → customize flow that eliminates user confusion
+* **Enhanced UX:** Redesigned CTAs, compact layout, enhanced quick tips, and better visual hierarchy
+* **Conversion Optimized:** Reduced time-to-value from minutes to seconds with interactive learning experience
+
 = 2.5.0 =
 * **Google Sheets Integration:** First-class support for public Google Sheets. Simply paste the "Anyone with the link" URL.
 * **CSV Data Source:** Full support for loading remote CSV files as data tables.

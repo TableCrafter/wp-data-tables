@@ -1,5 +1,32 @@
 # Changelog
 
+## [2.6.0] - 2026-01-15
+### 🚀 MAJOR: Interactive Welcome Screen Revolution
+- **Interactive Feature Playground:** Brand new welcome screen with live demo table and real-time feature toggles
+- **Instant Value Demonstration:** Users see working tables with search, sorting, filters, and export capabilities within 30 seconds of activation
+- **Live Feature Toggles:** Toggle search, filters, and export on/off to see immediate changes in the demo table
+- **Smart Onboarding Flow:** Streamlined welcome → demo → customize flow that eliminates user confusion
+- **Enhanced CTAs:** Redesigned buttons with optimized colors (blue primary, orange secondary, red lead magnet) for better conversion
+- **Compact Design:** Removed bulky full-width header in favor of integrated, space-efficient layout
+
+### 🎨 UX Enhancements
+- **No-Scroll Demo:** Users see the interactive table immediately without scrolling
+- **Enhanced Quick Tips:** Expanded sidebar with detailed feature explanations including filters and exports
+- **Prominent Lead Magnet:** Repositioned and redesigned email capture with better value proposition and social proof
+- **Better Visual Hierarchy:** Clear progression from demo → features → conversion
+
+### ⚡ Technical Improvements
+- **Robust Asset Loading:** Fixed JavaScript library loading issues on welcome screen
+- **Fallback Static Demo:** Beautiful static table fallback when JavaScript fails to load
+- **Enhanced Error Handling:** Better debugging and graceful degradation
+- **Mobile-Optimized:** Responsive button layout and toggle controls for all screen sizes
+
+### 📈 Conversion Optimization
+- **Reduced Time-to-Value:** From minutes to seconds for users to see plugin value
+- **Interactive Learning:** Users learn by doing rather than reading static descriptions
+- **Feature Confidence:** Users experience all capabilities before customizing
+- **Email Capture:** Enhanced lead magnet with 3 specific benefit bullets and urgency indicators
+
 ## [2.5.0] - 2026-01-15
 ### Added
 - **Google Sheets Integration:** First-class support for public Google Sheets. Simply paste the "Anyone with the link" URL.

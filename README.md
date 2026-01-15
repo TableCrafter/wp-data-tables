@@ -1,6 +1,8 @@
 # 🚀 TableCrafter: WordPress Data Tables & Dynamic Content Plugin
 
-**Transform any Google Sheet, JSON API, or CSV into beautiful, responsive WordPress data tables. Features live search, pagination, sorting, mobile optimization, and SEO-friendly server-side rendering.**
+**🚀 NEW v2.6.0: Interactive Welcome Screen with Live Feature Toggles!**
+
+**Transform any Google Sheet, JSON API, or CSV into beautiful, responsive WordPress data tables. Now with revolutionary interactive onboarding that lets users experience all features instantly.**
 
 [![Try Live Demo](https://img.shields.io/badge/Try%20Live%20Demo-TasteWP-blue?logo=wordpress)](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
 [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/tablecrafter-wp-data-tables?logo=wordpress)](https://wordpress.org/plugins/tablecrafter-wp-data-tables/)
@@ -8,10 +10,24 @@
 [![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/r/tablecrafter-wp-data-tables?logo=wordpress)](https://wordpress.org/plugins/tablecrafter-wp-data-tables/)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2+-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
 
+## 🚀 **NEW v2.6.0: Interactive Welcome Screen Revolution!**
+
+### 🎮 **Interactive Feature Playground**
+- **Live Demo Table:** See working tables with search, sorting, filters, and export within 30 seconds of activation
+- **Real-Time Feature Toggles:** Toggle search, filters, and export on/off to see immediate changes
+- **Smart Onboarding Flow:** Streamlined welcome → demo → customize experience
+- **Zero Learning Curve:** Users experience all capabilities before customizing
+
+### ✨ **Enhanced User Experience**
+- **Instant Value Demonstration:** No more guessing what the plugin can do
+- **Interactive Learning:** Users learn by doing, not reading
+- **Mobile-Optimized Controls:** Responsive toggles and buttons for all devices
+- **Conversion Optimized:** Reduced time-to-value from minutes to seconds
+
 ### 🚀 Recent Updates
-- **v2.3.10:** Added Skeleton Loading states for better perceived performance.
-- **v2.3.9:** Added Graceful Error Handling with Retry button.
-- **v2.3.8:** Accessibility improvements (WCAG 2.1 AA Compliance).
+- **v2.6.0:** Interactive Welcome Screen with live feature toggles and instant demos
+- **v2.5.0:** Google Sheets Integration and CSV Data Source support
+- **v2.4.4:** Enhanced visual sorting with accessibility improvements
 
 ---
 
@@ -113,19 +129,47 @@ Unlock the full potential of your data with **[Advanced Data Tables for Gravity 
 
 ---
 
-## 💼 Perfect Business Use Cases
+## 💼 Powerful Use Cases Across Industries
 
-**Financial Services:** Display live cryptocurrency prices, stock data, or exchange rates from APIs like CoinGecko, Alpha Vantage, or custom trading platforms.
+### 🏦 Financial Services & FinTech
+- **Trading Platforms:** Live cryptocurrency prices, stock data, portfolio tracking (CoinGecko, Binance, Alpha Vantage APIs)
+- **Banking Solutions:** Transaction histories, account summaries, exchange rates, currency converters
+- **Investment Analytics:** Market performance data, financial calculators, risk assessment tools
 
-**E-Commerce:** Show real-time inventory levels, price comparisons, or product catalogs from external suppliers and marketplaces.
+### 🛒 E-Commerce & Retail
+- **Inventory Management:** Real-time stock levels, product catalogs from external suppliers
+- **Marketplace Integration:** Price comparison tables, dropshipping feeds, affiliate marketing data
+- **Customer Experience:** Order histories, shipping tracking, return statuses, customer portals
 
-**SaaS Dashboards:** Create client portals displaying usage metrics, billing information, or performance data from your application's API.
+### ⚗️ Scientific & Research
+- **Laboratory Data:** Experiment results, research findings, clinical trial statistics
+- **Environmental Monitoring:** Weather data, air quality sensors, IoT device readings
+- **Academic Research:** Publication databases, citation tracking, peer review systems
 
-**Real Estate:** Display property listings, market data, or rental information from MLS feeds or real estate APIs.
+### 🏢 Enterprise & SaaS
+- **Client Portals:** Usage metrics, billing information, analytics dashboards, support tickets
+- **HR Management:** Employee directories, organizational charts, performance tracking
+- **Project Management:** Task tracking, team metrics, resource allocation, timeline visualization
 
-**News & Media:** Showcase live sports scores, weather data, or social media metrics from external feeds.
+### 🏘️ Real Estate & Property
+- **MLS Integration:** Property listings, market data, pricing trends, comparative market analysis
+- **Property Management:** Tenant information, lease tracking, maintenance requests
+- **Investment Analysis:** Portfolio performance, ROI calculators, market research
 
-**Corporate Directories:** Display employee information, contact lists, or organizational data from HR systems.
+### 📺 Media & Content
+- **Sports & Entertainment:** Live scores, player statistics, league standings, event schedules
+- **Social Media Analytics:** Engagement metrics, influencer data, campaign performance
+- **Publishing Platforms:** Article databases, content management, editorial calendars
+
+### 🎓 Education & Training
+- **Academic Management:** Student records, grade books, attendance tracking, course catalogs
+- **Professional Development:** Certification tracking, training programs, skill assessments
+- **Research Institutions:** Academic databases, curriculum planning, resource management
+
+### 🚀 Agencies & Startups
+- **Client Management:** Project portfolios, case studies, testimonial databases
+- **Freelancer Networks:** Service provider directories, vendor listings, skill marketplaces
+- **Marketing Analytics:** Campaign data, lead tracking, conversion metrics, partnership networks
 
 ---
 

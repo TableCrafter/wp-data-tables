@@ -22,6 +22,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!urlInput || !previewBtn || !copyBtn) return; // Exit if not on the settings page
 
+    // Auto-trigger preview if coming from welcome screen with demo URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const demoUrl = urlParams.get('demo_url');
+    if (demoUrl) {
+        setTimeout(() => {
+            urlInput.dispatchEvent(new Event('input')); // Update shortcode
+            previewBtn.click(); // Trigger preview
+        }, 500);
+    }
+
     // --- Media Library Upload Handler (v2.5.0) ---
     // --- Media Library Upload Handler (v2.5.0) ---
     if (uploadBtn) {

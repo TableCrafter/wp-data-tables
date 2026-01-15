@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – Data to Beautiful Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: Transform any data source into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
- * Version: 2.5.0
+ * Version: 2.6.0
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.5.0');
+define('TABLECRAFTER_VERSION', '2.6.0');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -162,7 +162,8 @@ class TableCrafter
 
                             <div style="display: flex; gap: 5px; margin-bottom: 8px;">
                                 <input type="text" id="tc-preview-url" class="widefat"
-                                    placeholder="https://api.example.com/data.json" style="flex: 1;">
+                                    placeholder="https://api.example.com/data.json" style="flex: 1;"
+                                    value="<?php echo isset($_GET['demo_url']) ? esc_attr($_GET['demo_url']) : ''; ?>">
                             </div>
 
                             <div style="display: flex; gap: 5px;">
@@ -1343,6 +1344,11 @@ class TableCrafter
      */
     public function render_welcome_page(): void
     {
+        // Register and enqueue TableCrafter library and styles for the demo
+        $this->register_assets();
+        wp_enqueue_style('tablecrafter-style');
+        wp_enqueue_script('tablecrafter-lib');
+        
         include TABLECRAFTER_PATH . 'views/welcome.php';
     }
 
