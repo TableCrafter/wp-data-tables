@@ -17,48 +17,21 @@
             height: 24, 
             viewBox: '0 0 24 24', 
             fill: 'none',
-            style: { color: '#1e40af' }
+            style: { color: '#0073aa' }
         },
-            // Background grid pattern
+            // Simple table outline
             el('rect', { 
-                x: 2, y: 6, width: 20, height: 12, 
-                rx: 2, 
-                fill: 'currentColor', 
-                fillOpacity: 0.1, 
+                x: 4, y: 6, width: 16, height: 12, 
+                rx: 1, 
                 stroke: 'currentColor', 
-                strokeWidth: 1.5 
-            }),
-            
-            // Table grid lines
-            el('line', { x1: 2, y1: 10, x2: 22, y2: 10, stroke: 'currentColor', strokeWidth: 0.8, opacity: 0.4 }),
-            el('line', { x1: 2, y1: 14, x2: 22, y2: 14, stroke: 'currentColor', strokeWidth: 0.8, opacity: 0.4 }),
-            el('line', { x1: 8, y1: 6, x2: 8, y2: 18, stroke: 'currentColor', strokeWidth: 0.8, opacity: 0.4 }),
-            el('line', { x1: 14, y1: 6, x2: 14, y2: 18, stroke: 'currentColor', strokeWidth: 0.8, opacity: 0.4 }),
-            
-            // Dynamic data transformation arrow
-            el('path', { 
-                d: 'M3 3 L8 3 M6 1 L8 3 L6 5',
-                stroke: 'currentColor',
                 strokeWidth: 2,
-                strokeLinecap: 'round',
-                strokeLinejoin: 'round',
                 fill: 'none'
             }),
             
-            // Auto-refresh indicator (spinning dots)
-            el('circle', { cx: 19, cy: 4, r: 1.5, fill: 'currentColor' }),
-            el('circle', { cx: 19, cy: 4, r: 3, fill: 'none', stroke: 'currentColor', strokeWidth: 1, opacity: 0.3, strokeDasharray: '1 2' }),
-            
-            // Data bars in cells (representing dynamic content)
-            el('rect', { x: 4, y: 8, width: 2, height: 1, fill: 'currentColor', opacity: 0.6 }),
-            el('rect', { x: 10, y: 7.5, width: 2, height: 2, fill: 'currentColor', opacity: 0.6 }),
-            el('rect', { x: 16, y: 8.5, width: 2, height: 1, fill: 'currentColor', opacity: 0.6 }),
-            el('rect', { x: 4, y: 12, width: 3, height: 1, fill: 'currentColor', opacity: 0.6 }),
-            el('rect', { x: 10, y: 11.5, width: 1.5, height: 2, fill: 'currentColor', opacity: 0.6 }),
-            el('rect', { x: 16, y: 12.5, width: 2.5, height: 1, fill: 'currentColor', opacity: 0.6 }),
-            el('rect', { x: 4, y: 16, width: 1.5, height: 1, fill: 'currentColor', opacity: 0.6 }),
-            el('rect', { x: 10, y: 15.5, width: 3, height: 2, fill: 'currentColor', opacity: 0.6 }),
-            el('rect', { x: 16, y: 16, width: 1, height: 1, fill: 'currentColor', opacity: 0.6 })
+            // Two simple grid lines
+            el('line', { x1: 4, y1: 10, x2: 20, y2: 10, stroke: 'currentColor', strokeWidth: 2 }),
+            el('line', { x1: 4, y1: 14, x2: 20, y2: 14, stroke: 'currentColor', strokeWidth: 2 }),
+            el('line', { x1: 12, y1: 6, x2: 12, y2: 18, stroke: 'currentColor', strokeWidth: 2 })
         ),
         category: 'widgets',
 
