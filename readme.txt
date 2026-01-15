@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.4.4
+Stable tag: 2.5.0
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -178,6 +178,11 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 2.5.0 =
+* **Google Sheets Integration:** First-class support for public Google Sheets. Simply paste the "Anyone with the link" URL.
+* **CSV Data Source:** Full support for loading remote CSV files as data tables.
+* **Admin Upload:** New "Upload CSV/JSON" button in the dashboard for easy file handling.
+* **Quick Demos:** Added one-click demos for Employee List (CSV) and Project Status (Google Sheet).
 
 = 2.4.4 =
 * New: Enhanced visual sorting indicators with ascending/descending arrows for improved user experience

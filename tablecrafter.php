@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – Data to Beautiful Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: Transform any data source into responsive WordPress tables. Features live search, pagination, sorting, and SEO-friendly server-side rendering.
- * Version: 2.4.4
+ * Version: 2.5.0
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '2.4.4');
+define('TABLECRAFTER_VERSION', '2.5.0');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -159,20 +159,22 @@ class TableCrafter
                         <div style="margin-bottom: 15px;">
                             <label for="tc-preview-url"
                                 style="font-weight: 600; display: block; margin-bottom: 5px;"><?php esc_html_e('Data Source URL', 'tablecrafter-wp-data-tables'); ?></label>
-                            
+
                             <div style="display: flex; gap: 5px; margin-bottom: 8px;">
                                 <input type="text" id="tc-preview-url" class="widefat"
                                     placeholder="https://api.example.com/data.json" style="flex: 1;">
                             </div>
-                            
+
                             <div style="display: flex; gap: 5px;">
                                 <button id="tc-upload-csv-btn" class="button button-secondary" type="button" style="flex: 1;">
-                                    <span class="dashicons dashicons-upload" style="margin-right: 4px; vertical-align: middle;"></span>
+                                    <span class="dashicons dashicons-upload"
+                                        style="margin-right: 4px; vertical-align: middle;"></span>
                                     <?php esc_html_e('Upload File (CSV/JSON)', 'tablecrafter-wp-data-tables'); ?>
                                 </button>
                                 <button id="tc-google-sheet-btn" class="button button-secondary" type="button" style="flex: 1;"
                                     title="<?php esc_attr_e('Paste a Google Sheet URL', 'tablecrafter-wp-data-tables'); ?>">
-                                    <span class="dashicons dashicons-media-spreadsheet" style="margin-right: 4px; vertical-align: middle;"></span>
+                                    <span class="dashicons dashicons-media-spreadsheet"
+                                        style="margin-right: 4px; vertical-align: middle;"></span>
                                     <?php esc_html_e('Google Sheets', 'tablecrafter-wp-data-tables'); ?>
                                 </button>
                             </div>

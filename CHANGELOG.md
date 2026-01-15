@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0] - 2026-01-15
+### Added
+- **Google Sheets Integration:** First-class support for public Google Sheets. Simply paste the "Anyone with the link" URL.
+- **CSV Data Source:** Full support for loading remote CSV files as data tables.
+- **Admin Upload:** New "Upload CSV/JSON" button in the dashboard for easy file handling.
+- **Quick Demos:** Added one-click demos for Employee List (CSV) and Project Status (Google Sheet).
+
 ## [2.4.4] - 2026-01-14
 ### Added
 - **Enhanced Visual Sorting:** Added ascending (↑) and descending (↓) arrow indicators for active table sort states
