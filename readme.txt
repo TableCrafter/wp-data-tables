@@ -3,12 +3,12 @@ Contributors: fahdi
 Tags: table, json, api, gutenberg, responsive
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.7.1
+Stable tag: 2.8.0
 Requires PHP: 7.4
 License: GPLv2 or later
 
 
-🔄 NEW: Smart Auto-Refresh! Transform Google Sheets, JSON APIs, and CSV files into dynamic tables with live data updates and smart pausing.
+🚀 NEW: Intelligent Large Dataset Handling! Transform massive datasets (10,000+ rows) with smart pagination, performance optimizations, and enhanced navigation controls.
 
 == Description ==
 

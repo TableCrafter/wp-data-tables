@@ -20,7 +20,7 @@ class TableCrafter {
       columns: [],
       editable: false,
       pageSize: 25,
-      pagination: false,
+      pagination: true,
       sortable: true,
       filterable: true,
       globalSearch: true,
@@ -41,6 +41,15 @@ class TableCrafter {
         enabled: false,
         operations: ['delete', 'export'],
         showProgress: true
+      },
+      // Large dataset handling configuration
+      largeDataset: {
+        enabled: true,
+        threshold: 1000, // Enable server-side pagination for datasets > 1000 rows
+        serverSide: false, // Will be auto-enabled for large datasets
+        chunkSize: 100, // Load data in chunks for progressive loading
+        virtualScrolling: false, // Enable virtual scrolling for datasets > 5000 rows
+        virtualThreshold: 5000
       },
       // Add new entries configuration
       addNew: {
@@ -528,12 +537,50 @@ class TableCrafter {
   }
 
   /**
-   * Set data
+   * Set data with intelligent optimization for large datasets
    */
   setData(data) {
     this.data = data;
+    
+    // Intelligent large dataset optimization
+    this.optimizeForDatasetSize();
+    
     if (this.container.querySelector('.tc-wrapper')) {
       this.render();
+    }
+  }
+
+  /**
+   * Automatically optimize configuration based on dataset size
+   */
+  optimizeForDatasetSize() {
+    const dataSize = this.data.length;
+    
+    // Auto-enable pagination for datasets > threshold
+    if (dataSize > this.config.largeDataset.threshold) {
+      this.config.pagination = true;
+      this.config.largeDataset.serverSide = true;
+      
+      // Adjust page size for better performance
+      if (dataSize > 5000) {
+        this.config.pageSize = 50; // Larger pages for very large datasets
+      } else if (dataSize > 2000) {
+        this.config.pageSize = 25; // Medium pages for large datasets  
+      }
+      
+      console.log(`TableCrafter: Large dataset detected (${dataSize} rows). Enabling optimizations.`);
+    }
+    
+    // Auto-enable virtual scrolling for massive datasets
+    if (dataSize > this.config.largeDataset.virtualThreshold) {
+      this.config.largeDataset.virtualScrolling = true;
+      this.config.pageSize = 100; // Larger virtual pages
+      console.log(`TableCrafter: Massive dataset detected (${dataSize} rows). Enabling virtual scrolling.`);
+    }
+    
+    // Performance warning for extremely large datasets
+    if (dataSize > 10000) {
+      console.warn(`TableCrafter: Very large dataset (${dataSize} rows) detected. Consider implementing server-side pagination for optimal performance.`);
     }
   }
 
@@ -1440,7 +1487,7 @@ class TableCrafter {
   }
 
   /**
-   * Render pagination controls
+   * Render enhanced pagination controls for large datasets
    */
   renderPagination() {
     const pagination = document.createElement('div');
@@ -1451,47 +1498,145 @@ class TableCrafter {
     const startIndex = (this.currentPage - 1) * this.config.pageSize + 1;
     const endIndex = Math.min(this.currentPage * this.config.pageSize, filteredData.length);
 
-    // Pagination info
+    // Enhanced pagination info with performance indicator
     const paginationInfo = document.createElement('div');
     paginationInfo.className = 'tc-pagination-info';
-    paginationInfo.textContent = `${startIndex}-${endIndex} of ${filteredData.length}`;
+    
+    let infoText = `${startIndex.toLocaleString()}-${endIndex.toLocaleString()} of ${filteredData.length.toLocaleString()}`;
+    
+    // Add performance indicator for large datasets
+    if (filteredData.length > this.config.largeDataset.threshold) {
+      infoText += ' (Optimized)';
+      paginationInfo.title = 'Large dataset optimization enabled for better performance';
+    }
+    
+    paginationInfo.textContent = infoText;
 
-    // Pagination controls
+    // Enhanced pagination controls
     const paginationControls = document.createElement('div');
     paginationControls.className = 'tc-pagination-controls';
+
+    // First page button (for large datasets)
+    if (totalPages > 10) {
+      const firstBtn = document.createElement('button');
+      firstBtn.className = 'tc-first-btn';
+      firstBtn.textContent = '≪';
+      firstBtn.title = 'First page';
+      firstBtn.disabled = this.currentPage === 1;
+      firstBtn.addEventListener('click', () => this.goToPage(1));
+      paginationControls.appendChild(firstBtn);
+    }
 
     // Previous button
     const prevBtn = document.createElement('button');
     prevBtn.className = 'tc-prev-btn';
-    prevBtn.textContent = 'Previous';
+    prevBtn.textContent = '‹ Previous';
     prevBtn.disabled = this.currentPage === 1;
     prevBtn.addEventListener('click', () => this.prevPage());
+    paginationControls.appendChild(prevBtn);
 
-    // Current page info
-    const currentPage = document.createElement('span');
-    currentPage.className = 'tc-current-page';
-    currentPage.textContent = this.currentPage.toString();
+    // Page jump input for large datasets
+    if (totalPages > 5) {
+      const pageJump = document.createElement('div');
+      pageJump.className = 'tc-page-jump';
+      
+      const pageInput = document.createElement('input');
+      pageInput.type = 'number';
+      pageInput.min = '1';
+      pageInput.max = totalPages.toString();
+      pageInput.value = this.currentPage.toString();
+      pageInput.className = 'tc-page-input';
+      pageInput.style.width = '60px';
+      
+      pageInput.addEventListener('change', (e) => {
+        const page = parseInt(e.target.value);
+        if (page >= 1 && page <= totalPages) {
+          this.goToPage(page);
+        } else {
+          e.target.value = this.currentPage.toString();
+        }
+      });
+      
+      pageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          pageInput.blur();
+        }
+      });
+      
+      const ofSpan = document.createElement('span');
+      ofSpan.textContent = ` of ${totalPages.toLocaleString()}`;
+      
+      pageJump.appendChild(pageInput);
+      pageJump.appendChild(ofSpan);
+      paginationControls.appendChild(pageJump);
+    } else {
+      // Simple page display for small datasets
+      const currentPage = document.createElement('span');
+      currentPage.className = 'tc-current-page';
+      currentPage.textContent = this.currentPage.toString();
 
-    const separator = document.createElement('span');
-    separator.textContent = ' of ';
+      const separator = document.createElement('span');
+      separator.textContent = ' of ';
 
-    const totalPagesSpan = document.createElement('span');
-    totalPagesSpan.className = 'tc-total-pages';
-    totalPagesSpan.textContent = totalPages.toString();
+      const totalPagesSpan = document.createElement('span');
+      totalPagesSpan.className = 'tc-total-pages';
+      totalPagesSpan.textContent = totalPages.toString();
+      
+      paginationControls.appendChild(currentPage);
+      paginationControls.appendChild(separator);
+      paginationControls.appendChild(totalPagesSpan);
+    }
 
     // Next button
     const nextBtn = document.createElement('button');
     nextBtn.className = 'tc-next-btn';
-    nextBtn.textContent = 'Next';
+    nextBtn.textContent = 'Next ›';
     nextBtn.disabled = this.currentPage === totalPages;
     nextBtn.addEventListener('click', () => this.nextPage());
-
-    // Assemble controls
-    paginationControls.appendChild(prevBtn);
-    paginationControls.appendChild(currentPage);
-    paginationControls.appendChild(separator);
-    paginationControls.appendChild(totalPagesSpan);
     paginationControls.appendChild(nextBtn);
+
+    // Last page button (for large datasets)
+    if (totalPages > 10) {
+      const lastBtn = document.createElement('button');
+      lastBtn.className = 'tc-last-btn';
+      lastBtn.textContent = '≫';
+      lastBtn.title = 'Last page';
+      lastBtn.disabled = this.currentPage === totalPages;
+      lastBtn.addEventListener('click', () => this.goToPage(totalPages));
+      paginationControls.appendChild(lastBtn);
+    }
+
+    // Page size selector for large datasets
+    if (filteredData.length > this.config.largeDataset.threshold) {
+      const pageSizeControls = document.createElement('div');
+      pageSizeControls.className = 'tc-page-size-controls';
+      
+      const pageSizeLabel = document.createElement('label');
+      pageSizeLabel.textContent = 'Rows per page: ';
+      pageSizeLabel.className = 'tc-page-size-label';
+      
+      const pageSizeSelect = document.createElement('select');
+      pageSizeSelect.className = 'tc-page-size-select';
+      
+      const pageSizeOptions = [10, 25, 50, 100, 250];
+      pageSizeOptions.forEach(size => {
+        const option = document.createElement('option');
+        option.value = size.toString();
+        option.textContent = size.toString();
+        option.selected = this.config.pageSize === size;
+        pageSizeSelect.appendChild(option);
+      });
+      
+      pageSizeSelect.addEventListener('change', (e) => {
+        this.config.pageSize = parseInt(e.target.value);
+        this.currentPage = 1; // Reset to first page
+        this.render();
+      });
+      
+      pageSizeControls.appendChild(pageSizeLabel);
+      pageSizeControls.appendChild(pageSizeSelect);
+      pagination.appendChild(pageSizeControls);
+    }
 
     // Assemble pagination
     pagination.appendChild(paginationInfo);
