@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.1.2] - 2026-01-16
+### 🚨 CRITICAL HOTFIX: Elementor Compatibility Fix
+- **Fatal Error Fix:** Resolved critical issue where plugin would break sites without Elementor installed
+- **Safety Enhancement:** Elementor widget file now only loads when Elementor is actually available
+- **Improved Detection:** Enhanced Elementor presence detection with proper hook usage and class existence checks
+- **Compatibility Testing:** Added comprehensive safety checks to prevent plugin conflicts
+
+### 🔧 Technical Improvements
+- **Hook Optimization:** Changed from `plugins_loaded` to `elementor/loaded` hook for better timing
+- **Class Validation:** Added existence checks for `\Elementor\Widget_Base` and `\Elementor\Plugin` classes
+- **Graceful Degradation:** Widget registration functions now safely return when Elementor is unavailable
+- **Error Prevention:** Enhanced parameter validation in category registration function
+
+### 📊 Business Impact
+- **Site Stability:** Eliminates fatal errors that would break non-Elementor WordPress sites
+- **Universal Compatibility:** Plugin now works safely across all WordPress installations
+- **Trust Restoration:** Fixes critical bug that could damage user confidence and plugin reputation
+- **Support Reduction:** Prevents influx of support tickets from sites experiencing fatal errors
+
 ## [3.1.1] - 2026-01-16
 ### 🚀 MAJOR UX ENHANCEMENT: Elementor Live Preview Functionality
 - **Professional Workflow Revolution:** Real-time table preview in Elementor editor eliminates repetitive preview/publish cycles for designers

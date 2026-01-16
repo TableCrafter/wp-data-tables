@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 3.1.1
+Stable tag: 3.1.2
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -265,6 +265,12 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 3.1.2 =
+* 🚨 **CRITICAL HOTFIX: Fixed Fatal Error on Sites Without Elementor**
+* **Emergency Fix:** Elementor widget file was being loaded unconditionally, causing fatal errors on sites without Elementor installed
+* **Improved Safety:** Enhanced Elementor detection with proper hook usage and class existence checks
+* **Compatibility:** Plugin now works safely on all WordPress sites regardless of Elementor installation status
+* **Developer Note:** Always test plugin compatibility across different plugin combinations before release
 = 3.1.1 =
 * 🚀 **MAJOR UX ENHANCEMENT: Elementor Live Preview!**
 * **Professional Workflow:** Real-time table preview in Elementor editor eliminates preview/publish cycles

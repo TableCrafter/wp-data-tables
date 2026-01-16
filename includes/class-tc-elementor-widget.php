@@ -791,8 +791,13 @@ class TC_Elementor_Widget extends Widget_Base
  */
 function register_tc_elementor_widget()
 {
-    // Make sure Elementor is loaded
-    if (!did_action('elementor/loaded')) {
+    // Make sure Elementor is loaded and classes are available
+    if (!did_action('elementor/loaded') || !class_exists('\Elementor\Plugin')) {
+        return;
+    }
+
+    // Additional safety check
+    if (!class_exists('\Elementor\Widget_Base')) {
         return;
     }
 
@@ -806,6 +811,11 @@ add_action('elementor/widgets/widgets_registered', 'register_tc_elementor_widget
  */
 function add_tc_elementor_category($elements_manager)
 {
+    // Safety check
+    if (!$elements_manager || !is_object($elements_manager)) {
+        return;
+    }
+
     $elements_manager->add_category(
         'tablecrafter',
         [
