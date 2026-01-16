@@ -178,7 +178,7 @@ class TableCrafter
 
             <div class="tc-admin-layout" style="display: flex; gap: 20px; margin-top: 20px; align-items: flex-start;">
 
-                <div class="tc-sidebar" style="flex: 0 0 350px;">
+                <div class="tc-sidebar" style="flex: 0 0 380px;">
                     <div class="card" style="margin: 0 0 20px 0; max-width: none;">
                         <h2><?php esc_html_e('Settings', 'tablecrafter-wp-data-tables'); ?></h2>
                         <div style="margin-bottom: 15px;">
@@ -266,54 +266,68 @@ class TableCrafter
                         </div>
                     </div>
 
-                    <div class="card" style="margin: 0 0 20px 0; max-width: none;">
+                    <div class="card" style="margin: 0 0 20px 0; max-width: none; background: linear-gradient(135deg, #e0f7fa 0%, #f0f9ff 100%); border-left: 4px solid #0891b2;">
+                        <h2 style="color: #0e7490; margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 20px;">🚀</span>
+                            <?php esc_html_e('Quick Start Demos', 'tablecrafter-wp-data-tables'); ?>
+                        </h2>
+                        <p style="margin-bottom: 15px; color: #155e75; font-weight: 500;">
+                            <?php esc_html_e('Click any dataset below to instantly load a demo table:', 'tablecrafter-wp-data-tables'); ?>
+                        </p>
+                        <ul class="tc-demo-links" style="margin: 0;">
+                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                                    data-url="<?php echo esc_url($sheets_url); ?>">📑
+                                    <?php esc_html_e('Student Grades (Google Sheet)', 'tablecrafter-wp-data-tables'); ?></a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                                    data-url="<?php echo esc_url($users_url); ?>">👤
+                                    <?php esc_html_e('User Directory (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                                    data-url="<?php echo esc_url($products_url); ?>">📦
+                                    <?php esc_html_e('Product Inventory (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                                    data-url="<?php echo esc_url($employees_url); ?>">📊
+                                    <?php esc_html_e('Employee List (CSV)', 'tablecrafter-wp-data-tables'); ?></a></li>
+                            <li style="margin-bottom: 0;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                                    data-url="<?php echo esc_url($metrics_url); ?>">📈
+                                    <?php esc_html_e('Sales Metrics (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
+                        </ul>
+                        <div style="margin-top: 12px; padding: 8px 12px; background: rgba(8, 145, 178, 0.1); border-radius: 6px; border: 1px dashed #0891b2;">
+                            <p style="margin: 0; font-size: 12px; color: #155e75; text-align: center;">
+                                ↑ <strong>Instant Demo:</strong> No setup required! Each dataset shows different table features.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin: 0; max-width: none;">
                         <h2><?php esc_html_e('Usage', 'tablecrafter-wp-data-tables'); ?></h2>
                         <p><?php esc_html_e('Copy the shortcode below to use this table:', 'tablecrafter-wp-data-tables'); ?>
                         </p>
                         <code id="tc-shortcode-display"
-                            style="display: block; padding: 10px; background: #f0f0f1; margin: 10px 0;">[tablecrafter source="..."]</code>
+                            style="display: block; padding: 10px; background: #f0f0f1; margin: 10px 0; word-break: break-all;">[tablecrafter source="..."]</code>
                         <button id="tc-copy-shortcode" class="button button-secondary"
                             style="width: 100%;"><?php esc_html_e('Copy Shortcode', 'tablecrafter-wp-data-tables'); ?></button>
                     </div>
-
-                    <div class="card" style="margin: 0; max-width: none;">
-                        <h2><?php esc_html_e('Quick Demos', 'tablecrafter-wp-data-tables'); ?></h2>
-                        <p><?php esc_html_e('Click a dataset to load:', 'tablecrafter-wp-data-tables'); ?></p>
-                        <ul class="tc-demo-links" style="margin: 0;">
-                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;"
-                                    data-url="<?php echo esc_url($users_url); ?>">👤
-                                    <?php esc_html_e('User Directory (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;"
-                                    data-url="<?php echo esc_url($products_url); ?>">📦
-                                    <?php esc_html_e('Product Inventory (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;"
-                                    data-url="<?php echo esc_url($metrics_url); ?>">📈
-                                    <?php esc_html_e('Sales Metrics (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;"
-                                    data-url="<?php echo esc_url($employees_url); ?>">📊
-                                    <?php esc_html_e('Employee List (CSV)', 'tablecrafter-wp-data-tables'); ?></a></li>
-                            <li style="margin-bottom: 0;"><a href="#" class="button" style="width: 100%; text-align: left;"
-                                    data-url="<?php echo esc_url($sheets_url); ?>">📑
-                                    <?php esc_html_e('Project Status (Google Sheet)', 'tablecrafter-wp-data-tables'); ?></a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
 
-                <div class="tc-preview-area" style="flex: 1; min-width: 0;">
+                <div class="tc-preview-area" style="flex: 1; min-width: 600px; max-width: none;">
                     <div class="card"
                         style="margin: 0; max-width: none; min-height: 500px; display: flex; flex-direction: column;">
-                        <h2 style="border-bottom: 1px solid #f0f0f1; padding-bottom: 15px; margin-bottom: 15px; margin-top: 0;">
-                            <?php esc_html_e('Live Preview', 'tablecrafter-wp-data-tables'); ?>
+                        <h2 style="border-bottom: 1px solid #f0f0f1; padding-bottom: 15px; margin-bottom: 15px; margin-top: 0; display: flex; align-items: center; justify-content: space-between;">
+                            <span><?php esc_html_e('Live Preview', 'tablecrafter-wp-data-tables'); ?></span>
+                            <small style="font-weight: normal; color: #666; font-size: 13px;">Try search, sort, filters & export</small>
                         </h2>
 
                         <div id="tc-preview-wrap" style="flex: 1; overflow: auto; background: #fff;">
                             <div id="tc-preview-container"
-                                style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666;">
+                                style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666; min-height: 400px;">
                                 <div style="text-align: center;">
                                     <span class="dashicons dashicons-editor-table"
                                         style="font-size: 48px; width: 48px; height: 48px; color: #ddd;"></span>
-                                    <p><?php esc_html_e('Select a demo or enter a URL to generate a table.', 'tablecrafter-wp-data-tables'); ?>
+                                    <p style="margin: 16px 0 8px; font-size: 16px; color: #333;">
+                                        <?php esc_html_e('Ready to generate your table!', 'tablecrafter-wp-data-tables'); ?>
+                                    </p>
+                                    <p style="margin: 0; font-size: 14px; color: #666;">
+                                        <?php esc_html_e('👈 Click a Quick Start Demo or enter your own URL', 'tablecrafter-wp-data-tables'); ?>
                                     </p>
                                 </div>
                             </div>
