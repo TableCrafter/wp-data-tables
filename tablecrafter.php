@@ -37,6 +37,10 @@ if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-performance-optimizer.php
     require_once TABLECRAFTER_PATH . 'includes/class-tc-performance-optimizer.php';
 }
 
+if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-elementor-widget.php')) {
+    require_once TABLECRAFTER_PATH . 'includes/class-tc-elementor-widget.php';
+}
+
 
 /**
  * Main TableCrafter Class
@@ -100,6 +104,10 @@ class TableCrafter
         add_action('wp_ajax_nopriv_tc_export_data', array($this, 'ajax_export_data'));
         add_action('wp_ajax_tc_download_export', array($this, 'ajax_download_export'));
         add_action('wp_ajax_nopriv_tc_download_export', array($this, 'ajax_download_export'));
+
+        // Elementor Live Preview Handler
+        add_action('wp_ajax_tc_elementor_preview', array($this, 'ajax_elementor_preview'));
+        add_action('wp_ajax_nopriv_tc_elementor_preview', array($this, 'ajax_elementor_preview'));
 
         if (!wp_next_scheduled('tc_refresher_cron')) {
             wp_schedule_event(time(), 'hourly', 'tc_refresher_cron');
@@ -352,6 +360,20 @@ class TableCrafter
             array(),
             TABLECRAFTER_VERSION
         );
+
+        // Elementor preview script
+        wp_register_script(
+            'tc-elementor-preview',
+            TABLECRAFTER_URL . 'assets/js/elementor-preview.js',
+            array('jquery', 'tablecrafter-lib'),
+            TABLECRAFTER_VERSION,
+            true
+        );
+
+        wp_localize_script('tc-elementor-preview', 'tablecrafterData', array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('tc_proxy_nonce')
+        ));
     }
 
     /**
@@ -1610,6 +1632,81 @@ class TableCrafter
         delete_transient('tc_export_' . $export_id);
 
         exit;
+    }
+
+    /**
+     * Handle Elementor Live Preview AJAX Request
+     * 
+     * Fetches and processes data specifically for Elementor editor preview.
+     * Optimized for preview performance with row limiting and caching.
+     * 
+     * @return void
+     */
+    public function ajax_elementor_preview(): void
+    {
+        // Verify nonce
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'tc_proxy_nonce')) {
+            wp_send_json_error('Invalid nonce');
+            return;
+        }
+
+        // Check permissions (allow edit_posts for editors working with Elementor)
+        if (!current_user_can('edit_posts') && !current_user_can('manage_options')) {
+            wp_send_json_error('Insufficient permissions');
+            return;
+        }
+
+        // Get preview parameters
+        $source = isset($_POST['source']) ? esc_url_raw(wp_unslash($_POST['source'])) : '';
+        $root = isset($_POST['root']) ? sanitize_text_field(wp_unslash($_POST['root'])) : '';
+        $include = isset($_POST['include']) ? sanitize_text_field(wp_unslash($_POST['include'])) : '';
+        $exclude = isset($_POST['exclude']) ? sanitize_text_field(wp_unslash($_POST['exclude'])) : '';
+        $preview_rows = isset($_POST['preview_rows']) ? intval($_POST['preview_rows']) : 5;
+
+        // Validate required fields
+        if (empty($source)) {
+            wp_send_json_error('Source URL is required');
+            return;
+        }
+
+        // Limit preview rows for performance
+        $preview_rows = max(1, min(25, $preview_rows));
+
+        try {
+            // Build preview attributes
+            $preview_atts = array(
+                'source' => $source,
+                'root' => $root,
+                'include' => $include,
+                'exclude' => $exclude,
+                'search' => false,
+                'filters' => false,
+                'export' => false,
+                'per_page' => 0, // No pagination in preview
+                'sort' => ''
+            );
+
+            // Fetch and process data
+            $result = $this->fetch_and_render_php($preview_atts);
+
+            if (isset($result['error'])) {
+                wp_send_json_error($result['error']);
+                return;
+            }
+
+            if (!isset($result['data']) || !is_array($result['data'])) {
+                wp_send_json_error('Invalid data structure');
+                return;
+            }
+
+            // Limit data for preview performance
+            $preview_data = array_slice($result['data'], 0, $preview_rows);
+
+            wp_send_json_success($preview_data);
+
+        } catch (Exception $e) {
+            wp_send_json_error('Preview generation failed: ' . $e->getMessage());
+        }
     }
 
     /**
