@@ -1,8 +1,8 @@
 # 🚀 TableCrafter: WordPress Data Tables & Dynamic Content Plugin
 
-**🔄 NEW v2.7.0: Smart Auto-Refresh for Live Dashboards!**
+**🎨 NEW v3.1.1: Elementor Live Preview Integration!**
 
-**Transform any Google Sheet, JSON API, or CSV into beautiful, responsive WordPress data tables. Now with intelligent auto-refresh that transforms static tables into dynamic dashboards with configurable intervals and smart user interaction detection.**
+**The ONLY WordPress table plugin with true live preview in Elementor editor! Transform any Google Sheet, JSON API, or CSV into beautiful, responsive WordPress data tables. Now professional designers can see actual data while building - no more preview/publish cycles!**
 
 [![Try Live Demo](https://img.shields.io/badge/Try%20Live%20Demo-TasteWP-blue?logo=wordpress)](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
 [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/tablecrafter-wp-data-tables?logo=wordpress)](https://wordpress.org/plugins/tablecrafter-wp-data-tables/)
@@ -10,19 +10,19 @@
 [![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/r/tablecrafter-wp-data-tables?logo=wordpress)](https://wordpress.org/plugins/tablecrafter-wp-data-tables/)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2+-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
 
-## 🔄 **NEW v2.7.0: Smart Auto-Refresh System!**
+## 🎨 **NEW v3.1.1: Elementor Live Preview Revolution!**
 
-### 🚀 **Live Dashboard Transformation**
-- **Configurable Auto-Refresh:** Set any interval from 10 seconds to 24 hours for real-time data updates
-- **Smart Interaction Pausing:** Automatically pauses refresh during user interactions (sorting, filtering, scrolling)
-- **Visual Refresh Controls:** Pause/resume buttons, countdown timers, and "last updated" timestamps
-- **State Preservation:** Maintains user's current page, filters, search terms, and sort order during refresh
+### 🚀 **Professional Designer Experience**
+- **Live Data Preview:** See actual table data while designing in Elementor editor - WYSIWYG perfection!
+- **Performance Optimized:** Smart row limiting ensures smooth editor experience with large datasets
+- **Feature Indicators:** Visual badges show enabled features (search, filters, export, auto-refresh)
+- **Zero Friction Workflow:** Eliminates preview/publish cycles - design with confidence!
 
-### 🎛️ **Complete Control & Integration**
-- **Gutenberg Block Controls:** Full auto-refresh configuration in block editor sidebar
-- **Shortcode Parameters:** Complete control via shortcode attributes for any page builder
-- **Error Handling:** Robust retry logic with exponential backoff and graceful degradation
-- **Performance Optimized:** Background refresh without disrupting user experience
+### 🎛️ **Advanced Elementor Integration**
+- **Real-time Configuration:** All settings update live in editor preview
+- **Error Handling:** Graceful fallbacks with helpful troubleshooting messages
+- **Security First:** Comprehensive validation and permission checks
+- **Modern APIs:** Updated to use latest Elementor standards (deprecated classes fixed)
 
 ### 💼 **Perfect for Live Data**
 - **Financial Dashboards:** Stock prices, trading volumes, portfolio tracking
@@ -31,11 +31,11 @@
 - **SaaS Dashboards:** User analytics, system metrics, performance KPIs
 
 ### 🚀 Recent Updates
-- **v2.7.1:** Enhanced block editor experience with redesigned professional icon and improved descriptions
+- **v3.1.1:** 🎨 **MAJOR: Elementor Live Preview** - WYSIWYG table editing with real data in editor
+- **v3.1.0:** Virtual Scrolling Performance Engine - 10,000+ rows with sub-2-second load times
+- **v3.0.0:** Full WCAG 2.1 AA Accessibility Compliance - Enterprise-ready accessibility features
+- **v2.8.0:** Intelligent Large Dataset Handling - Enhanced pagination and memory management
 - **v2.7.0:** Smart Auto-Refresh System with intelligent pausing and visual controls
-- **v2.6.0:** Interactive Welcome Screen with live feature toggles and instant demos
-- **v2.5.0:** Google Sheets Integration and CSV Data Source support
-- **v2.4.4:** Enhanced visual sorting with accessibility improvements
 
 ---
 

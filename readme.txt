@@ -18,6 +18,8 @@ Transform JSON APIs, Google Sheets & CSV into fully accessible WordPress tables.
 
 ### 🚀 Why TableCrafter is the Best WordPress Table Plugin
 
+**🎨 Professional Elementor Integration** - The ONLY table plugin with true live preview in Elementor editor! Design tables with real data, no guesswork. Perfect for agencies and professional designers working with clients.
+
 **Zero Database Impact** - Unlike other WordPress table plugins that store data in your database, TableCrafter fetches data directly from your sources, keeping your WordPress installation clean and fast.
 
 **SEO-Optimized Tables** - Every table is rendered server-side with proper HTML structure, making all your data crawlable by Google, Bing, and other search engines for better rankings.
@@ -26,12 +28,13 @@ Transform JSON APIs, Google Sheets & CSV into fully accessible WordPress tables.
 
 **Mobile-First Design** - Tables automatically transform into responsive card layouts on mobile devices, ensuring perfect user experience across all screen sizes.
 
-### 🛠️ Key Features for WordPress Developers
+### 🛠️ Key Features for WordPress Developers & Designers
 
 *   **🎯 Data Integration:** Connect to Google Sheets, REST APIs, JSON endpoints, or CSV files with zero coding
 *   **🔄 Smart Auto-Refresh:** Live data updates with configurable intervals, smart interaction pausing, and visual indicators
 *   **⚡ Live Search & Sorting:** Real-time data filtering and multi-column sorting that works instantly in both the **Gutenberg Block** and **Shortcodes**.
 *   **📱 Responsive Design:** Mobile-optimized card view with automatic reflow for small screens  
+*   **🎨 Elementor Pro Integration:** WYSIWYG table design with live data preview directly in Elementor editor! No more preview/publish cycles - see your actual data while designing. Includes visual controls for all features, responsive settings, and real-time configuration.
 *   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls for data sources, auto-refresh settings, and display options. Features live preview directly in the editor.
 *   **🛠️ Shortcode Builder:** Built-in generator in the admin dashboard. Configure your table visually, preview real-time results, and copy the ready-to-use shortcode with one click.
 *   **📄 Smart Pagination:** Client-side pagination for large datasets with customizable page sizes
@@ -124,10 +127,12 @@ Transform JSON APIs, Google Sheets & CSV into fully accessible WordPress tables.
 ### ✨ Next Steps After Installation
 1. **Interactive Learning**: Use the welcome screen to explore features with live demo data.
 2. **Create Your First Table**: 
+   - **🎨 Elementor Users**: Add "TableCrafter Data Table" widget - features LIVE PREVIEW with real data!
    - **Block Editor Users**: Add a "TableCrafter" block to any page/post
    - **Shortcode Users**: Visit **TableCrafter > Settings** to use the visual shortcode builder
 3. **Connect Your Data**: Paste any public JSON URL, Google Sheet link, or CSV file URL as your data source.
 4. **Customize**: Enable search, filters, auto-refresh, and export options to match your needs.
+5. **🎨 Elementor Pro Tip**: Enjoy the ONLY table plugin with true WYSIWYG editing - see your data live while designing!
 
 ### 🔧 For Developers
 - **Theme Integration**: Use `[tablecrafter]` shortcodes in template files with PHP: `echo do_shortcode('[tablecrafter source="..."]');`
@@ -219,6 +224,9 @@ Need a specific feature, a custom API integration, or a unique table layout? Con
 
 
 == Frequently Asked Questions ==
+
+= Does this work with Elementor? =
+YES! TableCrafter features the **ONLY true live preview** for Elementor users. Unlike other table plugins, you can see your actual data while designing in the Elementor editor - no more preview/publish cycles! Add the "TableCrafter Data Table" widget and enjoy WYSIWYG table editing with real-time data preview, feature indicators, and performance optimization.
 
 = Do you offer Gravity Form Integration? =
 Yes! We have a dedicated premium solution called **Advanced Data Tables for Gravity Forms** (formerly Gravity Tables). It adds frontend editing, advanced filtering, and bulk operations to your Gravity Forms entries.
