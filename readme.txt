@@ -18,7 +18,11 @@ Transform JSON APIs, Google Sheets & CSV into fully accessible WordPress tables.
 
 ### 🚀 Why TableCrafter is the Best WordPress Table Plugin
 
+**🌍 UNIVERSAL WORDPRESS COMPATIBILITY** - TableCrafter works with EVERY single WordPress website ever created! Native Gutenberg block integration ensures perfect compatibility with all modern WordPress sites, while our powerful shortcode system supports every classic theme back to WordPress 3.0. Whether your client uses the latest block themes or a 10-year-old custom theme, TableCrafter just works.
+
 **🎨 Professional Elementor Integration** - The ONLY table plugin with true live preview in Elementor editor! Design tables with real data, no guesswork. Perfect for agencies and professional designers working with clients.
+
+**🎯 Three Ways to Win** - Gutenberg Block for modern sites, Shortcodes for legacy themes, and Elementor Widget for design professionals. No other table plugin offers this level of flexibility. Your investment is future-proof regardless of how WordPress evolves.
 
 **Zero Database Impact** - Unlike other WordPress table plugins that store data in your database, TableCrafter fetches data directly from your sources, keeping your WordPress installation clean and fast.
 
@@ -32,11 +36,12 @@ Transform JSON APIs, Google Sheets & CSV into fully accessible WordPress tables.
 
 *   **🎯 Data Integration:** Connect to Google Sheets, REST APIs, JSON endpoints, or CSV files with zero coding
 *   **🔄 Smart Auto-Refresh:** Live data updates with configurable intervals, smart interaction pausing, and visual indicators
-*   **⚡ Live Search & Sorting:** Real-time data filtering and multi-column sorting that works instantly in both the **Gutenberg Block** and **Shortcodes**.
+*   **🌍 WORKS WITH EVERY WORDPRESS SITE:** Three powerful integration methods ensure 100% compatibility - Gutenberg Block (WordPress 5.0+), Universal Shortcodes (WordPress 3.0+), and Elementor Widget. No theme conflicts, no version incompatibilities, no exceptions!
+*   **⚡ Live Search & Sorting:** Real-time data filtering and multi-column sorting that works instantly across all integration methods - **Gutenberg Block**, **Shortcodes**, and **Elementor Widget**.
 *   **📱 Responsive Design:** Mobile-optimized card view with automatic reflow for small screens  
 *   **🎨 Elementor Pro Integration:** WYSIWYG table design with live data preview directly in Elementor editor! No more preview/publish cycles - see your actual data while designing. Includes visual controls for all features, responsive settings, and real-time configuration.
-*   **🔧 Gutenberg Block:** Native WordPress block editor integration with visual controls for data sources, auto-refresh settings, and display options. Features live preview directly in the editor.
-*   **🛠️ Shortcode Builder:** Built-in generator in the admin dashboard. Configure your table visually, preview real-time results, and copy the ready-to-use shortcode with one click.
+*   **🔧 Native Gutenberg Block:** Built for the modern WordPress editor with visual sidebar controls, live preview, and instant configuration. Perfect for WordPress 5.0+ sites and all block-based themes.
+*   **🛠️ Powerful Shortcode System:** Built-in visual generator in the admin dashboard works with ANY WordPress theme since 2010. Configure your table visually, preview real-time results, and copy the ready-to-use shortcode with one click. Perfect for classic themes, custom themes, and legacy WordPress sites.
 *   **📄 Smart Pagination:** Client-side pagination for large datasets with customizable page sizes
 *   **🎨 Custom Styling:** CSS-friendly with variables and hooks for complete design control
 *   **🔒 Security First:** Built-in SSRF protection and WordPress capability-based authorization
@@ -124,15 +129,16 @@ Transform JSON APIs, Google Sheets & CSV into fully accessible WordPress tables.
 3. **Activate**: Click **Activate Plugin** after successful upload.
 4. **Getting Started**: Visit **TableCrafter** in your admin sidebar for tutorials and shortcode generation.
 
-### ✨ Next Steps After Installation
+### ✨ Next Steps After Installation (Works with ANY WordPress Setup!)
 1. **Interactive Learning**: Use the welcome screen to explore features with live demo data.
-2. **Create Your First Table**: 
+2. **Choose Your Perfect Integration Method**: 
    - **🎨 Elementor Users**: Add "TableCrafter Data Table" widget - features LIVE PREVIEW with real data!
-   - **Block Editor Users**: Add a "TableCrafter" block to any page/post
-   - **Shortcode Users**: Visit **TableCrafter > Settings** to use the visual shortcode builder
+   - **🔧 Modern WordPress (5.0+)**: Add a "TableCrafter" block to any page/post using the native Gutenberg editor
+   - **🛠️ Classic Themes & Legacy Sites**: Use our powerful shortcode system - works with ANY WordPress theme back to version 3.0!
+   - **🌍 Universal Guarantee**: Whatever your WordPress setup, TableCrafter has you covered with THREE different integration methods
 3. **Connect Your Data**: Paste any public JSON URL, Google Sheet link, or CSV file URL as your data source.
 4. **Customize**: Enable search, filters, auto-refresh, and export options to match your needs.
-5. **🎨 Elementor Pro Tip**: Enjoy the ONLY table plugin with true WYSIWYG editing - see your data live while designing!
+5. **🚀 Future-Proof Investment**: No matter how WordPress evolves, your tables will always work - we support every integration method!
 
 ### 🔧 For Developers
 - **Theme Integration**: Use `[tablecrafter]` shortcodes in template files with PHP: `echo do_shortcode('[tablecrafter source="..."]');`

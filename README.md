@@ -1,8 +1,8 @@
 # 🚀 TableCrafter: WordPress Data Tables & Dynamic Content Plugin
 
-**🎨 NEW v3.1.1: Elementor Live Preview Integration!**
+**🌍 WORKS WITH EVERY WORDPRESS SITE EVER CREATED + Elementor Live Preview!**
 
-**The ONLY WordPress table plugin with true live preview in Elementor editor! Transform any Google Sheet, JSON API, or CSV into beautiful, responsive WordPress data tables. Now professional designers can see actual data while building - no more preview/publish cycles!**
+**The ONLY WordPress table plugin with UNIVERSAL compatibility! Three powerful integration methods (Gutenberg Block, Universal Shortcodes, Elementor Widget) ensure TableCrafter works with EVERY WordPress theme and version since 3.0. Plus exclusive live preview in Elementor editor! Transform any Google Sheet, JSON API, or CSV into beautiful, responsive WordPress data tables - regardless of your WordPress setup!**
 
 [![Try Live Demo](https://img.shields.io/badge/Try%20Live%20Demo-TasteWP-blue?logo=wordpress)](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
 [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/tablecrafter-wp-data-tables?logo=wordpress)](https://wordpress.org/plugins/tablecrafter-wp-data-tables/)
