@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 3.1.2
+Stable tag: 3.1.3
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -271,6 +271,13 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 3.1.3 =
+* 📈 **MARKETING ENHANCEMENT: Emphasized Universal WordPress Compatibility**
+* **Key Selling Point:** Now prominently features universal compatibility as primary competitive advantage
+* **Three Integration Methods:** Gutenberg Block (WordPress 5.0+), Universal Shortcodes (WordPress 3.0+), and Elementor Widget
+* **Future-Proof Messaging:** Enhanced marketing language about investment protection and WordPress evolution
+* **Agency Appeal:** Perfect positioning for agencies serving diverse client WordPress environments
+* **Competitive Differentiation:** No other table plugin offers this level of compatibility across WordPress versions
 = 3.1.2 =
 * 🚨 **CRITICAL HOTFIX: Fixed Fatal Error on Sites Without Elementor**
 * **Emergency Fix:** Elementor widget file was being loaded unconditionally, causing fatal errors on sites without Elementor installed
