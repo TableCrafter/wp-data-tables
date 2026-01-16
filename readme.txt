@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 3.1.3
+Stable tag: 3.1.4
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -271,6 +271,13 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 3.1.4 =
+* 🎨 **UI/UX IMPROVEMENTS: Enhanced Admin Preview Experience**
+* **Fixed:** Prevented table column squishing in Live Preview section with proper min-width constraints
+* **Enhanced:** Moved Quick Start Demos higher up in sidebar for better visibility and discoverability
+* **Improved:** Table responsive behavior in admin preview with better column sizing and text wrapping
+* **Better Design:** Added gradient backgrounds and visual enhancements to Quick Start Demos section
+
 = 3.1.3 =
 * 📈 **MARKETING ENHANCEMENT: Emphasized Universal WordPress Compatibility**
 * **Key Selling Point:** Now prominently features universal compatibility as primary competitive advantage

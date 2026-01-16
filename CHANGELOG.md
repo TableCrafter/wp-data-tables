@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.1.4] - 2026-01-16
+### 🎨 UI/UX IMPROVEMENTS: Enhanced Admin Preview Experience
+- **Fixed Column Squishing:** Prevented table columns from being compressed in Live Preview section with proper min-width constraints
+- **Enhanced Quick Start Demos:** Moved Quick Start Demos higher up in sidebar for better visibility and discoverability
+- **Improved Table Layout:** Enhanced responsive behavior in admin preview with better column sizing and text wrapping
+- **Visual Enhancements:** Added gradient backgrounds and improved styling for Quick Start Demos section
+- **Better User Flow:** Optimized admin interface layout to guide users more effectively through table configuration
+
+### 📊 Business Impact
+- **Improved User Experience:** Eliminates confusion from squeezed table columns that made data unreadable
+- **Better Feature Discovery:** Moving Quick Demos higher reduces time-to-value for new users
+- **Professional Appearance:** Enhanced UI design improves plugin perception and user confidence
+- **Reduced Support Burden:** Clearer interface reduces user confusion and support ticket volume
+
 ## [3.1.2] - 2026-01-16
 ### 🚨 CRITICAL HOTFIX: Elementor Compatibility Fix
 - **Fatal Error Fix:** Resolved critical issue where plugin would break sites without Elementor installed
