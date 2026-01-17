@@ -8,7 +8,7 @@ Requires PHP: 7.4
 License: GPLv2 or later
 
 
-Transform JSON APIs, Google Sheets & CSV into fully accessible WordPress tables. Mobile-first responsive design with touch gestures and WCAG 2.1 compliance.
+Transform JSON APIs, Google Sheets & CSV into accessible WordPress tables. Mobile-first design with touch gestures and WCAG 2.1 compliance.
 
 == Description ==
 
