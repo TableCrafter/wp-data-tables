@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.2.1] - 2026-01-17
+### 📋 DOCUMENTATION ENHANCEMENT: Improved WCAG Compliance Details
+- **Enhanced WCAG Documentation:** Added comprehensive WCAG 2.1 AA compliance details including semantic ARIA labels, high contrast support, and accessibility standards
+- **Enterprise Focus:** Improved documentation specifically for enterprise and government organizations requiring strict accessibility compliance
+- **Feature Clarity:** Better description of accessibility features to help users understand compliance capabilities
+
+### 📊 Business Impact
+- **Market Expansion:** Better accessibility documentation opens doors to enterprise and government contracts
+- **Compliance Confidence:** Clear accessibility features reduce procurement friction for regulated organizations
+- **Professional Positioning:** Enhanced technical documentation improves plugin credibility and perceived value
+
 ## [3.1.4] - 2026-01-16
 ### 🎨 UI/UX IMPROVEMENTS: Enhanced Admin Preview Experience
 - **Fixed Column Squishing:** Prevented table columns from being compressed in Live Preview section with proper min-width constraints

@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 3.2.0
+Stable tag: 3.2.1
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -22,7 +22,7 @@ Transform JSON APIs, Google Sheets & CSV into accessible WordPress tables. Mobil
 
 **👆 TOUCH GESTURE SYSTEM** - Intuitive swipe gestures for mobile card interactions. Right swipe to expand/collapse, left swipe for quick actions, with visual feedback and haptic support on supported devices. The only WordPress table plugin with native touch gesture support.
 
-**♿ WCAG 2.1 AA ACCESSIBILITY COMPLIANCE** - Full accessibility compliance with 44px minimum touch targets, screen reader optimization, and keyboard navigation. Perfect for enterprises requiring accessibility standards compliance.
+**♿ WCAG 2.1 AA ACCESSIBILITY COMPLIANCE** - Full accessibility compliance with 44px minimum touch targets, semantic ARIA labels, screen reader optimization, high contrast support, and comprehensive keyboard navigation. Perfect for enterprises and government organizations requiring strict accessibility standards compliance.
 
 **⚡ MOBILE PERFORMANCE OPTIMIZED** - 40%+ performance improvement on mobile devices with <150ms touch response times. Reduced memory footprint and optimized rendering for smooth 60fps interactions on all mobile devices.
 
@@ -281,6 +281,11 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 3.2.1 =
+* 📋 **DOCUMENTATION ENHANCEMENT: Improved WCAG Compliance Details**
+* **Enhanced:** More detailed WCAG 2.1 AA compliance documentation with semantic ARIA labels and high contrast support
+* **Improved:** Better accessibility feature descriptions for enterprise and government use cases
+
 = 3.2.0 =
 * 📱 **MAJOR MOBILE UX ENHANCEMENT: Mobile-First Responsive Design**
 * **NEW:** Complete mobile-first responsive design with card-based layouts for mobile devices
@@ -764,6 +769,9 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 * Initial release.
 
 == Upgrade Notice ==
+
+= 3.2.1 =
+Enhanced WCAG compliance documentation with detailed accessibility features for enterprise and government use cases.
 
 = 3.2.0 =
 Major mobile user experience enhancement with mobile-first responsive design, touch gestures, and WCAG 2.1 accessibility compliance. 40%+ performance improvement on mobile devices.
