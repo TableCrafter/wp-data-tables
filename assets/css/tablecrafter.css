@@ -869,11 +869,91 @@
   font-size: 14px;
 }
 
-/* === Responsive Design === */
+/* === Enhanced Mobile-First Responsive Design === */
+
+/* Large Mobile/Small Tablet (768px and below) */
 @media (max-width: 768px) {
-  .tc-filters-row {
-    grid-template-columns: 1fr;
+  .tc-wrapper {
+    padding: 8px;
+  }
+
+  /* Enhanced Table Mobile Experience */
+  .tc-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #ccc transparent; /* Firefox */
+  }
+
+  /* Webkit scrollbar styling */
+  .tc-table-container::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .tc-table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  .tc-table-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+
+  .tc-table-container::-webkit-scrollbar-thumb:hover {
+    background: #999;
+  }
+
+  /* Mobile-optimized table cells */
+  .tc-table th,
+  .tc-table td {
+    padding: 10px 12px;
+    min-width: 120px; /* Prevent excessive squishing */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Improved mobile table headers */
+  .tc-table th {
+    font-size: 14px;
+    font-weight: 600;
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  /* Better mobile cell content */
+  .tc-table td {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  /* Touch-friendly sortable headers */
+  .tc-table th.tc-sortable {
+    min-height: 44px; /* WCAG touch target minimum */
+    padding: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* Enhanced mobile cards */
+  .tc-cards-container {
+    display: grid;
     gap: 12px;
+    padding: 0 4px;
+  }
+
+  .tc-card {
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .tc-card:active {
+    transform: scale(0.98); /* Touch feedback */
   }
 
   .tc-card-field {
@@ -883,17 +963,58 @@
 
   .tc-card-label {
     grid-row: 1;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   .tc-card-value {
     grid-row: 2;
+    font-size: 15px;
+    line-height: 1.4;
+    word-break: break-word;
   }
 
-  .tc-pagination {
-    flex-direction: column;
+  /* Mobile-optimized filters */
+  .tc-filters-row {
+    grid-template-columns: 1fr;
     gap: 12px;
   }
 
+  .tc-filter-item {
+    width: 100%;
+  }
+
+  .tc-filter-item input,
+  .tc-filter-item select {
+    width: 100%;
+    min-height: 44px; /* Touch-friendly */
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 12px;
+  }
+
+  /* Mobile pagination */
+  .tc-pagination {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .tc-pagination-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .tc-pagination button {
+    min-height: 44px;
+    min-width: 44px;
+    font-size: 14px;
+  }
+
+  /* Mobile bulk controls */
   .tc-bulk-controls {
     flex-direction: column;
     align-items: stretch;
@@ -902,27 +1023,202 @@
 
   .tc-bulk-actions {
     justify-content: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .tc-wrapper {
-    font-size: 13px;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
-  .tc-card {
-    padding: 12px;
+  .tc-bulk-actions button {
+    min-height: 44px;
+    flex: 1 1 auto;
+    min-width: 120px;
   }
 
+  /* Mobile search */
+  .tc-global-search input {
+    width: 100%;
+    font-size: 16px; /* Prevents zoom on iOS */
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+
+  /* Mobile export controls */
+  .tc-export-dropdown-wrapper {
+    width: 100%;
+  }
+
+  .tc-export-main-btn {
+    width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .tc-export-dropdown {
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+
+  .tc-export-option {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+
+  /* Modal improvements for mobile */
   .tc-modal {
     margin: 16px;
     width: calc(100% - 32px);
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
   }
 
+  .tc-modal-content {
+    padding: 20px;
+  }
+
+  .tc-modal-close {
+    min-height: 44px;
+    min-width: 44px;
+    font-size: 20px;
+  }
+}
+
+/* Standard Mobile (480px and below) */
+@media (max-width: 480px) {
+  .tc-wrapper {
+    font-size: 14px;
+    padding: 4px;
+  }
+
+  /* Smaller mobile optimizations */
+  .tc-card {
+    padding: 12px;
+    margin-bottom: 8px;
+  }
+
+  .tc-card-header {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .tc-card-value {
+    font-size: 14px;
+  }
+
+  /* Compact table for very small screens */
+  .tc-table th,
+  .tc-table td {
+    padding: 8px 10px;
+    font-size: 13px;
+    min-width: 100px;
+  }
+
+  /* Smaller touch targets acceptable on small screens */
+  .tc-pagination button {
+    min-height: 40px;
+    min-width: 40px;
+    font-size: 13px;
+  }
+
+  .tc-filter-item input,
+  .tc-filter-item select {
+    min-height: 40px;
+    font-size: 15px; /* Still prevents iOS zoom */
+    padding: 10px;
+  }
+
+  /* Compact filter controls */
   .tc-daterange-container,
   .tc-numberrange-container {
     grid-template-columns: 1fr;
     gap: 8px;
+  }
+
+  .tc-daterange-container input,
+  .tc-numberrange-container input {
+    width: 100%;
+    min-height: 40px;
+  }
+
+  /* Compact search on very small screens */
+  .tc-global-search input {
+    min-height: 40px;
+    font-size: 15px;
+    padding: 10px 14px;
+  }
+
+  /* More compact export on tiny screens */
+  .tc-export-main-btn,
+  .tc-export-option {
+    min-height: 40px;
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+}
+
+/* Large Mobile/Phablet (up to 580px) - Enhanced coverage */
+@media (max-width: 580px) {
+  .tc-table-container {
+    border-radius: 4px; /* Smaller border radius for mobile */
+  }
+
+  .tc-card {
+    border-radius: 6px; /* Consistent smaller radius */
+  }
+
+  /* Improved card layout spacing */
+  .tc-cards-container {
+    gap: 10px;
+    padding: 0 2px;
+  }
+}
+
+/* Portrait Tablet (up to 900px) */
+@media (max-width: 900px) and (min-width: 769px) {
+  .tc-table th,
+  .tc-table td {
+    padding: 11px 14px;
+    min-width: 110px;
+  }
+
+  .tc-card {
+    padding: 14px;
+  }
+
+  .tc-filters-row {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+  }
+}
+
+/* Touch Device Optimizations (any touch-capable device) */
+@media (pointer: coarse) {
+  /* Enhance all interactive elements for touch */
+  .tc-sortable,
+  .tc-pagination button,
+  .tc-card-expandable,
+  .tc-filter-item input,
+  .tc-filter-item select,
+  .tc-export-main-btn,
+  .tc-bulk-actions button {
+    min-height: 44px;
+  }
+
+  /* Remove hover states on touch devices */
+  .tc-table tr:hover {
+    background-color: inherit;
+  }
+
+  .tc-card:hover {
+    transform: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Add touch-specific active states */
+  .tc-sortable:active,
+  .tc-pagination button:active,
+  .tc-card-expandable:active {
+    background-color: #e9ecef;
+    transform: scale(0.98);
   }
 }
 
