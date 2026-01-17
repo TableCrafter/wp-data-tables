@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.4.5
+Stable tag: 3.2.0
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -16,7 +16,7 @@ Transform JSON APIs, Google Sheets & CSV into accessible WordPress tables. Mobil
 
 [Try Live Demo](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
 
-### 📱 NEW: Mobile-First Excellence (v2.4.5)
+### 📱 NEW: Mobile-First Excellence (v3.2.0)
 
 **🎯 MOBILE-FIRST RESPONSIVE DESIGN** - Complete mobile-first architecture with card-based layouts optimized for mobile devices. Seamlessly adapts from 320px mobile screens to 4K desktops with intelligent breakpoint system (≤768px mobile, 768-900px tablet, >900px desktop).
 
@@ -281,7 +281,7 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
-= 2.4.5 =
+= 3.2.0 =
 * 📱 **MAJOR MOBILE UX ENHANCEMENT: Mobile-First Responsive Design**
 * **NEW:** Complete mobile-first responsive design with card-based layouts for mobile devices
 * **NEW:** Touch gesture system with swipe detection for mobile card interactions
@@ -765,7 +765,7 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 
 == Upgrade Notice ==
 
-= 2.4.5 =
+= 3.2.0 =
 Major mobile user experience enhancement with mobile-first responsive design, touch gestures, and WCAG 2.1 accessibility compliance. 40%+ performance improvement on mobile devices.
 
 = 2.2.15 =
