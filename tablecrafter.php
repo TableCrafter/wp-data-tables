@@ -1073,7 +1073,9 @@ class TableCrafter
     }
 
     /**
-     * Smart Value Renderer.
+     * Smart Value Renderer with XSS Protection.
+     * 
+     * SECURITY: All user input is properly escaped to prevent XSS vulnerabilities
      * 
      * @param mixed $val Raw data.
      * @return string Sanitized HTML/Value.
@@ -1091,54 +1093,253 @@ class TableCrafter
             return '<span class="tc-badge tc-no">No</span>';
         }
 
-        // 2. Images
-        if (preg_match('/\.(jpeg|jpg|gif|png|webp|svg|bmp)$/i', $str) || strpos($str, 'data:image') === 0) {
-            return sprintf('<img src="%s" style="max-width: 100px; height: auto; display: block;">', esc_url($str));
+        // 2. Images - Enhanced security validation
+        if ($this->is_safe_image_url($str)) {
+            $safe_url = $this->sanitize_image_url($str);
+            if ($safe_url) {
+                return sprintf(
+                    '<img src="%s" style="max-width: 100px; height: auto; display: block;" alt="%s" loading="lazy">',
+                    esc_url($safe_url),
+                    esc_attr('Table image')
+                );
+            }
         }
 
-        // 3. Email Addresses
-        if (filter_var($str, FILTER_VALIDATE_EMAIL)) {
-            return sprintf('<a href="mailto:%s">%s</a>', esc_attr($str), esc_html($str));
+        // 3. Email Addresses - Enhanced validation
+        if (filter_var($str, FILTER_VALIDATE_EMAIL) && strlen($str) <= 254) {
+            return sprintf(
+                '<a href="mailto:%s" title="%s">%s</a>', 
+                esc_attr($str), 
+                esc_attr('Send email to ' . $str),
+                esc_html($str)
+            );
         }
 
-        // 4. ISO Dates (YYYY-MM-DD)
-        if (preg_match('/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2})?/', $str) && strtotime($str)) {
+        // 4. ISO Dates (YYYY-MM-DD) - Enhanced validation
+        if ($this->is_valid_date_string($str)) {
             try {
                 $date = new DateTime($str);
-                return $date->format('M j, Y');
+                $formatted_date = $date->format('M j, Y');
+                return sprintf('<time datetime="%s">%s</time>', esc_attr($str), esc_html($formatted_date));
             } catch (Exception $e) {
-                // Fallback
+                // Fallback to escaped string
             }
         }
 
-        // 5. URLs
-        if (strpos($str, 'http://') === 0 || strpos($str, 'https://') === 0) {
-            return sprintf('<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>', esc_url($str), esc_html($str));
+        // 5. URLs - Enhanced security validation
+        if ($this->is_safe_display_url($str)) {
+            return sprintf(
+                '<a href="%s" target="_blank" rel="noopener noreferrer" title="%s">%s</a>', 
+                esc_url($str),
+                esc_attr('Open link in new window'), 
+                esc_html($this->truncate_url($str))
+            );
         }
 
-        // 6. Arrays (Tags UI)
+        // 6. Arrays (Tags UI) - Enhanced security for nested data
         if (is_array($val)) {
-            if (empty($val))
-                return '';
-
-            // Check if it's an associative array (Object-like)
-            if (array_keys($val) !== range(0, count($val) - 1)) {
-                $display = isset($val['name']) ? $val['name'] : (isset($val['title']) ? $val['title'] : (isset($val['label']) ? $val['label'] : json_encode($val)));
-                return sprintf('<span class="tc-tag">%s</span>', esc_html((string) $display));
-            }
-
-            $tags = array_map(function ($item) {
-                $display = $item;
-                if (is_array($item)) {
-                    $display = isset($item['name']) ? $item['name'] : (isset($item['title']) ? $item['title'] : (isset($item['label']) ? $item['label'] : json_encode($item)));
-                }
-                return sprintf('<span class="tc-tag">%s</span>', esc_html((string) $display));
-            }, $val);
-
-            return '<div class="tc-tag-list">' . implode('', $tags) . '</div>';
+            return $this->render_array_safely($val);
         }
 
+        // 7. Objects - Handle objects safely
+        if (is_object($val)) {
+            return $this->render_object_safely($val);
+        }
+
+        // Default: Always escape HTML
         return esc_html($str);
+    }
+
+    /**
+     * Security helper: Validate image URLs safely
+     * 
+     * @param string $url
+     * @return bool
+     */
+    private function is_safe_image_url(string $url): bool
+    {
+        // Prevent javascript: and data: schemes except safe data:image
+        if (preg_match('/^(javascript|vbscript|data:(?!image\/)):/i', $url)) {
+            return false;
+        }
+
+        // Check for image file extensions
+        if (preg_match('/\.(jpeg|jpg|gif|png|webp|bmp)$/i', $url)) {
+            return true;
+        }
+
+        // Allow safe data:image URLs (but not SVG due to XSS risks)
+        if (preg_match('/^data:image\/(jpeg|jpg|gif|png|webp|bmp);base64,/i', $url)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Security helper: Sanitize image URLs
+     * 
+     * @param string $url
+     * @return string|false
+     */
+    private function sanitize_image_url(string $url)
+    {
+        // Additional validation for data URLs
+        if (strpos($url, 'data:image') === 0) {
+            // Validate base64 data URL format
+            if (preg_match('/^data:image\/(jpeg|jpg|gif|png|webp|bmp);base64,[A-Za-z0-9+\/=]+$/i', $url)) {
+                return $url;
+            }
+            return false;
+        }
+
+        // For regular URLs, use WordPress validation
+        $clean_url = filter_var($url, FILTER_VALIDATE_URL);
+        return $clean_url ? $clean_url : false;
+    }
+
+    /**
+     * Security helper: Validate date strings safely
+     * 
+     * @param string $str
+     * @return bool
+     */
+    private function is_valid_date_string(string $str): bool
+    {
+        // Only allow specific date patterns to prevent injection
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d{3})?Z?)?$/', $str)) {
+            return false;
+        }
+
+        return (bool) strtotime($str);
+    }
+
+    /**
+     * Security helper: Validate URLs safely for XSS prevention
+     * 
+     * @param string $str
+     * @return bool
+     */
+    private function is_safe_display_url(string $str): bool
+    {
+        // Prevent javascript: and other dangerous schemes
+        if (preg_match('/^(javascript|vbscript|data|file|ftp):/i', $str)) {
+            return false;
+        }
+
+        // Only allow http/https
+        if (!preg_match('/^https?:\/\//i', $str)) {
+            return false;
+        }
+
+        // Validate URL format
+        return filter_var($str, FILTER_VALIDATE_URL) !== false;
+    }
+
+    /**
+     * Security helper: Truncate URLs for display
+     * 
+     * @param string $url
+     * @return string
+     */
+    private function truncate_url(string $url): string
+    {
+        if (strlen($url) > 50) {
+            return substr($url, 0, 47) . '...';
+        }
+        return $url;
+    }
+
+    /**
+     * Security helper: Render arrays safely
+     * 
+     * @param array $val
+     * @return string
+     */
+    private function render_array_safely(array $val): string
+    {
+        if (empty($val)) {
+            return '';
+        }
+
+        // Check if it's an associative array (Object-like)
+        if (array_keys($val) !== range(0, count($val) - 1)) {
+            $display = $this->extract_safe_display_value($val);
+            return sprintf('<span class="tc-tag">%s</span>', esc_html($display));
+        }
+
+        // Handle regular arrays
+        $tags = [];
+        $max_items = 10; // Prevent excessive DOM creation
+        $items = array_slice($val, 0, $max_items);
+        
+        foreach ($items as $item) {
+            $display = $this->extract_safe_display_value($item);
+            $tags[] = sprintf('<span class="tc-tag">%s</span>', esc_html($display));
+        }
+
+        $result = '<div class="tc-tag-list">' . implode('', $tags);
+        
+        if (count($val) > $max_items) {
+            $remaining = count($val) - $max_items;
+            $result .= sprintf('<span class="tc-tag tc-more">+%d more</span>', $remaining);
+        }
+        
+        $result .= '</div>';
+        return $result;
+    }
+
+    /**
+     * Security helper: Render objects safely
+     * 
+     * @param object $val
+     * @return string
+     */
+    private function render_object_safely($val): string
+    {
+        // Convert object to array for safe handling
+        $array_val = json_decode(json_encode($val), true);
+        
+        if (!is_array($array_val)) {
+            return esc_html('[Object]');
+        }
+
+        return $this->render_array_safely($array_val);
+    }
+
+    /**
+     * Security helper: Extract safe display value from complex data
+     * 
+     * @param mixed $item
+     * @return string
+     */
+    private function extract_safe_display_value($item): string
+    {
+        if (is_string($item)) {
+            // Limit string length to prevent DOM bloat
+            return strlen($item) > 100 ? substr($item, 0, 97) . '...' : $item;
+        }
+
+        if (is_array($item)) {
+            // Try common display field names
+            $display_fields = ['name', 'title', 'label', 'text', 'value'];
+            foreach ($display_fields as $field) {
+                if (isset($item[$field]) && is_string($item[$field])) {
+                    $value = strlen($item[$field]) > 100 ? substr($item[$field], 0, 97) . '...' : $item[$field];
+                    return $value;
+                }
+            }
+            
+            // Fallback to safe JSON representation
+            return json_encode($item, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+        }
+
+        if (is_object($item)) {
+            return $this->extract_safe_display_value((array) $item);
+        }
+
+        // Convert other types to string safely
+        return (string) $item;
     }
 
     /**

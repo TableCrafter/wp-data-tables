@@ -960,9 +960,15 @@ class TableCrafter {
              // Auto-format value
              const formatted = this.formatValue(displayValue, column.type);
              
-             // Check if formatted result is HTML (simple check: contains tags)
+             // SECURITY: Use safe HTML rendering to prevent XSS
              if (typeof formatted === 'string' && /<[a-z][\s\S]*>/i.test(formatted)) {
-                td.innerHTML = formatted;
+                // Only allow HTML from trusted server-side formatting
+                if (this.isTrustedHTML(formatted)) {
+                   td.innerHTML = formatted;
+                } else {
+                   // Escape potentially dangerous HTML
+                   td.textContent = formatted;
+                }
              } else {
                 td.textContent = formatted;
              }
@@ -2324,7 +2330,12 @@ class TableCrafter {
 
     const exportBtn = document.createElement('button');
     exportBtn.className = 'tc-export-main-btn';
-    exportBtn.innerHTML = 'Export Data <span class="tc-dropdown-arrow">▼</span>';
+    // SECURITY: Use safe DOM creation instead of innerHTML
+    exportBtn.textContent = 'Export Data ';
+    const dropdownArrow = document.createElement('span');
+    dropdownArrow.className = 'tc-dropdown-arrow';
+    dropdownArrow.textContent = '▼';
+    exportBtn.appendChild(dropdownArrow);
     
     const dropdown = document.createElement('div');
     dropdown.className = 'tc-export-dropdown';
@@ -2334,7 +2345,33 @@ class TableCrafter {
     this.config.advancedExport.formats.forEach(format => {
       const option = document.createElement('button');
       option.className = `tc-export-option tc-export-${format}`;
-      option.innerHTML = this.getExportOptionHTML(format);
+      // SECURITY: Use safe DOM creation instead of innerHTML
+      const formatInfo = this.getExportOptionInfo(format);
+      
+      // Create icon span
+      const iconSpan = document.createElement('span');
+      iconSpan.className = 'tc-export-icon';
+      iconSpan.textContent = formatInfo.icon;
+      
+      // Create details div
+      const detailsDiv = document.createElement('div');
+      detailsDiv.className = 'tc-export-details';
+      
+      // Create title div
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'tc-export-title';
+      titleDiv.textContent = formatInfo.title;
+      
+      // Create description div
+      const descDiv = document.createElement('div');
+      descDiv.className = 'tc-export-desc';
+      descDiv.textContent = formatInfo.description;
+      
+      // Assemble structure
+      detailsDiv.appendChild(titleDiv);
+      detailsDiv.appendChild(descDiv);
+      option.appendChild(iconSpan);
+      option.appendChild(detailsDiv);
       option.addEventListener('click', (e) => {
         e.stopPropagation();
         this.handleExportFormat(format);
@@ -2361,9 +2398,9 @@ class TableCrafter {
   }
 
   /**
-   * Get HTML for export option
+   * SECURITY: Get safe export option info (replaces getExportOptionHTML)
    */
-  getExportOptionHTML(format) {
+  getExportOptionInfo(format) {
     const icons = {
       csv: '📄',
       excel: '📊', 
@@ -2375,12 +2412,12 @@ class TableCrafter {
       excel: 'Excel - Advanced spreadsheet with formatting',
       pdf: 'PDF - Professional report format'
     };
-
-    return `<span class="tc-export-icon">${icons[format]}</span>
-            <div class="tc-export-details">
-              <div class="tc-export-title">${format.toUpperCase()}</div>
-              <div class="tc-export-desc">${descriptions[format]}</div>
-            </div>`;
+    
+    return {
+      icon: icons[format] || '📄',
+      title: format.toUpperCase(),
+      description: descriptions[format] || format.toUpperCase()
+    };
   }
 
   /**
@@ -2666,6 +2703,57 @@ class TableCrafter {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  /**
+   * SECURITY: Check if HTML content is trusted (from server-side rendering)
+   * Only allow specific safe HTML patterns
+   */
+  isTrustedHTML(html) {
+    if (typeof html !== 'string') return false;
+    
+    // Allow specific trusted HTML patterns from server-side rendering
+    const trustedPatterns = [
+      /^<span class="tc-badge tc-(yes|no)">(?:Yes|No)<\/span>$/,
+      /^<img src="[^"]*" style="[^"]*" alt="[^"]*" loading="lazy">$/,
+      /^<a href="mailto:[^"]*" title="[^"]*">[^<]*<\/a>$/,
+      /^<time datetime="[^"]*">[^<]*<\/time>$/,
+      /^<a href="https?:\/\/[^"]*" target="_blank" rel="noopener noreferrer" title="[^"]*">[^<]*<\/a>$/,
+      /^<div class="tc-tag-list">(<span class="tc-tag">[^<]*<\/span>)*(<span class="tc-tag tc-more">\+\d+ more<\/span>)?<\/div>$/,
+      /^<span class="tc-tag">[^<]*<\/span>$/
+    ];
+
+    return trustedPatterns.some(pattern => pattern.test(html));
+  }
+
+  /**
+   * SECURITY: Safely set innerHTML with validation
+   */
+  safeSetInnerHTML(element, html) {
+    if (this.isTrustedHTML(html)) {
+      element.innerHTML = html;
+    } else {
+      element.textContent = html;
+    }
+  }
+
+  /**
+   * SECURITY: Create safe DOM element with escaped content
+   */
+  createSafeElement(tagName, content, attributes = {}) {
+    const element = document.createElement(tagName);
+    
+    // Set text content safely
+    if (content) {
+      element.textContent = content;
+    }
+    
+    // Set attributes safely
+    for (const [key, value] of Object.entries(attributes)) {
+      element.setAttribute(key, String(value));
+    }
+    
+    return element;
   }
 
   /**
