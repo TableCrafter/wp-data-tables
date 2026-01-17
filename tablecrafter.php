@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – Data to Beautiful Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: Transform any data source into responsive WordPress tables. WCAG 2.1 compliant, advanced export (Excel/PDF), keyboard navigation, screen readers.
- * Version: 3.0.0
+ * Version: 3.1.4
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '3.0.0');
+define('TABLECRAFTER_VERSION', '3.1.4');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -32,6 +32,17 @@ if (file_exists(TABLECRAFTER_PATH . 'includes/sources/class-tc-csv-source.php'))
 if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-export-handler.php')) {
     require_once TABLECRAFTER_PATH . 'includes/class-tc-export-handler.php';
 }
+
+if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-performance-optimizer.php')) {
+    require_once TABLECRAFTER_PATH . 'includes/class-tc-performance-optimizer.php';
+}
+
+// Load Elementor widget only when Elementor is available
+add_action('elementor/loaded', function() {
+    if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-elementor-widget.php')) {
+        require_once TABLECRAFTER_PATH . 'includes/class-tc-elementor-widget.php';
+    }
+});
 
 
 /**
@@ -96,6 +107,10 @@ class TableCrafter
         add_action('wp_ajax_nopriv_tc_export_data', array($this, 'ajax_export_data'));
         add_action('wp_ajax_tc_download_export', array($this, 'ajax_download_export'));
         add_action('wp_ajax_nopriv_tc_download_export', array($this, 'ajax_download_export'));
+
+        // Elementor Live Preview Handler
+        add_action('wp_ajax_tc_elementor_preview', array($this, 'ajax_elementor_preview'));
+        add_action('wp_ajax_nopriv_tc_elementor_preview', array($this, 'ajax_elementor_preview'));
 
         if (!wp_next_scheduled('tc_refresher_cron')) {
             wp_schedule_event(time(), 'hourly', 'tc_refresher_cron');
@@ -163,7 +178,39 @@ class TableCrafter
 
             <div class="tc-admin-layout" style="display: flex; gap: 20px; margin-top: 20px; align-items: flex-start;">
 
-                <div class="tc-sidebar" style="flex: 0 0 350px;">
+                <div class="tc-sidebar" style="flex: 0 0 380px;">
+                    <div class="card" style="margin: 0 0 20px 0; max-width: none; background: linear-gradient(135deg, #e0f7fa 0%, #f0f9ff 100%); border-left: 4px solid #0891b2;">
+                        <h2 style="color: #0e7490; margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 20px;">🚀</span>
+                            <?php esc_html_e('Quick Start Demos', 'tablecrafter-wp-data-tables'); ?>
+                        </h2>
+                        <p style="margin-bottom: 15px; color: #155e75; font-weight: 500;">
+                            <?php esc_html_e('Click any dataset below to instantly load a demo table:', 'tablecrafter-wp-data-tables'); ?>
+                        </p>
+                        <ul class="tc-demo-links" style="margin: 0;">
+                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                                    data-url="<?php echo esc_url($sheets_url); ?>">📑
+                                    <?php esc_html_e('Student Grades (Google Sheet)', 'tablecrafter-wp-data-tables'); ?></a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                                    data-url="<?php echo esc_url($users_url); ?>">👤
+                                    <?php esc_html_e('User Directory (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                                    data-url="<?php echo esc_url($products_url); ?>">📦
+                                    <?php esc_html_e('Product Inventory (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                                    data-url="<?php echo esc_url($employees_url); ?>">📊
+                                    <?php esc_html_e('Employee List (CSV)', 'tablecrafter-wp-data-tables'); ?></a></li>
+                            <li style="margin-bottom: 0;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                                    data-url="<?php echo esc_url($metrics_url); ?>">📈
+                                    <?php esc_html_e('Sales Metrics (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
+                        </ul>
+                        <div style="margin-top: 12px; padding: 8px 12px; background: rgba(8, 145, 178, 0.1); border-radius: 6px; border: 1px dashed #0891b2;">
+                            <p style="margin: 0; font-size: 12px; color: #155e75; text-align: center;">
+                                ↑ <strong>Instant Demo:</strong> No setup required! Each dataset shows different table features.
+                            </p>
+                        </div>
+                    </div>
+
                     <div class="card" style="margin: 0 0 20px 0; max-width: none;">
                         <h2><?php esc_html_e('Settings', 'tablecrafter-wp-data-tables'); ?></h2>
                         <div style="margin-bottom: 15px;">
@@ -251,54 +298,36 @@ class TableCrafter
                         </div>
                     </div>
 
-                    <div class="card" style="margin: 0 0 20px 0; max-width: none;">
+                    <div class="card" style="margin: 0; max-width: none;">
                         <h2><?php esc_html_e('Usage', 'tablecrafter-wp-data-tables'); ?></h2>
                         <p><?php esc_html_e('Copy the shortcode below to use this table:', 'tablecrafter-wp-data-tables'); ?>
                         </p>
                         <code id="tc-shortcode-display"
-                            style="display: block; padding: 10px; background: #f0f0f1; margin: 10px 0;">[tablecrafter source="..."]</code>
+                            style="display: block; padding: 10px; background: #f0f0f1; margin: 10px 0; word-break: break-all;">[tablecrafter source="..."]</code>
                         <button id="tc-copy-shortcode" class="button button-secondary"
                             style="width: 100%;"><?php esc_html_e('Copy Shortcode', 'tablecrafter-wp-data-tables'); ?></button>
                     </div>
-
-                    <div class="card" style="margin: 0; max-width: none;">
-                        <h2><?php esc_html_e('Quick Demos', 'tablecrafter-wp-data-tables'); ?></h2>
-                        <p><?php esc_html_e('Click a dataset to load:', 'tablecrafter-wp-data-tables'); ?></p>
-                        <ul class="tc-demo-links" style="margin: 0;">
-                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;"
-                                    data-url="<?php echo esc_url($users_url); ?>">👤
-                                    <?php esc_html_e('User Directory (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;"
-                                    data-url="<?php echo esc_url($products_url); ?>">📦
-                                    <?php esc_html_e('Product Inventory (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;"
-                                    data-url="<?php echo esc_url($metrics_url); ?>">📈
-                                    <?php esc_html_e('Sales Metrics (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" class="button" style="width: 100%; text-align: left;"
-                                    data-url="<?php echo esc_url($employees_url); ?>">📊
-                                    <?php esc_html_e('Employee List (CSV)', 'tablecrafter-wp-data-tables'); ?></a></li>
-                            <li style="margin-bottom: 0;"><a href="#" class="button" style="width: 100%; text-align: left;"
-                                    data-url="<?php echo esc_url($sheets_url); ?>">📑
-                                    <?php esc_html_e('Project Status (Google Sheet)', 'tablecrafter-wp-data-tables'); ?></a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
 
-                <div class="tc-preview-area" style="flex: 1; min-width: 0;">
+                <div class="tc-preview-area" style="flex: 1; min-width: 600px; max-width: none;">
                     <div class="card"
                         style="margin: 0; max-width: none; min-height: 500px; display: flex; flex-direction: column;">
-                        <h2 style="border-bottom: 1px solid #f0f0f1; padding-bottom: 15px; margin-bottom: 15px; margin-top: 0;">
-                            <?php esc_html_e('Live Preview', 'tablecrafter-wp-data-tables'); ?>
+                        <h2 style="border-bottom: 1px solid #f0f0f1; padding-bottom: 15px; margin-bottom: 15px; margin-top: 0; display: flex; align-items: center; justify-content: space-between;">
+                            <span><?php esc_html_e('Live Preview', 'tablecrafter-wp-data-tables'); ?></span>
+                            <small style="font-weight: normal; color: #666; font-size: 13px;">Try search, sort, filters & export</small>
                         </h2>
 
                         <div id="tc-preview-wrap" style="flex: 1; overflow: auto; background: #fff;">
                             <div id="tc-preview-container"
-                                style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666;">
+                                style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666; min-height: 400px;">
                                 <div style="text-align: center;">
                                     <span class="dashicons dashicons-editor-table"
                                         style="font-size: 48px; width: 48px; height: 48px; color: #ddd;"></span>
-                                    <p><?php esc_html_e('Select a demo or enter a URL to generate a table.', 'tablecrafter-wp-data-tables'); ?>
+                                    <p style="margin: 16px 0 8px; font-size: 16px; color: #333;">
+                                        <?php esc_html_e('Ready to generate your table!', 'tablecrafter-wp-data-tables'); ?>
+                                    </p>
+                                    <p style="margin: 0; font-size: 14px; color: #666;">
+                                        <?php esc_html_e('👈 Click a Quick Start Demo or enter your own URL', 'tablecrafter-wp-data-tables'); ?>
                                     </p>
                                 </div>
                             </div>
@@ -348,6 +377,20 @@ class TableCrafter
             array(),
             TABLECRAFTER_VERSION
         );
+
+        // Elementor preview script
+        wp_register_script(
+            'tc-elementor-preview',
+            TABLECRAFTER_URL . 'assets/js/elementor-preview.js',
+            array('jquery', 'tablecrafter-lib'),
+            TABLECRAFTER_VERSION,
+            true
+        );
+
+        wp_localize_script('tc-elementor-preview', 'tablecrafterData', array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('tc_proxy_nonce')
+        ));
     }
 
     /**
@@ -1606,6 +1649,81 @@ class TableCrafter
         delete_transient('tc_export_' . $export_id);
 
         exit;
+    }
+
+    /**
+     * Handle Elementor Live Preview AJAX Request
+     * 
+     * Fetches and processes data specifically for Elementor editor preview.
+     * Optimized for preview performance with row limiting and caching.
+     * 
+     * @return void
+     */
+    public function ajax_elementor_preview(): void
+    {
+        // Verify nonce
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'tc_proxy_nonce')) {
+            wp_send_json_error('Invalid nonce');
+            return;
+        }
+
+        // Check permissions (allow edit_posts for editors working with Elementor)
+        if (!current_user_can('edit_posts') && !current_user_can('manage_options')) {
+            wp_send_json_error('Insufficient permissions');
+            return;
+        }
+
+        // Get preview parameters
+        $source = isset($_POST['source']) ? esc_url_raw(wp_unslash($_POST['source'])) : '';
+        $root = isset($_POST['root']) ? sanitize_text_field(wp_unslash($_POST['root'])) : '';
+        $include = isset($_POST['include']) ? sanitize_text_field(wp_unslash($_POST['include'])) : '';
+        $exclude = isset($_POST['exclude']) ? sanitize_text_field(wp_unslash($_POST['exclude'])) : '';
+        $preview_rows = isset($_POST['preview_rows']) ? intval($_POST['preview_rows']) : 5;
+
+        // Validate required fields
+        if (empty($source)) {
+            wp_send_json_error('Source URL is required');
+            return;
+        }
+
+        // Limit preview rows for performance
+        $preview_rows = max(1, min(25, $preview_rows));
+
+        try {
+            // Build preview attributes
+            $preview_atts = array(
+                'source' => $source,
+                'root' => $root,
+                'include' => $include,
+                'exclude' => $exclude,
+                'search' => false,
+                'filters' => false,
+                'export' => false,
+                'per_page' => 0, // No pagination in preview
+                'sort' => ''
+            );
+
+            // Fetch and process data
+            $result = $this->fetch_and_render_php($preview_atts);
+
+            if (isset($result['error'])) {
+                wp_send_json_error($result['error']);
+                return;
+            }
+
+            if (!isset($result['data']) || !is_array($result['data'])) {
+                wp_send_json_error('Invalid data structure');
+                return;
+            }
+
+            // Limit data for preview performance
+            $preview_data = array_slice($result['data'], 0, $preview_rows);
+
+            wp_send_json_success($preview_data);
+
+        } catch (Exception $e) {
+            wp_send_json_error('Preview generation failed: ' . $e->getMessage());
+        }
     }
 
     /**

@@ -1931,3 +1931,93 @@
     display: none !important;
   }
 }
+
+/* === Admin Preview Enhancements === */
+/* Prevent table column squishing in admin preview */
+.tc-preview-area .tc-table {
+  min-width: 600px; /* Ensure minimum table width */
+  table-layout: auto; /* Allow columns to size naturally */
+}
+
+.tc-preview-area .tc-table th,
+.tc-preview-area .tc-table td {
+  min-width: 100px; /* Minimum column width */
+  white-space: nowrap; /* Prevent text wrapping for headers */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; /* Maximum width to prevent extremely wide columns */
+}
+
+/* Allow text wrapping for data cells to show more content */
+.tc-preview-area .tc-table td {
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+/* Specific styling for common column types */
+.tc-preview-area .tc-table th:first-child,
+.tc-preview-area .tc-table td:first-child {
+  min-width: 120px; /* Usually names, need more space */
+}
+
+/* Email and URL columns */
+.tc-preview-area .tc-table td[data-type="email"],
+.tc-preview-area .tc-table td[data-type="url"] {
+  min-width: 150px;
+  max-width: 250px;
+}
+
+/* Numeric columns can be narrower */
+.tc-preview-area .tc-table td[data-type="number"],
+.tc-preview-area .tc-table td[data-type="numeric"] {
+  min-width: 80px;
+  text-align: right;
+}
+
+/* Enhanced admin preview container */
+.tc-preview-area .tc-table-container {
+  border: 1px solid #c3c4c7;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  overflow-x: auto;
+  max-height: none; /* Remove height restrictions */
+}
+
+/* Better spacing for admin preview */
+.tc-preview-area .tc-wrapper {
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure table is responsive within the admin preview area */
+@media (max-width: 1400px) {
+  .tc-admin-layout {
+    flex-direction: column;
+  }
+  
+  .tc-sidebar {
+    flex: none !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+  
+  .tc-preview-area {
+    min-width: auto !important;
+  }
+}
+
+/* Mobile admin improvements */
+@media (max-width: 768px) {
+  .tc-admin-layout {
+    gap: 15px;
+  }
+  
+  .tc-preview-area .tc-table th,
+  .tc-preview-area .tc-table td {
+    min-width: 80px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
