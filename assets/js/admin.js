@@ -226,14 +226,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 setButtonState('synced');
             } catch (error) {
                 console.error('TableCrafter Admin: Initialization error:', error);
-                previewDiv.innerHTML = `
-                    <div class="notice notice-error inline" style="padding: 15px; margin: 0;">
-                        <p><strong>Initialization error:</strong> ${error.message || 'Unknown error'}</p>
-                    </div>
-                `;
+                // SECURITY: Create error message safely without innerHTML
+                previewDiv.innerHTML = '';
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'notice notice-error inline';
+                errorDiv.style.cssText = 'padding: 15px; margin: 0;';
+                
+                const errorParagraph = document.createElement('p');
+                const errorStrong = document.createElement('strong');
+                errorStrong.textContent = 'Initialization error: ';
+                errorParagraph.appendChild(errorStrong);
+                errorParagraph.appendChild(document.createTextNode(error.message || 'Unknown error'));
+                
+                errorDiv.appendChild(errorParagraph);
+                previewDiv.appendChild(errorDiv);
             }
         } else {
-            container.innerHTML = `<div class="notice notice-error inline"><p>${tablecrafterAdmin.i18n.libMissing}</p></div>`;
+            // SECURITY: Create error message safely without innerHTML
+            container.innerHTML = '';
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'notice notice-error inline';
+            
+            const errorParagraph = document.createElement('p');
+            errorParagraph.textContent = tablecrafterAdmin.i18n.libMissing;
+            
+            errorDiv.appendChild(errorParagraph);
+            container.appendChild(errorDiv);
         }
     });
 

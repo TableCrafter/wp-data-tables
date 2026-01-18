@@ -111,13 +111,13 @@ class TableCrafter {
         color: { format: 'hex' },
         range: { min: 0, max: 100, step: 1 }
       },
-      // Mobile responsive configuration
+      // Enhanced mobile-first responsive configuration
       responsive: {
         enabled: true,
         breakpoints: {
-          mobile: { width: 480, layout: 'cards' },
-          tablet: { width: 768, layout: 'compact' },
-          desktop: { width: 1024, layout: 'table' }
+          mobile: { width: 768, layout: 'cards' },
+          tablet: { width: 900, layout: 'compact' },
+          desktop: { width: 1200, layout: 'table' }
         },
         fieldVisibility: {}
       },
@@ -636,13 +636,6 @@ class TableCrafter {
     }
   }
 
-  /**
-   * Check if mobile viewport
-   */
-  isMobile() {
-    const breakpoint = this.getCurrentBreakpoint();
-    return breakpoint === 'mobile';
-  }
 
   /**
    * Toggle row selection for bulk operations
@@ -960,9 +953,15 @@ class TableCrafter {
              // Auto-format value
              const formatted = this.formatValue(displayValue, column.type);
              
-             // Check if formatted result is HTML (simple check: contains tags)
+             // SECURITY: Use safe HTML rendering to prevent XSS
              if (typeof formatted === 'string' && /<[a-z][\s\S]*>/i.test(formatted)) {
-                td.innerHTML = formatted;
+                // Only allow HTML from trusted server-side formatting
+                if (this.isTrustedHTML(formatted)) {
+                   td.innerHTML = formatted;
+                } else {
+                   // Escape potentially dangerous HTML
+                   td.textContent = formatted;
+                }
              } else {
                 td.textContent = formatted;
              }
@@ -996,20 +995,374 @@ class TableCrafter {
   }
 
   /**
-   * Get current breakpoint
+   * Get current breakpoint with enhanced mobile-first detection
    */
   getCurrentBreakpoint() {
     const width = window.innerWidth;
     const defaults = {
-      mobile: { width: 480, layout: 'cards' },
-      tablet: { width: 768, layout: 'compact' },
-      desktop: { width: 1024, layout: 'table' }
+      mobile: { width: 768, layout: 'cards' },
+      tablet: { width: 900, layout: 'compact' },
+      desktop: { width: 1200, layout: 'table' }
     };
     const breakpoints = { ...defaults, ...(this.config.responsive.breakpoints || {}) };
 
     if (width <= breakpoints.mobile.width) return 'mobile';
     if (width <= breakpoints.tablet.width) return 'tablet';
     return 'desktop';
+  }
+
+  /**
+   * Enhanced mobile detection with touch capability
+   */
+  isMobile() {
+    const breakpoint = this.getCurrentBreakpoint();
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    // Consider device mobile if either small screen OR touch-only device
+    return breakpoint === 'mobile' || (isTouchDevice && breakpoint === 'tablet');
+  }
+
+  /**
+   * Check if device supports touch interactions
+   */
+  isTouchDevice() {
+    return 'ontouchstart' in window || 
+           navigator.maxTouchPoints > 0 || 
+           (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  }
+
+  /**
+   * Add enhanced touch gestures to mobile cards
+   */
+  addTouchGestures(card, rowData, rowIndex) {
+    let startX = 0;
+    let startY = 0;
+    let startTime = 0;
+    let isDragging = false;
+    let hasMoved = false;
+    const threshold = 50; // minimum distance for swipe
+    const timeThreshold = 300; // maximum time for swipe (ms)
+
+    // Touch start
+    card.addEventListener('touchstart', (e) => {
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      startTime = Date.now();
+      isDragging = false;
+      hasMoved = false;
+      
+      // Add visual feedback
+      card.style.transition = 'transform 0.1s ease';
+      card.style.transform = 'scale(0.98)';
+    }, { passive: true });
+
+    // Touch move
+    card.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 1) return; // ignore multi-touch
+      
+      const touch = e.touches[0];
+      const deltaX = Math.abs(touch.clientX - startX);
+      const deltaY = Math.abs(touch.clientY - startY);
+      
+      // Mark as moved if significant movement
+      if (deltaX > 10 || deltaY > 10) {
+        hasMoved = true;
+      }
+      
+      // Start drag if horizontal movement exceeds threshold
+      if (deltaX > 20 && deltaX > deltaY) {
+        isDragging = true;
+        e.preventDefault(); // prevent scrolling
+        
+        // Visual feedback for drag
+        const translateX = (touch.clientX - startX) * 0.3; // reduced movement
+        card.style.transform = `translateX(${translateX}px) scale(0.98)`;
+        
+        // Add visual hint based on swipe direction
+        if (translateX > 20) {
+          card.style.backgroundColor = '#e8f5e8'; // green hint for right swipe
+        } else if (translateX < -20) {
+          card.style.backgroundColor = '#ffe8e8'; // red hint for left swipe
+        }
+      }
+    }, { passive: false });
+
+    // Touch end
+    card.addEventListener('touchend', (e) => {
+      const endTime = Date.now();
+      const touch = e.changedTouches[0];
+      const deltaX = touch.clientX - startX;
+      const deltaY = touch.clientY - startY;
+      const duration = endTime - startTime;
+      
+      // Reset visual state
+      card.style.transition = 'transform 0.3s ease, background-color 0.3s ease';
+      card.style.transform = '';
+      card.style.backgroundColor = '';
+      
+      // Handle swipe gestures
+      if (Math.abs(deltaX) > threshold && Math.abs(deltaX) > Math.abs(deltaY) && duration < timeThreshold) {
+        e.preventDefault();
+        
+        if (deltaX > 0) {
+          // Right swipe - expand/collapse card if expandable
+          this.handleCardSwipeRight(card, rowData, rowIndex);
+        } else {
+          // Left swipe - show quick actions
+          this.handleCardSwipeLeft(card, rowData, rowIndex);
+        }
+      } else if (!hasMoved && duration < 200) {
+        // Quick tap without movement - handle as click
+        this.handleCardTap(card, rowData, rowIndex);
+      }
+    }, { passive: false });
+
+    // Touch cancel
+    card.addEventListener('touchcancel', () => {
+      // Reset visual state
+      card.style.transition = 'transform 0.3s ease, background-color 0.3s ease';
+      card.style.transform = '';
+      card.style.backgroundColor = '';
+    });
+  }
+
+  /**
+   * Handle right swipe on card (expand/collapse)
+   */
+  handleCardSwipeRight(card, rowData, rowIndex) {
+    const isExpandable = card.classList.contains('tc-card-expandable');
+    if (isExpandable) {
+      // Toggle expanded state
+      const isExpanded = card.classList.contains('tc-card-expanded');
+      if (isExpanded) {
+        card.classList.remove('tc-card-expanded');
+        this.announceToScreenReader('Card collapsed');
+      } else {
+        card.classList.add('tc-card-expanded');
+        this.announceToScreenReader('Card expanded to show more details');
+      }
+    } else {
+      // Provide haptic feedback if available
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+      this.showToast('Swipe left for actions', 'info');
+    }
+  }
+
+  /**
+   * Handle left swipe on card (quick actions)
+   */
+  handleCardSwipeLeft(card, rowData, rowIndex) {
+    // Show quick action menu
+    this.showCardQuickActions(card, rowData, rowIndex);
+    
+    // Haptic feedback
+    if (navigator.vibrate) {
+      navigator.vibrate([50, 50, 50]);
+    }
+  }
+
+  /**
+   * Handle tap on card
+   */
+  handleCardTap(card, rowData, rowIndex) {
+    // Check if card is expandable
+    const expandToggle = card.querySelector('.tc-card-toggle');
+    if (expandToggle) {
+      // Trigger expand/collapse
+      const isExpanded = card.classList.contains('tc-card-expanded');
+      card.classList.toggle('tc-card-expanded');
+      this.announceToScreenReader(isExpanded ? 'Card collapsed' : 'Card expanded');
+    }
+    
+    // Fire card selection event
+    this.dispatchEvent('cardTap', { 
+      rowData, 
+      rowIndex, 
+      card 
+    });
+  }
+
+  /**
+   * Show quick actions for card
+   */
+  showCardQuickActions(card, rowData, rowIndex) {
+    // Create floating action menu
+    const actionMenu = document.createElement('div');
+    actionMenu.className = 'tc-card-quick-actions';
+    actionMenu.style.cssText = `
+      position: fixed;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      display: flex;
+      gap: 12px;
+      z-index: 1000;
+      transform: scale(0);
+      transition: transform 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    `;
+
+    // Position menu near the card
+    const cardRect = card.getBoundingClientRect();
+    actionMenu.style.left = Math.min(cardRect.left + 20, window.innerWidth - 200) + 'px';
+    actionMenu.style.top = (cardRect.top + cardRect.height / 2 - 25) + 'px';
+
+    // Add action buttons
+    const actions = [
+      { label: 'View', icon: '👁️', action: () => this.viewCardDetails(rowData, rowIndex) },
+      { label: 'Edit', icon: '✏️', action: () => this.editCardData(rowData, rowIndex) },
+      { label: 'Share', icon: '📤', action: () => this.shareCardData(rowData, rowIndex) }
+    ];
+
+    actions.forEach(({ label, icon, action }) => {
+      const button = document.createElement('button');
+      button.className = 'tc-quick-action-btn';
+      button.style.cssText = `
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: background-color 0.2s;
+      `;
+      button.innerHTML = `<span>${icon}</span><span>${label}</span>`;
+      
+      button.addEventListener('click', () => {
+        action();
+        document.body.removeChild(actionMenu);
+      });
+      
+      button.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        action();
+        document.body.removeChild(actionMenu);
+      });
+
+      actionMenu.appendChild(button);
+    });
+
+    // Add close button
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '✕';
+    closeBtn.style.cssText = `
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px;
+    `;
+    closeBtn.addEventListener('click', () => {
+      document.body.removeChild(actionMenu);
+    });
+    actionMenu.appendChild(closeBtn);
+
+    document.body.appendChild(actionMenu);
+    
+    // Animate in
+    requestAnimationFrame(() => {
+      actionMenu.style.transform = 'scale(1)';
+    });
+
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+      if (document.body.contains(actionMenu)) {
+        actionMenu.style.transform = 'scale(0)';
+        setTimeout(() => {
+          if (document.body.contains(actionMenu)) {
+            document.body.removeChild(actionMenu);
+          }
+        }, 200);
+      }
+    }, 5000);
+  }
+
+  /**
+   * Show toast notification for mobile feedback
+   */
+  showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `tc-toast tc-toast-${type}`;
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: ${type === 'info' ? '#007bff' : type === 'success' ? '#28a745' : '#dc3545'};
+      color: white;
+      padding: 12px 20px;
+      border-radius: 25px;
+      z-index: 1001;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+      max-width: calc(100vw - 40px);
+      text-align: center;
+    `;
+    toast.textContent = message;
+
+    document.body.appendChild(toast);
+
+    // Animate in
+    requestAnimationFrame(() => {
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+    });
+
+    // Auto-hide
+    setTimeout(() => {
+      toast.style.transform = 'translateX(-50%) translateY(100px)';
+      setTimeout(() => {
+        if (document.body.contains(toast)) {
+          document.body.removeChild(toast);
+        }
+      }, 300);
+    }, 3000);
+  }
+
+  /**
+   * Placeholder methods for card actions (can be customized)
+   */
+  viewCardDetails(rowData, rowIndex) {
+    this.showToast('View details functionality can be customized', 'info');
+    this.dispatchEvent('cardView', { rowData, rowIndex });
+  }
+
+  editCardData(rowData, rowIndex) {
+    this.showToast('Edit functionality can be customized', 'info');
+    this.dispatchEvent('cardEdit', { rowData, rowIndex });
+  }
+
+  shareCardData(rowData, rowIndex) {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Table Data',
+        text: JSON.stringify(rowData, null, 2)
+      });
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard?.writeText(JSON.stringify(rowData, null, 2));
+      this.showToast('Data copied to clipboard', 'success');
+    }
+  }
+
+  /**
+   * Dispatch custom events for mobile interactions
+   */
+  dispatchEvent(eventName, detail) {
+    const event = new CustomEvent(`tablecrafter:${eventName}`, {
+      detail,
+      bubbles: true
+    });
+    this.container.dispatchEvent(event);
   }
 
   /**
@@ -1218,6 +1571,11 @@ class TableCrafter {
           });
 
           card.appendChild(hiddenSection);
+        }
+
+        // Enhanced mobile touch interaction
+        if (this.isTouchDevice()) {
+          this.addTouchGestures(card, row, actualRowIndex);
         }
 
         cardsContainer.appendChild(card);
@@ -2324,7 +2682,12 @@ class TableCrafter {
 
     const exportBtn = document.createElement('button');
     exportBtn.className = 'tc-export-main-btn';
-    exportBtn.innerHTML = 'Export Data <span class="tc-dropdown-arrow">▼</span>';
+    // SECURITY: Use safe DOM creation instead of innerHTML
+    exportBtn.textContent = 'Export Data ';
+    const dropdownArrow = document.createElement('span');
+    dropdownArrow.className = 'tc-dropdown-arrow';
+    dropdownArrow.textContent = '▼';
+    exportBtn.appendChild(dropdownArrow);
     
     const dropdown = document.createElement('div');
     dropdown.className = 'tc-export-dropdown';
@@ -2334,7 +2697,33 @@ class TableCrafter {
     this.config.advancedExport.formats.forEach(format => {
       const option = document.createElement('button');
       option.className = `tc-export-option tc-export-${format}`;
-      option.innerHTML = this.getExportOptionHTML(format);
+      // SECURITY: Use safe DOM creation instead of innerHTML
+      const formatInfo = this.getExportOptionInfo(format);
+      
+      // Create icon span
+      const iconSpan = document.createElement('span');
+      iconSpan.className = 'tc-export-icon';
+      iconSpan.textContent = formatInfo.icon;
+      
+      // Create details div
+      const detailsDiv = document.createElement('div');
+      detailsDiv.className = 'tc-export-details';
+      
+      // Create title div
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'tc-export-title';
+      titleDiv.textContent = formatInfo.title;
+      
+      // Create description div
+      const descDiv = document.createElement('div');
+      descDiv.className = 'tc-export-desc';
+      descDiv.textContent = formatInfo.description;
+      
+      // Assemble structure
+      detailsDiv.appendChild(titleDiv);
+      detailsDiv.appendChild(descDiv);
+      option.appendChild(iconSpan);
+      option.appendChild(detailsDiv);
       option.addEventListener('click', (e) => {
         e.stopPropagation();
         this.handleExportFormat(format);
@@ -2361,9 +2750,9 @@ class TableCrafter {
   }
 
   /**
-   * Get HTML for export option
+   * SECURITY: Get safe export option info (replaces getExportOptionHTML)
    */
-  getExportOptionHTML(format) {
+  getExportOptionInfo(format) {
     const icons = {
       csv: '📄',
       excel: '📊', 
@@ -2375,12 +2764,12 @@ class TableCrafter {
       excel: 'Excel - Advanced spreadsheet with formatting',
       pdf: 'PDF - Professional report format'
     };
-
-    return `<span class="tc-export-icon">${icons[format]}</span>
-            <div class="tc-export-details">
-              <div class="tc-export-title">${format.toUpperCase()}</div>
-              <div class="tc-export-desc">${descriptions[format]}</div>
-            </div>`;
+    
+    return {
+      icon: icons[format] || '📄',
+      title: format.toUpperCase(),
+      description: descriptions[format] || format.toUpperCase()
+    };
   }
 
   /**
@@ -2666,6 +3055,58 @@ class TableCrafter {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  /**
+   * SECURITY: Check if HTML content is trusted (from server-side rendering)
+   * Only allow specific safe HTML patterns
+   */
+  isTrustedHTML(html) {
+    if (typeof html !== 'string') return false;
+    
+    // Allow specific trusted HTML patterns from server-side rendering
+    const trustedPatterns = [
+      /^<span class="tc-badge tc-(yes|no)">(?:Yes|No)<\/span>$/,
+      /^<img src="[^"]*" style="[^"]*" alt="[^"]*" loading="lazy">$/,
+      // Enhanced email pattern to handle various formats and attribute orders
+      /^<a(?=.*href="mailto:[^"]*")[^>]*>.*?<\/a>$/,
+      /^<time datetime="[^"]*">[^<]*<\/time>$/,
+      /^<a href="https?:\/\/[^"]*" target="_blank" rel="noopener noreferrer" title="[^"]*">[^<]*<\/a>$/,
+      /^<div class="tc-tag-list">(<span class="tc-tag">[^<]*<\/span>)*(<span class="tc-tag tc-more">\+\d+ more<\/span>)?<\/div>$/,
+      /^<span class="tc-tag">[^<]*<\/span>$/
+    ];
+
+    return trustedPatterns.some(pattern => pattern.test(html));
+  }
+
+  /**
+   * SECURITY: Safely set innerHTML with validation
+   */
+  safeSetInnerHTML(element, html) {
+    if (this.isTrustedHTML(html)) {
+      element.innerHTML = html;
+    } else {
+      element.textContent = html;
+    }
+  }
+
+  /**
+   * SECURITY: Create safe DOM element with escaped content
+   */
+  createSafeElement(tagName, content, attributes = {}) {
+    const element = document.createElement(tagName);
+    
+    // Set text content safely
+    if (content) {
+      element.textContent = content;
+    }
+    
+    // Set attributes safely
+    for (const [key, value] of Object.entries(attributes)) {
+      element.setAttribute(key, String(value));
+    }
+    
+    return element;
   }
 
   /**

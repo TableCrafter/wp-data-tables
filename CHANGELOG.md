@@ -1,5 +1,58 @@
 # Changelog
 
+## [3.3.0] - 2026-01-18
+### 🔧 MAJOR BUG FIXES: Email Rendering & Elementor Integration
+- **Critical Bug Fix:** Resolved email HTML rendering issue where email addresses displayed as escaped HTML instead of clickable links
+- **JavaScript Fix:** Updated `isTrustedHTML()` patterns to properly recognize email links during table filtering and re-rendering  
+- **Elementor Widget Registration:** Fixed widget not appearing in Elementor panel with enhanced dual hook registration and debug logging
+- **UX Enhancement:** Improved block placeholder message with user-friendly guidance instead of technical error when no data source configured
+- **Security Enhancement:** Custom HTML sanitization system that maintains security while preserving email link functionality
+- **Cross-Platform Fix:** Ensures email links work correctly in both initial server-side rendering and client-side re-rendering scenarios
+
+### 📊 Business Impact  
+- **User Experience:** Email columns now function properly across all table interaction modes (filtering, searching, pagination)
+- **Elementor Integration:** 12+ million Elementor users can now access TableCrafter widget from the Elementor panel
+- **Content Creator Workflow:** Block editor users see helpful guidance instead of confusing error messages
+- **Professional Reliability:** Eliminates HTML rendering issues that affected data presentation quality
+
+### 🧪 Technical Improvements
+- **Dual Sanitization:** Enhanced both PHP (`sanitize_table_html()`) and JavaScript (`isTrustedHTML()`) to handle email links correctly
+- **Protocol Support:** Added explicit `mailto` protocol support with `wp_kses_allowed_protocols` filter for REST API contexts  
+- **Flexible Regex:** Updated email pattern matching to handle various HTML attribute orders and formats
+- **Context-Aware Messaging:** Placeholder messages adapt to editor vs frontend contexts for optimal UX
+
+## [3.2.2] - 2026-01-18
+### 🚨 CRITICAL HOTFIX: Elementor Activation Fatal Error Fix
+- **Critical Bug Fix:** Resolved fatal error when Elementor is installed after TableCrafter is already active
+- **Deprecated API Cleanup:** Removed Elementor scheme class imports that were removed in Elementor 3.0+
+- **Modern Widget Registration:** Updated to use `register()` method instead of deprecated `register_widget_type()`
+- **Version-Aware Hooks:** Implemented intelligent hook selection based on Elementor version
+- **Backward Compatibility:** Complete support for Elementor 2.0+ through latest versions with graceful fallbacks
+- **Error Handling:** Enhanced safety checks and graceful degradation for missing Elementor classes
+
+### 📊 Business Impact
+- **Customer Retention:** Eliminates fatal errors that caused immediate user abandonment
+- **Market Position:** Maintains competitive advantage among 12+ million Elementor users
+- **Support Efficiency:** Eliminates entire category of Elementor activation-related support tickets
+- **Professional Credibility:** Demonstrates technical excellence and commitment to ecosystem compatibility
+
+### 🧪 Technical Improvements
+- **Comprehensive Testing:** Added extensive test suite covering all activation scenarios
+- **Code Quality:** Removed deprecated imports and updated to modern Elementor APIs
+- **Future Compatibility:** Version-aware implementation supports upcoming Elementor changes
+- **Performance:** Zero performance impact while adding robust compatibility layers
+
+## [3.2.1] - 2026-01-17
+### 📋 DOCUMENTATION ENHANCEMENT: Improved WCAG Compliance Details
+- **Enhanced WCAG Documentation:** Added comprehensive WCAG 2.1 AA compliance details including semantic ARIA labels, high contrast support, and accessibility standards
+- **Enterprise Focus:** Improved documentation specifically for enterprise and government organizations requiring strict accessibility compliance
+- **Feature Clarity:** Better description of accessibility features to help users understand compliance capabilities
+
+### 📊 Business Impact
+- **Market Expansion:** Better accessibility documentation opens doors to enterprise and government contracts
+- **Compliance Confidence:** Clear accessibility features reduce procurement friction for regulated organizations
+- **Professional Positioning:** Enhanced technical documentation improves plugin credibility and perceived value
+
 ## [3.1.4] - 2026-01-16
 ### 🎨 UI/UX IMPROVEMENTS: Enhanced Admin Preview Experience
 - **Fixed Column Squishing:** Prevented table columns from being compressed in Live Preview section with proper min-width constraints

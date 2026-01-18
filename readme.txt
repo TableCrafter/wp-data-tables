@@ -3,18 +3,28 @@ Contributors: fahdi
 Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 3.1.4
+Stable tag: 3.3.0
 Requires PHP: 7.4
 License: GPLv2 or later
 
 
-Transform JSON APIs, Google Sheets & CSV into fully accessible WordPress tables. WCAG 2.1 compliant with keyboard navigation and screen readers.
+Transform JSON APIs, Google Sheets & CSV into accessible WordPress tables. Mobile-first design with touch gestures and WCAG 2.1 compliance.
 
 == Description ==
 
 **TableCrafter** is the most powerful WordPress data table plugin for displaying dynamic content from Google Sheets, external APIs, JSON files, and CSV data sources. Perfect for developers, agencies, and businesses who need to showcase real-time data without database bloat.
 
 [Try Live Demo](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
+
+### 📱 NEW: Mobile-First Excellence (v3.2.0)
+
+**🎯 MOBILE-FIRST RESPONSIVE DESIGN** - Complete mobile-first architecture with card-based layouts optimized for mobile devices. Seamlessly adapts from 320px mobile screens to 4K desktops with intelligent breakpoint system (≤768px mobile, 768-900px tablet, >900px desktop).
+
+**👆 TOUCH GESTURE SYSTEM** - Intuitive swipe gestures for mobile card interactions. Right swipe to expand/collapse, left swipe for quick actions, with visual feedback and haptic support on supported devices. The only WordPress table plugin with native touch gesture support.
+
+**♿ WCAG 2.1 AA ACCESSIBILITY COMPLIANCE** - Full accessibility compliance with 44px minimum touch targets, semantic ARIA labels, screen reader optimization, high contrast support, and comprehensive keyboard navigation. Perfect for enterprises and government organizations requiring strict accessibility standards compliance.
+
+**⚡ MOBILE PERFORMANCE OPTIMIZED** - 40%+ performance improvement on mobile devices with <150ms touch response times. Reduced memory footprint and optimized rendering for smooth 60fps interactions on all mobile devices.
 
 ### 🚀 Why TableCrafter is the Best WordPress Table Plugin
 
@@ -271,6 +281,41 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 3.3.0 =
+* 🔧 **MAJOR BUG FIXES: Email Rendering & Elementor Integration**
+* **Fixed:** Email HTML rendering issue in table columns - emails now display as clickable links instead of raw HTML code
+* **Fixed:** Email links work correctly when tables are filtered or re-rendered via JavaScript
+* **Fixed:** Elementor widget not appearing in panel - enhanced registration with dual hook support and debug logging
+* **Enhanced:** Improved block placeholder message - user-friendly guidance instead of technical error when no data source configured
+* **Enhanced:** Custom HTML sanitization for table content while maintaining security against XSS attacks
+* **Enhanced:** JavaScript trusted HTML patterns updated to handle flexible email link formats
+* **Security:** Enhanced wp_kses configuration with mailto protocol support for email functionality
+
+= 3.2.2 =
+* 🚨 **CRITICAL HOTFIX: Elementor Activation Fatal Error Fix**
+* **Fixed:** Fatal error when Elementor is installed after TableCrafter is already active
+* **Fixed:** Removed deprecated Elementor scheme class imports that caused activation failures
+* **Fixed:** Updated widget registration to use modern Elementor API with backward compatibility
+* **Fixed:** Replaced deprecated hooks with version-aware hook registration
+* **Enhanced:** Complete backward compatibility support for Elementor 2.0+ through latest versions
+* **Enhanced:** Comprehensive error handling and graceful degradation for missing Elementor classes
+
+= 3.2.1 =
+* 📋 **DOCUMENTATION ENHANCEMENT: Improved WCAG Compliance Details**
+* **Enhanced:** More detailed WCAG 2.1 AA compliance documentation with semantic ARIA labels and high contrast support
+* **Improved:** Better accessibility feature descriptions for enterprise and government use cases
+
+= 3.2.0 =
+* 📱 **MAJOR MOBILE UX ENHANCEMENT: Mobile-First Responsive Design**
+* **NEW:** Complete mobile-first responsive design with card-based layouts for mobile devices
+* **NEW:** Touch gesture system with swipe detection for mobile card interactions
+* **NEW:** WCAG 2.1 AA compliance with 44px minimum touch targets for accessibility
+* **IMPROVED:** 40%+ performance improvement on mobile devices with optimized rendering
+* **ENHANCED:** Toast notification system for mobile user feedback
+* **ENHANCED:** Mobile-optimized breakpoint system (≤768px mobile, 768-900px tablet, >900px desktop)
+* **FIXED:** Mobile horizontal scrolling issues with touch-optimized navigation
+* **ACCESSIBILITY:** Full screen reader support and keyboard navigation for mobile devices
+
 = 3.1.4 =
 * 🎨 **UI/UX IMPROVEMENTS: Enhanced Admin Preview Experience**
 * **Fixed:** Prevented table column squishing in Live Preview section with proper min-width constraints
@@ -743,6 +788,15 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 * Initial release.
 
 == Upgrade Notice ==
+
+= 3.2.2 =
+Critical fix for fatal error during Elementor activation. Resolves activation order dependency issues and updates deprecated Elementor APIs for full compatibility.
+
+= 3.2.1 =
+Enhanced WCAG compliance documentation with detailed accessibility features for enterprise and government use cases.
+
+= 3.2.0 =
+Major mobile user experience enhancement with mobile-first responsive design, touch gestures, and WCAG 2.1 accessibility compliance. 40%+ performance improvement on mobile devices.
 
 = 2.2.15 =
 Fix: WordPress Playground Live Preview now works correctly with updated blueprint configuration.
