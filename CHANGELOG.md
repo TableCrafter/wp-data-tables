@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.3.2] - 2026-01-18
+### 🔧 HOTFIX: Button Text Truncation in Admin Interface
+- **Critical Fix:** Resolved button text truncation in 300px sidebar where "Upload File (CSV/JSON)" displayed as "Upload File (CV"
+- **Layout Enhancement:** Buttons now stack vertically in constrained sidebar to ensure full text visibility
+- **UX Improvement:** Eliminated text overflow issues that affected admin interface usability
+- **Responsive Design:** Better button handling in responsive sidebar layouts
+
+### 📊 Business Impact  
+- **Admin Usability:** Users can now read full button labels without confusion
+- **Professional Interface:** Clean, readable admin controls improve user confidence
+- **Reduced Support:** Eliminates user confusion about truncated button text
+
+### 🧪 Technical Improvements
+- **CSS Layout:** Force vertical stacking with `flex-direction: column` in 300px sidebar
+- **Text Visibility:** Removed `white-space: nowrap` and text overflow restrictions for stacked buttons
+- **Button Sizing:** Full width buttons ensure adequate space for complete text display
+
 ## [3.3.1] - 2026-01-18
 ### 🎨 ADMIN UX IMPROVEMENTS: Responsive Layout & Button Handling
 - **Enhanced:** Admin page layout with comprehensive WordPress styling and standard padding/margins throughout all sections

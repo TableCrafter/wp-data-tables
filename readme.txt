@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 3.3.1
+Stable tag: 3.3.2
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -281,6 +281,12 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 3.3.2 =
+* 🔧 **HOTFIX: Button Text Truncation in Admin Interface**
+* **Fixed:** Button text no longer truncated in 300px sidebar - "Upload File (CSV/JSON)" and "Google Sheets" now display fully
+* **Enhanced:** Improved button layout by stacking vertically in constrained sidebar width
+* **UX:** Better readability and usability for admin interface controls
+
 = 3.3.1 =
 * 🎨 **ADMIN UX IMPROVEMENTS: Responsive Layout & Button Handling**
 * **Enhanced:** Admin page layout with proper WordPress styling and standard padding/margins
