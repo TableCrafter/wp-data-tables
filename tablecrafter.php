@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – Data to Beautiful Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: Transform any data source into responsive WordPress tables. WCAG 2.1 compliant, advanced export (Excel/PDF), keyboard navigation, screen readers.
- * Version: 3.2.2
+ * Version: 3.3.0
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '3.2.2');
+define('TABLECRAFTER_VERSION', '3.3.0');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -41,6 +41,18 @@ if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-performance-optimizer.php
 add_action('elementor/loaded', function() {
     if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-elementor-widget.php')) {
         require_once TABLECRAFTER_PATH . 'includes/class-tc-elementor-widget.php';
+        
+        // Register category first
+        if (function_exists('add_tc_elementor_category')) {
+            add_action('elementor/elements/categories_registered', 'add_tc_elementor_category');
+        }
+        
+        // Register widget using both hooks for maximum compatibility  
+        if (function_exists('register_tc_elementor_widget')) {
+            // Try both registration methods for maximum compatibility
+            add_action('elementor/widgets/register', 'register_tc_elementor_widget');
+            add_action('elementor/widgets/widgets_registered', 'register_tc_elementor_widget');
+        }
     }
 });
 
@@ -550,7 +562,7 @@ class TableCrafter
         $atts['source'] = esc_url_raw($atts['source']);
 
         if (empty($atts['source'])) {
-            return '<p>' . esc_html__('Error: TableCrafter requires a "source" attribute.', 'tablecrafter-wp-data-tables') . '</p>';
+            return $this->render_empty_source_placeholder();
         }
 
         // SWR (Stale-While-Revalidate) Logic
@@ -623,7 +635,7 @@ class TableCrafter
             data-refresh-countdown="<?php echo $atts['refresh_countdown'] ? 'true' : 'false'; ?>"
             data-refresh-last-updated="<?php echo $atts['refresh_last_updated'] ? 'true' : 'false'; ?>"
             data-ssr="true">
-            <?php echo $html_content ? wp_kses_post($html_content) : '<div class="tc-loading">' . esc_html__('Loading TableCrafter...', 'tablecrafter-wp-data-tables') . '</div>'; ?>
+            <?php echo $html_content ? $this->sanitize_table_html($html_content) : '<div class="tc-loading">' . esc_html__('Loading TableCrafter...', 'tablecrafter-wp-data-tables') . '</div>'; ?>
             <?php if (!empty($initial_data)): ?>
                 <script type="application/json" class="tc-initial-data"><?php echo wp_json_encode($initial_data); ?></script>
             <?php endif; ?>
@@ -1936,6 +1948,136 @@ class TableCrafter
     }
 
 
+
+    /**
+     * Render user-friendly placeholder when no data source is configured
+     * 
+     * @return string HTML placeholder content
+     */
+    private function render_empty_source_placeholder() {
+        // Check if we're in the block editor (Gutenberg)
+        $is_in_editor = function_exists('get_current_screen') && 
+                       get_current_screen() && 
+                       get_current_screen()->is_block_editor;
+        
+        // Also check for REST API context (block editor preview)
+        $is_rest_request = (defined('REST_REQUEST') && REST_REQUEST) || 
+                          (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/wp-json/') !== false);
+        
+        if ($is_in_editor || $is_rest_request) {
+            // Friendly message for block editor
+            return '
+                <div class="tc-placeholder" style="
+                    border: 2px dashed #ddd; 
+                    border-radius: 8px; 
+                    padding: 40px 20px; 
+                    text-align: center; 
+                    background: #f9f9f9;
+                    color: #666;
+                    font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, sans-serif;
+                ">
+                    <div style="margin-bottom: 16px;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" style="opacity: 0.5; margin-bottom: 12px;">
+                            <rect x="4" y="6" width="16" height="12" rx="1" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <line x1="4" y1="10" x2="20" y2="10" stroke="currentColor" stroke-width="2"/>
+                            <line x1="4" y1="14" x2="20" y2="14" stroke="currentColor" stroke-width="2"/>
+                            <line x1="12" y1="6" x2="12" y2="18" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3 style="margin: 0 0 8px 0; color: #333; font-size: 18px; font-weight: 600;">' . 
+                        esc_html__('Configure Your Data Source', 'tablecrafter-wp-data-tables') . 
+                    '</h3>
+                    <p style="margin: 0 0 16px 0; font-size: 14px; line-height: 1.5;">' . 
+                        esc_html__('Add a JSON URL, CSV file, or Google Sheet to create your table.', 'tablecrafter-wp-data-tables') . 
+                    '</p>
+                    <p style="margin: 0; font-size: 12px; color: #888;">' . 
+                        esc_html__('👉 Use the sidebar settings to get started', 'tablecrafter-wp-data-tables') . 
+                    '</p>
+                </div>';
+        } else {
+            // Simple message for frontend when block is published without source
+            return '<div class="tc-error" style="
+                padding: 16px; 
+                background: #fff3cd; 
+                border: 1px solid #ffeaa7; 
+                border-radius: 4px; 
+                color: #856404;
+                font-size: 14px;
+            ">' . 
+                esc_html__('⚠️ TableCrafter: Please configure a data source to display your table.', 'tablecrafter-wp-data-tables') . 
+            '</div>';
+        }
+    }
+
+    /**
+     * Sanitize table HTML content while preserving TableCrafter-specific elements
+     * 
+     * This method allows the HTML elements that TableCrafter generates (like email links,
+     * image tags, date/time elements) while maintaining security against XSS attacks.
+     * 
+     * @param string $html_content Raw HTML content from table generation
+     * @return string Sanitized HTML content
+     */
+    private function sanitize_table_html($html_content) {
+        // Define allowed HTML tags and attributes for TableCrafter tables
+        $allowed_tags = array(
+            'table' => array('class' => true, 'id' => true),
+            'thead' => array('class' => true),
+            'tbody' => array('class' => true),
+            'tr' => array('class' => true, 'data-tc-row-id' => true),
+            'th' => array(
+                'class' => true, 
+                'tabindex' => true, 
+                'aria-sort' => true, 
+                'data-field' => true,
+                'scope' => true
+            ),
+            'td' => array('class' => true, 'data-tc-label' => true),
+            'a' => array(
+                'href' => true, 
+                'title' => true, 
+                'target' => true, 
+                'rel' => true,
+                'class' => true
+            ),
+            'img' => array(
+                'src' => true, 
+                'alt' => true, 
+                'style' => true, 
+                'loading' => true,
+                'class' => true,
+                'width' => true,
+                'height' => true
+            ),
+            'span' => array('class' => true, 'title' => true),
+            'time' => array('datetime' => true, 'class' => true),
+            'div' => array('class' => true),
+            'strong' => array('class' => true),
+            'em' => array('class' => true),
+            'small' => array('class' => true)
+        );
+
+        // Define allowed protocols for links (includes mailto for email links)
+        $allowed_protocols = array('http', 'https', 'mailto');
+
+        // Use wp_kses with our custom configuration
+        // Add temporary filter to ensure mailto is always allowed
+        $filter_callback = function($protocols) {
+            if (!in_array('mailto', $protocols)) {
+                $protocols[] = 'mailto';
+            }
+            return $protocols;
+        };
+        
+        add_filter('wp_kses_allowed_protocols', $filter_callback, 10, 1);
+        
+        $sanitized = wp_kses($html_content, $allowed_tags, $allowed_protocols);
+        
+        // Clean up the specific filter
+        remove_filter('wp_kses_allowed_protocols', $filter_callback, 10);
+        
+        return $sanitized;
+    }
 
     /**
      * Initialize TableCrafter.

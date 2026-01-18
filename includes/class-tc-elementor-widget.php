@@ -13,15 +13,6 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-use Elementor\Widget_Base;
-use Elementor\Controls_Manager;
-use Elementor\Group_Control_Typography;
-// Removed deprecated scheme imports - Elementor 3.0+ compatibility
-// use Elementor\Core\Schemes\Typography as Scheme_Typography;
-// use Elementor\Core\Schemes\Color as Scheme_Color;
-use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Box_Shadow;
-
 /**
  * TableCrafter Elementor Widget Class
  * 
@@ -31,7 +22,7 @@ use Elementor\Group_Control_Box_Shadow;
 // Only define the widget class if Elementor's Widget_Base is available
 if (class_exists('\Elementor\Widget_Base')) {
 
-class TC_Elementor_Widget extends Widget_Base
+class TC_Elementor_Widget extends \Elementor\Widget_Base
 {
     /**
      * Widget name
@@ -109,7 +100,7 @@ class TC_Elementor_Widget extends Widget_Base
             'section_data_source',
             [
                 'label' => esc_html__('Data Source', 'tablecrafter-wp-data-tables'),
-                'tab' => Controls_Manager::TAB_CONTENT,
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
 
@@ -160,7 +151,7 @@ class TC_Elementor_Widget extends Widget_Base
             'root_path',
             [
                 'label' => esc_html__('JSON Root Path', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::TEXT,
                 'placeholder' => 'data.results',
                 'description' => esc_html__('If your data is nested in JSON, specify the path (e.g., "data.results").', 'tablecrafter-wp-data-tables'),
                 'condition' => [
@@ -173,7 +164,7 @@ class TC_Elementor_Widget extends Widget_Base
             'include_columns',
             [
                 'label' => esc_html__('Include Columns', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::TEXT,
                 'placeholder' => 'name,email,date',
                 'description' => esc_html__('Comma-separated list of columns to include. Leave empty to show all.', 'tablecrafter-wp-data-tables'),
             ]
@@ -183,7 +174,7 @@ class TC_Elementor_Widget extends Widget_Base
             'exclude_columns',
             [
                 'label' => esc_html__('Exclude Columns', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::TEXT,
                 'placeholder' => 'id,internal_notes',
                 'description' => esc_html__('Comma-separated list of columns to exclude.', 'tablecrafter-wp-data-tables'),
             ]
@@ -201,7 +192,7 @@ class TC_Elementor_Widget extends Widget_Base
             'section_display',
             [
                 'label' => esc_html__('Display Options', 'tablecrafter-wp-data-tables'),
-                'tab' => Controls_Manager::TAB_CONTENT,
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
 
@@ -209,7 +200,7 @@ class TC_Elementor_Widget extends Widget_Base
             'enable_search',
             [
                 'label' => esc_html__('Enable Global Search', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::SWITCHER,
+                'type' => \Elementor\Controls_Manager::SWITCHER,
                 'default' => 'yes',
                 'description' => esc_html__('Add a search box above the table for filtering data.', 'tablecrafter-wp-data-tables'),
             ]
@@ -219,7 +210,7 @@ class TC_Elementor_Widget extends Widget_Base
             'enable_filters',
             [
                 'label' => esc_html__('Enable Advanced Filters', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::SWITCHER,
+                'type' => \Elementor\Controls_Manager::SWITCHER,
                 'default' => 'yes',
                 'description' => esc_html__('Automatic column-based filters (dropdowns, date ranges, etc.).', 'tablecrafter-wp-data-tables'),
             ]
@@ -229,7 +220,7 @@ class TC_Elementor_Widget extends Widget_Base
             'enable_export',
             [
                 'label' => esc_html__('Enable Data Export', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::SWITCHER,
+                'type' => \Elementor\Controls_Manager::SWITCHER,
                 'default' => '',
                 'description' => esc_html__('Allow users to export table data as CSV, Excel, or PDF.', 'tablecrafter-wp-data-tables'),
             ]
@@ -239,7 +230,7 @@ class TC_Elementor_Widget extends Widget_Base
             'per_page',
             [
                 'label' => esc_html__('Rows Per Page', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::NUMBER,
+                'type' => \Elementor\Controls_Manager::NUMBER,
                 'default' => 25,
                 'min' => 1,
                 'max' => 1000,
@@ -251,7 +242,7 @@ class TC_Elementor_Widget extends Widget_Base
             'sort_column',
             [
                 'label' => esc_html__('Default Sort Column', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::TEXT,
                 'placeholder' => 'name',
                 'description' => esc_html__('Column name to sort by initially.', 'tablecrafter-wp-data-tables'),
             ]
@@ -285,7 +276,7 @@ class TC_Elementor_Widget extends Widget_Base
             'section_advanced',
             [
                 'label' => esc_html__('Advanced Features', 'tablecrafter-wp-data-tables'),
-                'tab' => Controls_Manager::TAB_CONTENT,
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
 
@@ -293,7 +284,7 @@ class TC_Elementor_Widget extends Widget_Base
             'auto_refresh',
             [
                 'label' => esc_html__('Auto-Refresh Data', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::SWITCHER,
+                'type' => \Elementor\Controls_Manager::SWITCHER,
                 'default' => '',
                 'description' => esc_html__('Automatically refresh data from the source at specified intervals.', 'tablecrafter-wp-data-tables'),
             ]
@@ -303,7 +294,7 @@ class TC_Elementor_Widget extends Widget_Base
             'refresh_interval',
             [
                 'label' => esc_html__('Refresh Interval (seconds)', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::NUMBER,
+                'type' => \Elementor\Controls_Manager::NUMBER,
                 'default' => 300,
                 'min' => 30,
                 'max' => 86400,
@@ -318,7 +309,7 @@ class TC_Elementor_Widget extends Widget_Base
             'cache_duration',
             [
                 'label' => esc_html__('Cache Duration (minutes)', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::NUMBER,
+                'type' => \Elementor\Controls_Manager::NUMBER,
                 'default' => 15,
                 'min' => 0,
                 'max' => 1440,
@@ -330,7 +321,7 @@ class TC_Elementor_Widget extends Widget_Base
             'enable_live_preview',
             [
                 'label' => esc_html__('Enable Live Preview', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::SWITCHER,
+                'type' => \Elementor\Controls_Manager::SWITCHER,
                 'default' => 'yes',
                 'description' => esc_html__('Show live table data in Elementor editor. Disable if you have performance issues.', 'tablecrafter-wp-data-tables'),
             ]
@@ -340,7 +331,7 @@ class TC_Elementor_Widget extends Widget_Base
             'preview_rows',
             [
                 'label' => esc_html__('Preview Rows', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::NUMBER,
+                'type' => \Elementor\Controls_Manager::NUMBER,
                 'default' => 5,
                 'min' => 1,
                 'max' => 25,
@@ -355,7 +346,7 @@ class TC_Elementor_Widget extends Widget_Base
             'loading_message',
             [
                 'label' => esc_html__('Loading Message', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::TEXT,
                 'default' => 'Loading data...',
                 'description' => esc_html__('Message shown while data is being fetched.', 'tablecrafter-wp-data-tables'),
             ]
@@ -365,7 +356,7 @@ class TC_Elementor_Widget extends Widget_Base
             'error_message',
             [
                 'label' => esc_html__('Error Message', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::TEXT,
                 'default' => 'Unable to load data. Please try again.',
                 'description' => esc_html__('Message shown when data loading fails.', 'tablecrafter-wp-data-tables'),
             ]
@@ -384,12 +375,12 @@ class TC_Elementor_Widget extends Widget_Base
             'section_table_style',
             [
                 'label' => esc_html__('Table Styling', 'tablecrafter-wp-data-tables'),
-                'tab' => Controls_Manager::TAB_STYLE,
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
         $this->add_group_control(
-            Group_Control_Typography::get_type(),
+            \Elementor\Group_Control_Typography::get_type(),
             [
                 'name' => 'table_typography',
                 'selector' => '{{WRAPPER}} .tc-table',
@@ -400,7 +391,7 @@ class TC_Elementor_Widget extends Widget_Base
             'table_background',
             [
                 'label' => esc_html__('Background Color', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::COLOR,
+                'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#ffffff',
                 'selectors' => [
                     '{{WRAPPER}} .tc-table-container' => 'background-color: {{VALUE}};',
@@ -409,7 +400,7 @@ class TC_Elementor_Widget extends Widget_Base
         );
 
         $this->add_group_control(
-            Group_Control_Border::get_type(),
+            \Elementor\Group_Control_Border::get_type(),
             [
                 'name' => 'table_border',
                 'selector' => '{{WRAPPER}} .tc-table-container',
@@ -429,7 +420,7 @@ class TC_Elementor_Widget extends Widget_Base
         );
 
         $this->add_group_control(
-            Group_Control_Box_Shadow::get_type(),
+            \Elementor\Group_Control_Box_Shadow::get_type(),
             [
                 'name' => 'table_shadow',
                 'selector' => '{{WRAPPER}} .tc-table-container',
@@ -443,12 +434,12 @@ class TC_Elementor_Widget extends Widget_Base
             'section_header_style',
             [
                 'label' => esc_html__('Header Styling', 'tablecrafter-wp-data-tables'),
-                'tab' => Controls_Manager::TAB_STYLE,
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
         $this->add_group_control(
-            Group_Control_Typography::get_type(),
+            \Elementor\Group_Control_Typography::get_type(),
             [
                 'name' => 'header_typography',
                 'selector' => '{{WRAPPER}} .tc-table th',
@@ -459,7 +450,7 @@ class TC_Elementor_Widget extends Widget_Base
             'header_background',
             [
                 'label' => esc_html__('Background Color', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::COLOR,
+                'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#f8f9fa',
                 'selectors' => [
                     '{{WRAPPER}} .tc-table th' => 'background-color: {{VALUE}};',
@@ -471,7 +462,7 @@ class TC_Elementor_Widget extends Widget_Base
             'header_color',
             [
                 'label' => esc_html__('Text Color', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::COLOR,
+                'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#495057',
                 'selectors' => [
                     '{{WRAPPER}} .tc-table th' => 'color: {{VALUE}};',
@@ -505,7 +496,7 @@ class TC_Elementor_Widget extends Widget_Base
             'section_rows_style',
             [
                 'label' => esc_html__('Rows Styling', 'tablecrafter-wp-data-tables'),
-                'tab' => Controls_Manager::TAB_STYLE,
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -513,7 +504,7 @@ class TC_Elementor_Widget extends Widget_Base
             'row_background',
             [
                 'label' => esc_html__('Row Background', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::COLOR,
+                'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#ffffff',
                 'selectors' => [
                     '{{WRAPPER}} .tc-table td' => 'background-color: {{VALUE}};',
@@ -525,7 +516,7 @@ class TC_Elementor_Widget extends Widget_Base
             'row_hover_background',
             [
                 'label' => esc_html__('Row Hover Background', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::COLOR,
+                'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#f8f9fa',
                 'selectors' => [
                     '{{WRAPPER}} .tc-table tr:hover td' => 'background-color: {{VALUE}};',
@@ -537,7 +528,7 @@ class TC_Elementor_Widget extends Widget_Base
             'row_color',
             [
                 'label' => esc_html__('Text Color', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::COLOR,
+                'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#333333',
                 'selectors' => [
                     '{{WRAPPER}} .tc-table td' => 'color: {{VALUE}};',
@@ -568,7 +559,7 @@ class TC_Elementor_Widget extends Widget_Base
             'row_border',
             [
                 'label' => esc_html__('Row Border', 'tablecrafter-wp-data-tables'),
-                'type' => Controls_Manager::COLOR,
+                'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#e1e5e9',
                 'selectors' => [
                     '{{WRAPPER}} .tc-table td' => 'border-bottom: 1px solid {{VALUE}};',
@@ -795,34 +786,59 @@ class TC_Elementor_Widget extends Widget_Base
 
 /**
  * Register TableCrafter Elementor Widget with backward compatibility
+ * @param object $widgets_manager Optional widget manager instance for new hook
  */
-function register_tc_elementor_widget()
+function register_tc_elementor_widget($widgets_manager = null)
 {
-    // Make sure Elementor is loaded and classes are available
-    if (!did_action('elementor/loaded') || !class_exists('\Elementor\Plugin')) {
-        return;
+    // Debug logging in WordPress environment
+    if (function_exists('error_log')) {
+        error_log('TableCrafter: Attempting to register Elementor widget');
     }
-
-    // Additional safety check
-    if (!class_exists('\Elementor\Widget_Base')) {
+    
+    // Make sure Elementor classes are available
+    if (!class_exists('\Elementor\Plugin') || !class_exists('\Elementor\Widget_Base')) {
+        if (function_exists('error_log')) {
+            error_log('TableCrafter: Elementor classes not available');
+        }
         return;
     }
 
     // Check if our widget class is available (only defined if Elementor is properly loaded)
     if (!class_exists('TC_Elementor_Widget')) {
+        if (function_exists('error_log')) {
+            error_log('TableCrafter: TC_Elementor_Widget class not available');
+        }
         return;
     }
 
-    $widget_manager = \Elementor\Plugin::instance()->widgets_manager;
+    // Use provided widget manager or get instance
+    if (!$widgets_manager) {
+        $widgets_manager = \Elementor\Plugin::instance()->widgets_manager;
+    }
+    
+    if (function_exists('error_log')) {
+        error_log('TableCrafter: Creating widget instance');
+    }
+    
     $widget = new TC_Elementor_Widget();
 
     // Backward compatibility for Elementor versions
-    if (method_exists($widget_manager, 'register')) {
+    if (method_exists($widgets_manager, 'register')) {
         // Elementor 3.5+ - Use new register method
-        $widget_manager->register($widget);
-    } elseif (method_exists($widget_manager, 'register_widget_type')) {
+        $widgets_manager->register($widget);
+        if (function_exists('error_log')) {
+            error_log('TableCrafter: Widget registered using new method (register)');
+        }
+    } elseif (method_exists($widgets_manager, 'register_widget_type')) {
         // Elementor < 3.5 - Use deprecated method for backward compatibility
-        $widget_manager->register_widget_type($widget);
+        $widgets_manager->register_widget_type($widget);
+        if (function_exists('error_log')) {
+            error_log('TableCrafter: Widget registered using deprecated method (register_widget_type)');
+        }
+    } else {
+        if (function_exists('error_log')) {
+            error_log('TableCrafter: No valid registration method found on widget manager');
+        }
     }
 }
 
@@ -831,21 +847,20 @@ function register_tc_elementor_widget()
  */
 function tc_register_elementor_hooks()
 {
-    // Use new hook for Elementor 3.5+ or fallback to deprecated hook
-    // Add safety check for ELEMENTOR_VERSION constant
+    // Use the most compatible registration approach
+    // For Elementor 3.5+ use the new hook, otherwise use the deprecated one
     if (defined('ELEMENTOR_VERSION') && version_compare(ELEMENTOR_VERSION, '3.5.0', '>=')) {
+        // New method for Elementor 3.5+
         add_action('elementor/widgets/register', 'register_tc_elementor_widget');
     } else {
-        // Fallback to deprecated hook for older versions or when version is unknown
+        // Fallback for older versions
         add_action('elementor/widgets/widgets_registered', 'register_tc_elementor_widget');
     }
 }
 
 // Register widget hooks - this file is loaded via elementor/loaded hook
 // Only register if we're in a WordPress environment
-if (function_exists('add_action') && function_exists('did_action')) {
-    tc_register_elementor_hooks();
-}
+// NOTE: Hook registration is now done externally to avoid issues during testing
 
 /**
  * Add TableCrafter category to Elementor
@@ -867,6 +882,5 @@ function add_tc_elementor_category($elements_manager)
 }
 
 // Register category - this file is loaded after Elementor is available
-if (function_exists('add_action')) {
-    add_action('elementor/elements/categories_registered', 'add_tc_elementor_category');
-}
+// NOTE: Category registration is now done externally to avoid issues during testing
+?>

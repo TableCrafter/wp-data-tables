@@ -3068,7 +3068,8 @@ class TableCrafter {
     const trustedPatterns = [
       /^<span class="tc-badge tc-(yes|no)">(?:Yes|No)<\/span>$/,
       /^<img src="[^"]*" style="[^"]*" alt="[^"]*" loading="lazy">$/,
-      /^<a href="mailto:[^"]*" title="[^"]*">[^<]*<\/a>$/,
+      // Enhanced email pattern to handle various formats and attribute orders
+      /^<a(?=.*href="mailto:[^"]*")[^>]*>.*?<\/a>$/,
       /^<time datetime="[^"]*">[^<]*<\/time>$/,
       /^<a href="https?:\/\/[^"]*" target="_blank" rel="noopener noreferrer" title="[^"]*">[^<]*<\/a>$/,
       /^<div class="tc-tag-list">(<span class="tc-tag">[^<]*<\/span>)*(<span class="tc-tag tc-more">\+\d+ more<\/span>)?<\/div>$/,

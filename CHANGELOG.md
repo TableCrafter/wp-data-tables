@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.3.0] - 2026-01-18
+### 🔧 MAJOR BUG FIXES: Email Rendering & Elementor Integration
+- **Critical Bug Fix:** Resolved email HTML rendering issue where email addresses displayed as escaped HTML instead of clickable links
+- **JavaScript Fix:** Updated `isTrustedHTML()` patterns to properly recognize email links during table filtering and re-rendering  
+- **Elementor Widget Registration:** Fixed widget not appearing in Elementor panel with enhanced dual hook registration and debug logging
+- **UX Enhancement:** Improved block placeholder message with user-friendly guidance instead of technical error when no data source configured
+- **Security Enhancement:** Custom HTML sanitization system that maintains security while preserving email link functionality
+- **Cross-Platform Fix:** Ensures email links work correctly in both initial server-side rendering and client-side re-rendering scenarios
+
+### 📊 Business Impact  
+- **User Experience:** Email columns now function properly across all table interaction modes (filtering, searching, pagination)
+- **Elementor Integration:** 12+ million Elementor users can now access TableCrafter widget from the Elementor panel
+- **Content Creator Workflow:** Block editor users see helpful guidance instead of confusing error messages
+- **Professional Reliability:** Eliminates HTML rendering issues that affected data presentation quality
+
+### 🧪 Technical Improvements
+- **Dual Sanitization:** Enhanced both PHP (`sanitize_table_html()`) and JavaScript (`isTrustedHTML()`) to handle email links correctly
+- **Protocol Support:** Added explicit `mailto` protocol support with `wp_kses_allowed_protocols` filter for REST API contexts  
+- **Flexible Regex:** Updated email pattern matching to handle various HTML attribute orders and formats
+- **Context-Aware Messaging:** Placeholder messages adapt to editor vs frontend contexts for optimal UX
+
 ## [3.2.2] - 2026-01-18
 ### 🚨 CRITICAL HOTFIX: Elementor Activation Fatal Error Fix
 - **Critical Bug Fix:** Resolved fatal error when Elementor is installed after TableCrafter is already active

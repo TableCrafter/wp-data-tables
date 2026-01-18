@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 3.2.2
+Stable tag: 3.3.0
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -281,6 +281,16 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 3.3.0 =
+* 🔧 **MAJOR BUG FIXES: Email Rendering & Elementor Integration**
+* **Fixed:** Email HTML rendering issue in table columns - emails now display as clickable links instead of raw HTML code
+* **Fixed:** Email links work correctly when tables are filtered or re-rendered via JavaScript
+* **Fixed:** Elementor widget not appearing in panel - enhanced registration with dual hook support and debug logging
+* **Enhanced:** Improved block placeholder message - user-friendly guidance instead of technical error when no data source configured
+* **Enhanced:** Custom HTML sanitization for table content while maintaining security against XSS attacks
+* **Enhanced:** JavaScript trusted HTML patterns updated to handle flexible email link formats
+* **Security:** Enhanced wp_kses configuration with mailto protocol support for email functionality
+
 = 3.2.2 =
 * 🚨 **CRITICAL HOTFIX: Elementor Activation Fatal Error Fix**
 * **Fixed:** Fatal error when Elementor is installed after TableCrafter is already active
