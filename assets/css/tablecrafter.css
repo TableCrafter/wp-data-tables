@@ -2132,20 +2132,24 @@
   
   /* Button responsiveness in constrained sidebar */
   body.wp-admin .tc-sidebar .button-group .button {
-    min-width: 120px !important;
+    min-width: 140px !important;
     flex: 1 1 calc(50% - 5px) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
   
-  /* When buttons would be too narrow, stack them */
-  @media (max-width: 1200px) {
-    body.wp-admin .tc-sidebar .button-group {
-      flex-direction: column !important;
-    }
-    
-    body.wp-admin .tc-sidebar .button-group .button {
-      width: 100% !important;
-      flex: none !important;
-    }
+  /* Always stack buttons in 300px sidebar to prevent text truncation */
+  body.wp-admin .tc-sidebar .button-group {
+    flex-direction: column !important;
+  }
+  
+  body.wp-admin .tc-sidebar .button-group .button {
+    width: 100% !important;
+    flex: none !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
   }
   
   body.wp-admin .tc-preview-area {
