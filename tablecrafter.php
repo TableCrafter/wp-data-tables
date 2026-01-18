@@ -188,9 +188,9 @@ class TableCrafter
             </p>
             <hr class="wp-header-end">
 
-            <div class="tc-admin-layout" style="display: flex; gap: 20px; margin-top: 20px; align-items: flex-start;">
+            <div class="tc-admin-layout">
 
-                <div class="tc-sidebar" style="flex: 0 0 380px;">
+                <div class="tc-sidebar">
                     <div class="card" style="margin: 0 0 20px 0; max-width: none; background: linear-gradient(135deg, #e0f7fa 0%, #f0f9ff 100%); border-left: 4px solid #0891b2;">
                         <h2 style="color: #0e7490; margin-top: 0; display: flex; align-items: center; gap: 8px;">
                             <span style="font-size: 20px;">🚀</span>
@@ -235,13 +235,13 @@ class TableCrafter
                                     value="<?php echo isset($_GET['demo_url']) ? esc_attr($_GET['demo_url']) : ''; ?>">
                             </div>
 
-                            <div style="display: flex; gap: 5px;">
-                                <button id="tc-upload-csv-btn" class="button button-secondary" type="button" style="flex: 1;">
+                            <div class="button-group">
+                                <button id="tc-upload-csv-btn" class="button button-secondary" type="button">
                                     <span class="dashicons dashicons-upload"
                                         style="margin-right: 4px; vertical-align: middle;"></span>
                                     <?php esc_html_e('Upload File (CSV/JSON)', 'tablecrafter-wp-data-tables'); ?>
                                 </button>
-                                <button id="tc-google-sheet-btn" class="button button-secondary" type="button" style="flex: 1;"
+                                <button id="tc-google-sheet-btn" class="button button-secondary" type="button"
                                     title="<?php esc_attr_e('Paste a Google Sheet URL', 'tablecrafter-wp-data-tables'); ?>">
                                     <span class="dashicons dashicons-media-spreadsheet"
                                         style="margin-right: 4px; vertical-align: middle;"></span>
@@ -263,8 +263,8 @@ class TableCrafter
                             </p>
                         </div>
 
-                        <div style="margin-bottom: 15px; display: flex; gap: 20px;">
-                            <div style="flex: 1;">
+                        <div class="form-row">
+                            <div>
                                 <label for="tc-per-page"
                                     style="font-weight: 600; display: block; margin-bottom: 5px;"><?php esc_html_e('Rows Per Page', 'tablecrafter-wp-data-tables'); ?></label>
                                 <input type="number" id="tc-per-page" class="widefat" value="10" min="1">
@@ -289,7 +289,7 @@ class TableCrafter
                             </p>
                         </div>
 
-                        <div style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 15px;">
+                        <div class="checkbox-group">
                             <label style="font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer;">
                                 <input type="checkbox" id="tc-enable-search" checked>
                                 <?php esc_html_e('Enable Search', 'tablecrafter-wp-data-tables'); ?>
@@ -304,9 +304,8 @@ class TableCrafter
                             </label>
                         </div>
 
-                        <div style="display: flex; gap: 10px; margin-top: 15px;">
-                            <button id="tc-preview-btn" class="button button-primary button-large"
-                                style="flex: 1;"><?php esc_html_e('Preview Table', 'tablecrafter-wp-data-tables'); ?></button>
+                        <div class="button-group">
+                            <button id="tc-preview-btn" class="button button-primary button-large"><?php esc_html_e('Preview Table', 'tablecrafter-wp-data-tables'); ?></button>
                         </div>
                     </div>
 
@@ -321,7 +320,7 @@ class TableCrafter
                     </div>
                 </div>
 
-                <div class="tc-preview-area" style="flex: 1; min-width: 600px; max-width: none;">
+                <div class="tc-preview-area">
                     <div class="card"
                         style="margin: 0; max-width: none; min-height: 500px; display: flex; flex-direction: column;">
                         <h2 style="border-bottom: 1px solid #f0f0f1; padding-bottom: 15px; margin-bottom: 15px; margin-top: 0; display: flex; align-items: center; justify-content: space-between;">

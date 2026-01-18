@@ -1924,18 +1924,23 @@
 }
 
 .tc-preview-area {
-  flex: 1 !important;
-  min-width: 600px !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
   max-width: none !important;
+  width: 100% !important;
 }
 
 .tc-preview-area .card {
   margin: 0 !important;
   max-width: none !important;
+  width: 100% !important;
+  height: calc(100vh - 200px) !important;
   min-height: 500px !important;
+  max-height: 800px !important;
   display: flex !important;
   flex-direction: column !important;
   padding: 20px !important;
+  box-sizing: border-box !important;
 }
 
 .tc-preview-area .card h2 {
@@ -1949,20 +1954,78 @@
 }
 
 #tc-preview-wrap {
-  flex: 1 !important;
+  flex: 1 1 auto !important;
   overflow: auto !important;
   background: #fff !important;
   padding: 15px !important;
   border: 1px solid #ddd !important;
   border-radius: 4px !important;
+  height: 100% !important;
+  max-height: none !important;
 }
 
 #tc-preview-container {
   min-height: 400px !important;
+  height: 100% !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   color: #666 !important;
+}
+
+/* When table is loaded, change alignment */
+#tc-preview-container:has(.tablecrafter-container) {
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+/* Fallback for browsers that don't support :has() */
+#tc-preview-container.tc-has-table {
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+/* TableCrafter instance inside admin preview */
+#tc-preview-container .tablecrafter-container {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#tc-preview-container .tc-wrapper {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#tc-preview-container .tc-table-container {
+  flex: 1 1 auto !important;
+  height: 100% !important;
+  max-height: none !important;
+  overflow: auto !important;
+}
+
+#tc-preview-container .tc-table {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Preview area table optimization */
+.tc-preview-area .tc-table th,
+.tc-preview-area .tc-table td {
+  min-width: 100px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 200px !important;
+}
+
+.tc-preview-area .tc-table td {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  line-height: 1.4 !important;
 }
 
 .tc-demo-links {
@@ -2025,12 +2088,14 @@
 
 .tc-admin-layout .card .button-group {
   display: flex !important;
+  flex-wrap: wrap !important;
   gap: 10px !important;
   margin-top: 15px !important;
 }
 
 .tc-admin-layout .card .button-group .button {
-  flex: 1 !important;
+  flex: 1 1 auto !important;
+  min-width: 180px !important;
   margin: 0 !important;
 }
 
@@ -2048,8 +2113,57 @@
   line-height: 1.4 !important;
 }
 
+/* Two-column layout for screens above 800px */
+@media (min-width: 801px) {
+  body.wp-admin .tc-admin-layout {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 20px !important;
+    margin-top: 20px !important;
+    align-items: flex-start !important;
+  }
+  
+  body.wp-admin .tc-sidebar {
+    flex: 0 0 300px !important;
+    min-width: 300px !important;
+    max-width: 300px !important;
+    width: 300px !important;
+  }
+  
+  /* Button responsiveness in constrained sidebar */
+  body.wp-admin .tc-sidebar .button-group .button {
+    min-width: 120px !important;
+    flex: 1 1 calc(50% - 5px) !important;
+  }
+  
+  /* When buttons would be too narrow, stack them */
+  @media (max-width: 1200px) {
+    body.wp-admin .tc-sidebar .button-group {
+      flex-direction: column !important;
+    }
+    
+    body.wp-admin .tc-sidebar .button-group .button {
+      width: 100% !important;
+      flex: none !important;
+    }
+  }
+  
+  body.wp-admin .tc-preview-area {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    width: auto !important;
+  }
+  
+  body.wp-admin .tc-preview-area .card {
+    height: calc(100vh - 200px) !important;
+    min-height: 500px !important;
+    max-height: 800px !important;
+  }
+}
+
 /* Responsive admin layout */
-@media (max-width: 1400px) {
+@media (max-width: 800px) {
   .tc-admin-layout {
     flex-direction: column !important;
   }
@@ -2062,12 +2176,25 @@
   
   .tc-preview-area {
     min-width: auto !important;
+    width: 100% !important;
+  }
+  
+  .tc-preview-area .card {
+    height: calc(100vh - 300px) !important;
+    min-height: 400px !important;
+    max-height: 600px !important;
   }
 }
 
 @media (max-width: 768px) {
   .tc-admin-layout {
     gap: 15px !important;
+  }
+  
+  .tc-preview-area .card {
+    height: calc(100vh - 250px) !important;
+    min-height: 350px !important;
+    max-height: 500px !important;
   }
   
   .tc-sidebar .card .form-row {

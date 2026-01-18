@@ -184,6 +184,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         container.innerHTML = '';
         container.style.display = 'block';
+        
+        // Add class for table layout styling
+        container.classList.add('tc-has-table');
 
         if (typeof TableCrafter !== 'undefined') {
             const tableId = 'tc-preview-' + Date.now();
