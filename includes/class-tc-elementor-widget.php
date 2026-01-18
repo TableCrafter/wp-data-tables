@@ -27,6 +27,10 @@ use Elementor\Group_Control_Box_Shadow;
  * 
  * Provides native Elementor integration with live preview and visual controls
  */
+
+// Only define the widget class if Elementor's Widget_Base is available
+if (class_exists('\Elementor\Widget_Base')) {
+
 class TC_Elementor_Widget extends Widget_Base
 {
     /**
@@ -787,6 +791,8 @@ class TC_Elementor_Widget extends Widget_Base
     }
 }
 
+} // End if (class_exists('\\Elementor\\Widget_Base'))
+
 /**
  * Register TableCrafter Elementor Widget with backward compatibility
  */
@@ -799,6 +805,11 @@ function register_tc_elementor_widget()
 
     // Additional safety check
     if (!class_exists('\Elementor\Widget_Base')) {
+        return;
+    }
+
+    // Check if our widget class is available (only defined if Elementor is properly loaded)
+    if (!class_exists('TC_Elementor_Widget')) {
         return;
     }
 
@@ -821,15 +832,20 @@ function register_tc_elementor_widget()
 function tc_register_elementor_hooks()
 {
     // Use new hook for Elementor 3.5+ or fallback to deprecated hook
-    if (version_compare(ELEMENTOR_VERSION, '3.5.0', '>=')) {
+    // Add safety check for ELEMENTOR_VERSION constant
+    if (defined('ELEMENTOR_VERSION') && version_compare(ELEMENTOR_VERSION, '3.5.0', '>=')) {
         add_action('elementor/widgets/register', 'register_tc_elementor_widget');
     } else {
+        // Fallback to deprecated hook for older versions or when version is unknown
         add_action('elementor/widgets/widgets_registered', 'register_tc_elementor_widget');
     }
 }
 
-// Register hooks after Elementor is loaded to check version
-add_action('elementor/loaded', 'tc_register_elementor_hooks');
+// Register widget hooks - this file is loaded via elementor/loaded hook
+// Only register if we're in a WordPress environment
+if (function_exists('add_action') && function_exists('did_action')) {
+    tc_register_elementor_hooks();
+}
 
 /**
  * Add TableCrafter category to Elementor
@@ -849,4 +865,8 @@ function add_tc_elementor_category($elements_manager)
         ]
     );
 }
-add_action('elementor/elements/categories_registered', 'add_tc_elementor_category');
+
+// Register category - this file is loaded after Elementor is available
+if (function_exists('add_action')) {
+    add_action('elementor/elements/categories_registered', 'add_tc_elementor_category');
+}
