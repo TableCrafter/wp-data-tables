@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -281,6 +281,15 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 3.3.1 =
+* 🎨 **ADMIN UX IMPROVEMENTS: Responsive Layout & Button Handling**
+* **Enhanced:** Admin page layout with proper WordPress styling and standard padding/margins
+* **Fixed:** Sidebar width now properly constrained to 300px maximum above 800px screen width
+* **Improved:** Responsive button layout - buttons wrap to new lines or stack vertically when space is constrained
+* **Enhanced:** Two-column layout above 800px with flexible preview area using maximum available space
+* **Fixed:** Removed conflicting inline styles that prevented CSS layout rules from applying
+* **Optimized:** Preview table container now uses full height and width of available space
+
 = 3.3.0 =
 * 🔧 **MAJOR BUG FIXES: Email Rendering & Elementor Integration**
 * **Fixed:** Email HTML rendering issue in table columns - emails now display as clickable links instead of raw HTML code

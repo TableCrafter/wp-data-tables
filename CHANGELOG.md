@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.3.1] - 2026-01-18
+### 🎨 ADMIN UX IMPROVEMENTS: Responsive Layout & Button Handling
+- **Enhanced:** Admin page layout with comprehensive WordPress styling and standard padding/margins throughout all sections
+- **Fixed:** Sidebar width properly constrained to 300px maximum above 800px screen width (was previously 380px+ causing layout issues)
+- **Improved:** Responsive button layout with intelligent wrapping - buttons stack vertically or wrap to new lines when space is constrained
+- **Enhanced:** Two-column layout above 800px with flexible preview area that automatically uses maximum available screen space
+- **Fixed:** Removed conflicting inline CSS styles that prevented responsive CSS layout rules from applying correctly
+- **Optimized:** Preview table container now utilizes full height and width of available container space with dynamic viewport sizing
+
+### 📊 Business Impact  
+- **Admin UX:** Improved workflow efficiency for content creators using the TableCrafter admin interface
+- **Mobile Responsive:** Better admin experience across all device sizes and screen orientations
+- **Professional Layout:** Consistent WordPress admin styling that matches native admin interface expectations
+- **Space Optimization:** Maximum preview area utilization improves table visualization and configuration experience
+
+### 🧪 Technical Improvements
+- **CSS Specificity:** Enhanced CSS selectors with `body.wp-admin` for proper inline style overrides
+- **Flexible Layout:** Implemented CSS Grid and Flexbox for responsive button and form layouts
+- **Viewport Optimization:** Dynamic height calculations using `calc(100vh - 200px)` for optimal space usage
+- **Progressive Enhancement:** Graceful degradation from two-column to single-column layout on smaller screens
+
 ## [3.3.0] - 2026-01-18
 ### 🔧 MAJOR BUG FIXES: Email Rendering & Elementor Integration
 - **Critical Bug Fix:** Resolved email HTML rendering issue where email addresses displayed as escaped HTML instead of clickable links
