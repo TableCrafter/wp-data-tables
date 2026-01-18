@@ -1854,6 +1854,241 @@
   }
 }
 
+/* === WordPress Admin Page Styles === */
+.tc-admin-layout {
+  display: flex !important;
+  gap: 20px !important;
+  margin-top: 20px !important;
+  align-items: flex-start !important;
+}
+
+.tc-sidebar {
+  flex: 0 0 380px !important;
+}
+
+.tc-sidebar .card {
+  margin: 0 0 20px 0 !important;
+  max-width: none !important;
+  padding: 20px !important;
+}
+
+.tc-sidebar .card h2 {
+  margin-top: 0 !important;
+  margin-bottom: 15px !important;
+  color: #23282d !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+}
+
+.tc-sidebar .card p {
+  margin: 0 0 15px 0 !important;
+  line-height: 1.5 !important;
+}
+
+.tc-sidebar .card label {
+  font-weight: 600 !important;
+  display: block !important;
+  margin-bottom: 5px !important;
+  color: #23282d !important;
+}
+
+.tc-sidebar .card input.widefat,
+.tc-sidebar .card textarea.widefat {
+  margin-bottom: 8px !important;
+  padding: 8px 12px !important;
+  border: 1px solid #ddd !important;
+  border-radius: 4px !important;
+}
+
+.tc-sidebar .card .description {
+  margin-top: 5px !important;
+  margin-bottom: 15px !important;
+  font-size: 13px !important;
+  color: #666 !important;
+}
+
+.tc-sidebar .card .button {
+  margin: 0 5px 0 0 !important;
+  padding: 8px 16px !important;
+}
+
+.tc-sidebar .card .button-primary {
+  background: #0073aa !important;
+  border-color: #0073aa !important;
+}
+
+.tc-sidebar .card .button-secondary {
+  background: #f1f1f1 !important;
+  border-color: #ddd !important;
+  color: #555 !important;
+}
+
+.tc-preview-area {
+  flex: 1 !important;
+  min-width: 600px !important;
+  max-width: none !important;
+}
+
+.tc-preview-area .card {
+  margin: 0 !important;
+  max-width: none !important;
+  min-height: 500px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 20px !important;
+}
+
+.tc-preview-area .card h2 {
+  border-bottom: 1px solid #f0f0f1 !important;
+  padding-bottom: 15px !important;
+  margin-bottom: 15px !important;
+  margin-top: 0 !important;
+  color: #23282d !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+}
+
+#tc-preview-wrap {
+  flex: 1 !important;
+  overflow: auto !important;
+  background: #fff !important;
+  padding: 15px !important;
+  border: 1px solid #ddd !important;
+  border-radius: 4px !important;
+}
+
+#tc-preview-container {
+  min-height: 400px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #666 !important;
+}
+
+.tc-demo-links {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+.tc-demo-links li {
+  margin-bottom: 8px !important;
+}
+
+.tc-demo-links .button {
+  width: 100% !important;
+  text-align: left !important;
+  background: white !important;
+  border: 2px solid #0073aa !important;
+  color: #0073aa !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+  padding: 10px 15px !important;
+}
+
+.tc-demo-links .button:hover {
+  background: #0073aa !important;
+  color: white !important;
+  border-color: #0073aa !important;
+}
+
+/* Admin form field containers */
+.tc-admin-layout .card .form-field {
+  margin-bottom: 15px !important;
+}
+
+.tc-admin-layout .card .form-row {
+  display: flex !important;
+  gap: 20px !important;
+  margin-bottom: 15px !important;
+}
+
+.tc-admin-layout .card .form-row > div {
+  flex: 1 !important;
+}
+
+.tc-admin-layout .card .checkbox-group {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 15px !important;
+  margin-bottom: 15px !important;
+}
+
+.tc-admin-layout .card .checkbox-group label {
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  margin-bottom: 0 !important;
+}
+
+.tc-admin-layout .card .button-group {
+  display: flex !important;
+  gap: 10px !important;
+  margin-top: 15px !important;
+}
+
+.tc-admin-layout .card .button-group .button {
+  flex: 1 !important;
+  margin: 0 !important;
+}
+
+/* Shortcode display */
+#tc-shortcode-display {
+  display: block !important;
+  padding: 15px !important;
+  background: #f1f1f1 !important;
+  margin: 15px 0 !important;
+  word-break: break-all !important;
+  border: 1px solid #ddd !important;
+  border-radius: 4px !important;
+  font-family: Consolas, Monaco, monospace !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+}
+
+/* Responsive admin layout */
+@media (max-width: 1400px) {
+  .tc-admin-layout {
+    flex-direction: column !important;
+  }
+  
+  .tc-sidebar {
+    flex: none !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+  
+  .tc-preview-area {
+    min-width: auto !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .tc-admin-layout {
+    gap: 15px !important;
+  }
+  
+  .tc-sidebar .card .form-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  
+  .tc-sidebar .card .checkbox-group {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  
+  .tc-sidebar .card .button-group {
+    flex-direction: column !important;
+  }
+  
+  .tc-sidebar .card .button-group .button {
+    width: 100% !important;
+  }
+}
+
 /* === Rich Data Presentation === */
 .tc-badge {
   display: inline-block;
