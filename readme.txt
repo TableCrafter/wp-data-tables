@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 3.2.1
+Stable tag: 3.2.2
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -281,6 +281,15 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 3.2.2 =
+* 🚨 **CRITICAL HOTFIX: Elementor Activation Fatal Error Fix**
+* **Fixed:** Fatal error when Elementor is installed after TableCrafter is already active
+* **Fixed:** Removed deprecated Elementor scheme class imports that caused activation failures
+* **Fixed:** Updated widget registration to use modern Elementor API with backward compatibility
+* **Fixed:** Replaced deprecated hooks with version-aware hook registration
+* **Enhanced:** Complete backward compatibility support for Elementor 2.0+ through latest versions
+* **Enhanced:** Comprehensive error handling and graceful degradation for missing Elementor classes
+
 = 3.2.1 =
 * 📋 **DOCUMENTATION ENHANCEMENT: Improved WCAG Compliance Details**
 * **Enhanced:** More detailed WCAG 2.1 AA compliance documentation with semantic ARIA labels and high contrast support
@@ -769,6 +778,9 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 * Initial release.
 
 == Upgrade Notice ==
+
+= 3.2.2 =
+Critical fix for fatal error during Elementor activation. Resolves activation order dependency issues and updates deprecated Elementor APIs for full compatibility.
 
 = 3.2.1 =
 Enhanced WCAG compliance documentation with detailed accessibility features for enterprise and government use cases.

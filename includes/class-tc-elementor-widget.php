@@ -16,8 +16,9 @@ if (!defined('ABSPATH')) {
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
-use Elementor\Core\Schemes\Typography as Scheme_Typography;
-use Elementor\Core\Schemes\Color as Scheme_Color;
+// Removed deprecated scheme imports - Elementor 3.0+ compatibility
+// use Elementor\Core\Schemes\Typography as Scheme_Typography;
+// use Elementor\Core\Schemes\Color as Scheme_Color;
 use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
 
@@ -787,7 +788,7 @@ class TC_Elementor_Widget extends Widget_Base
 }
 
 /**
- * Register TableCrafter Elementor Widget
+ * Register TableCrafter Elementor Widget with backward compatibility
  */
 function register_tc_elementor_widget()
 {
@@ -801,10 +802,34 @@ function register_tc_elementor_widget()
         return;
     }
 
-    // Register the widget
-    \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new TC_Elementor_Widget());
+    $widget_manager = \Elementor\Plugin::instance()->widgets_manager;
+    $widget = new TC_Elementor_Widget();
+
+    // Backward compatibility for Elementor versions
+    if (method_exists($widget_manager, 'register')) {
+        // Elementor 3.5+ - Use new register method
+        $widget_manager->register($widget);
+    } elseif (method_exists($widget_manager, 'register_widget_type')) {
+        // Elementor < 3.5 - Use deprecated method for backward compatibility
+        $widget_manager->register_widget_type($widget);
+    }
 }
-add_action('elementor/widgets/widgets_registered', 'register_tc_elementor_widget');
+
+/**
+ * Register widget using appropriate hook based on Elementor version
+ */
+function tc_register_elementor_hooks()
+{
+    // Use new hook for Elementor 3.5+ or fallback to deprecated hook
+    if (version_compare(ELEMENTOR_VERSION, '3.5.0', '>=')) {
+        add_action('elementor/widgets/register', 'register_tc_elementor_widget');
+    } else {
+        add_action('elementor/widgets/widgets_registered', 'register_tc_elementor_widget');
+    }
+}
+
+// Register hooks after Elementor is loaded to check version
+add_action('elementor/loaded', 'tc_register_elementor_hooks');
 
 /**
  * Add TableCrafter category to Elementor

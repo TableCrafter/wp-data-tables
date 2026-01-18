@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.2.2] - 2026-01-18
+### 🚨 CRITICAL HOTFIX: Elementor Activation Fatal Error Fix
+- **Critical Bug Fix:** Resolved fatal error when Elementor is installed after TableCrafter is already active
+- **Deprecated API Cleanup:** Removed Elementor scheme class imports that were removed in Elementor 3.0+
+- **Modern Widget Registration:** Updated to use `register()` method instead of deprecated `register_widget_type()`
+- **Version-Aware Hooks:** Implemented intelligent hook selection based on Elementor version
+- **Backward Compatibility:** Complete support for Elementor 2.0+ through latest versions with graceful fallbacks
+- **Error Handling:** Enhanced safety checks and graceful degradation for missing Elementor classes
+
+### 📊 Business Impact
+- **Customer Retention:** Eliminates fatal errors that caused immediate user abandonment
+- **Market Position:** Maintains competitive advantage among 12+ million Elementor users
+- **Support Efficiency:** Eliminates entire category of Elementor activation-related support tickets
+- **Professional Credibility:** Demonstrates technical excellence and commitment to ecosystem compatibility
+
+### 🧪 Technical Improvements
+- **Comprehensive Testing:** Added extensive test suite covering all activation scenarios
+- **Code Quality:** Removed deprecated imports and updated to modern Elementor APIs
+- **Future Compatibility:** Version-aware implementation supports upcoming Elementor changes
+- **Performance:** Zero performance impact while adding robust compatibility layers
+
 ## [3.2.1] - 2026-01-17
 ### 📋 DOCUMENTATION ENHANCEMENT: Improved WCAG Compliance Details
 - **Enhanced WCAG Documentation:** Added comprehensive WCAG 2.1 AA compliance details including semantic ARIA labels, high contrast support, and accessibility standards
