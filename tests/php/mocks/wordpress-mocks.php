@@ -8,13 +8,15 @@
  */
 
 if (!function_exists('wp_parse_url')) {
-    function wp_parse_url($url, $component = -1) {
+    function wp_parse_url($url, $component = -1)
+    {
         return parse_url($url, $component);
     }
 }
 
 if (!function_exists('wp_http_validate_url')) {
-    function wp_http_validate_url($url) {
+    function wp_http_validate_url($url)
+    {
         $parsed = parse_url($url);
         if (!$parsed || !isset($parsed['host'])) {
             return false;
@@ -44,31 +46,36 @@ if (!function_exists('wp_http_validate_url')) {
 }
 
 if (!function_exists('sanitize_text_field')) {
-    function sanitize_text_field($str) {
+    function sanitize_text_field($str)
+    {
         return htmlspecialchars(strip_tags(trim($str)), ENT_QUOTES, 'UTF-8');
     }
 }
 
 if (!function_exists('wp_unslash')) {
-    function wp_unslash($value) {
+    function wp_unslash($value)
+    {
         return stripslashes($value);
     }
 }
 
 if (!function_exists('wp_hash')) {
-    function wp_hash($data, $scheme = 'auth') {
+    function wp_hash($data, $scheme = 'auth')
+    {
         return md5($data);
     }
 }
 
 if (!function_exists('wp_json_encode')) {
-    function wp_json_encode($data, $options = 0, $depth = 512) {
+    function wp_json_encode($data, $options = 0, $depth = 512)
+    {
         return json_encode($data, $options, $depth);
     }
 }
 
 if (!function_exists('get_current_user_id')) {
-    function get_current_user_id() {
+    function get_current_user_id()
+    {
         return 0;
     }
 }
@@ -76,7 +83,8 @@ if (!function_exists('get_current_user_id')) {
 if (!function_exists('get_transient')) {
     $GLOBALS['_tc_transients'] = array();
 
-    function get_transient($transient) {
+    function get_transient($transient)
+    {
         return isset($GLOBALS['_tc_transients'][$transient])
             ? $GLOBALS['_tc_transients'][$transient]['value']
             : false;
@@ -84,7 +92,8 @@ if (!function_exists('get_transient')) {
 }
 
 if (!function_exists('set_transient')) {
-    function set_transient($transient, $value, $expiration = 0) {
+    function set_transient($transient, $value, $expiration = 0)
+    {
         $GLOBALS['_tc_transients'][$transient] = array(
             'value' => $value,
             'expiration' => $expiration,
@@ -95,7 +104,8 @@ if (!function_exists('set_transient')) {
 }
 
 if (!function_exists('delete_transient')) {
-    function delete_transient($transient) {
+    function delete_transient($transient)
+    {
         if (isset($GLOBALS['_tc_transients'][$transient])) {
             unset($GLOBALS['_tc_transients'][$transient]);
             return true;
@@ -105,19 +115,22 @@ if (!function_exists('delete_transient')) {
 }
 
 if (!function_exists('apply_filters')) {
-    function apply_filters($tag, $value, ...$args) {
+    function apply_filters($tag, $value, ...$args)
+    {
         return $value;
     }
 }
 
 if (!function_exists('add_filter')) {
-    function add_filter($tag, $callback, $priority = 10, $accepted_args = 1) {
+    function add_filter($tag, $callback, $priority = 10, $accepted_args = 1)
+    {
         return true;
     }
 }
 
 if (!function_exists('wp_verify_nonce')) {
-    function wp_verify_nonce($nonce, $action = -1) {
+    function wp_verify_nonce($nonce, $action = -1)
+    {
         // For testing, accept a specific test nonce
         return $nonce === 'test_nonce_' . $action;
     }
@@ -126,6 +139,115 @@ if (!function_exists('wp_verify_nonce')) {
 /**
  * Reset all mocked transients (useful between tests)
  */
-function tc_reset_mock_transients() {
+function tc_reset_mock_transients()
+{
     $GLOBALS['_tc_transients'] = array();
+}
+
+// WP_Error class mock
+if (!class_exists('WP_Error')) {
+    class WP_Error
+    {
+        public $code;
+        public $message;
+        public $data;
+
+        public function __construct($code = '', $message = '', $data = '')
+        {
+            $this->code = $code;
+            $this->message = $message;
+            $this->data = $data;
+        }
+
+        public function get_error_code()
+        {
+            return $this->code;
+        }
+
+        public function get_error_message()
+        {
+            return $this->message;
+        }
+    }
+}
+
+if (!function_exists('is_wp_error')) {
+    function is_wp_error($thing)
+    {
+        return $thing instanceof WP_Error;
+    }
+}
+
+if (!function_exists('site_url')) {
+    function site_url($path = '')
+    {
+        return 'http://example.com' . ($path ? '/' . ltrim($path, '/') : '');
+    }
+}
+
+if (!function_exists('home_url')) {
+    function home_url($path = '')
+    {
+        return 'http://example.com' . ($path ? '/' . ltrim($path, '/') : '');
+    }
+}
+
+if (!function_exists('wp_remote_get')) {
+    function wp_remote_get($url, $args = array())
+    {
+        return array('body' => '[]', 'response' => array('code' => 200));
+    }
+}
+
+if (!function_exists('wp_remote_retrieve_body')) {
+    function wp_remote_retrieve_body($response)
+    {
+        return isset($response['body']) ? $response['body'] : '';
+    }
+}
+
+if (!function_exists('get_option')) {
+    function get_option($option, $default = false)
+    {
+        return isset($GLOBALS['_tc_options'][$option]) ? $GLOBALS['_tc_options'][$option] : $default;
+    }
+}
+
+if (!function_exists('update_option')) {
+    function update_option($option, $value, $autoload = null)
+    {
+        $GLOBALS['_tc_options'][$option] = $value;
+        return true;
+    }
+}
+
+$GLOBALS['_tc_options'] = array();
+
+// Mock $wpdb for standalone tests
+if (!isset($GLOBALS['wpdb'])) {
+    $GLOBALS['wpdb'] = new class {
+        public $options = 'wp_options';
+
+        public function get_col($query)
+        {
+            // Return matching transients from our mock storage
+            $results = array();
+            foreach (array_keys($GLOBALS['_tc_transients']) as $key) {
+                if (strpos($key, 'tc_') === 0) {
+                    $results[] = '_transient_' . $key;
+                }
+            }
+            return $results;
+        }
+
+        public function prepare($query, ...$args)
+        {
+            return vsprintf(str_replace('%s', "'%s'", $query), $args);
+        }
+
+        public function esc_like($text)
+        {
+            return addcslashes($text, '_%\\');
+        }
+    };
 }

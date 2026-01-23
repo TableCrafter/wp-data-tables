@@ -23,7 +23,8 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     /**
      * Manually load the plugin being tested.
      */
-    function _manually_load_plugin() {
+    function _manually_load_plugin()
+    {
         require dirname(dirname(__DIR__)) . '/tablecrafter.php';
     }
     tests_add_filter('muplugins_loaded', '_manually_load_plugin');
@@ -42,6 +43,12 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     if (!defined('WPINC')) {
         define('WPINC', 'wp-includes');
     }
+    if (!defined('WP_CONTENT_DIR')) {
+        define('WP_CONTENT_DIR', '/tmp/wordpress/wp-content');
+    }
+    if (!defined('HOUR_IN_SECONDS')) {
+        define('HOUR_IN_SECONDS', 3600);
+    }
 
     // Define plugin constants
     define('TABLECRAFTER_VERSION', '3.4.0');
@@ -54,6 +61,8 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     // Load plugin classes (without full WordPress)
     require_once TABLECRAFTER_PATH . 'includes/class-tc-security.php';
     require_once TABLECRAFTER_PATH . 'includes/class-tc-cache.php';
+    require_once TABLECRAFTER_PATH . 'includes/class-tc-data-fetcher.php';
+    require_once TABLECRAFTER_PATH . 'includes/sources/class-tc-csv-source.php';
 }
 
 // Load Composer autoloader if available
