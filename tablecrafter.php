@@ -139,6 +139,9 @@ class TableCrafter
         add_action('wp_ajax_tc_elementor_preview', array($this, 'ajax_elementor_preview'));
         add_action('wp_ajax_nopriv_tc_elementor_preview', array($this, 'ajax_elementor_preview'));
 
+        // Airtable Token Handler [v3.5.0]
+        add_action('wp_ajax_tc_save_airtable_token', array($this, 'ajax_save_airtable_token'));
+
         if (!wp_next_scheduled('tc_refresher_cron')) {
             wp_schedule_event(time(), 'hourly', 'tc_refresher_cron');
         }
@@ -196,6 +199,7 @@ class TableCrafter
         $metrics_url = TABLECRAFTER_URL . 'demo-data/metrics.json';
         $employees_url = TABLECRAFTER_URL . 'demo-data/employees.csv';
         $sheets_url = 'https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit#gid=0';
+        $airtable_demo_url = 'airtable://appSampleBaseId/Employees';
         ?>
         <div class="wrap">
             <h1 class="wp-heading-inline"><?php esc_html_e('TableCrafter', 'tablecrafter-wp-data-tables'); ?></h1>
@@ -241,12 +245,18 @@ class TableCrafter
                                     onmouseout="this.style.background='white'; this.style.color='#0e7490'"
                                     data-url="<?php echo esc_url($employees_url); ?>">📊
                                     <?php esc_html_e('Employee List (CSV)', 'tablecrafter-wp-data-tables'); ?></a></li>
-                            <li style="margin-bottom: 0;"><a href="#" class="button button-large"
+                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large"
                                     style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;"
                                     onmouseover="this.style.background='#0891b2'; this.style.color='white'"
                                     onmouseout="this.style.background='white'; this.style.color='#0e7490'"
                                     data-url="<?php echo esc_url($metrics_url); ?>">📈
                                     <?php esc_html_e('Sales Metrics (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
+                            <li style="margin-bottom: 0;"><a href="#" class="button button-large"
+                                    style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;"
+                                    onmouseover="this.style.background='#0891b2'; this.style.color='white'"
+                                    onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                                    data-url="<?php echo esc_url($airtable_demo_url); ?>">🔮
+                                    <?php esc_html_e('Airtable Base (API)', 'tablecrafter-wp-data-tables'); ?></a></li>
                         </ul>
                         <div
                             style="margin-top: 12px; padding: 8px 12px; background: rgba(8, 145, 178, 0.1); border-radius: 6px; border: 1px dashed #0891b2;">
@@ -279,6 +289,12 @@ class TableCrafter
                                     <span class="dashicons dashicons-media-spreadsheet"
                                         style="margin-right: 4px; vertical-align: middle;"></span>
                                     <?php esc_html_e('Google Sheets', 'tablecrafter-wp-data-tables'); ?>
+                                </button>
+                                <button id="tc-airtable-btn" class="button button-secondary" type="button"
+                                    title="<?php esc_attr_e('Connect to Airtable Base', 'tablecrafter-wp-data-tables'); ?>">
+                                    <span class="dashicons dashicons-database"
+                                        style="margin-right: 4px; vertical-align: middle;"></span>
+                                    <?php esc_html_e('Airtable', 'tablecrafter-wp-data-tables'); ?>
                                 </button>
                             </div>
 
@@ -514,6 +530,7 @@ class TableCrafter
                 array('label' => __('📈 Sales Metrics (JSON)', 'tablecrafter-wp-data-tables'), 'value' => TABLECRAFTER_URL . 'demo-data/metrics.json'),
                 array('label' => __('👥 Employee List (CSV)', 'tablecrafter-wp-data-tables'), 'value' => TABLECRAFTER_URL . 'demo-data/employees.csv'),
                 array('label' => __('📋 Google Sheets Example', 'tablecrafter-wp-data-tables'), 'value' => 'https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit#gid=0'),
+                array('label' => __('🔮 Airtable Base (API)', 'tablecrafter-wp-data-tables'), 'value' => 'airtable://appSampleBaseId/Employees'),
             )
         ));
 
@@ -677,6 +694,35 @@ class TableCrafter
         </div>
         <?php
         return ob_get_clean();
+    }
+
+    /**
+     * AJAX Handler: Save Airtable Token securely
+     */
+    public function ajax_save_airtable_token()
+    {
+        // Check permissions and nonce
+        if (!current_user_can('manage_options') || !check_ajax_referer('tc_proxy_nonce', 'nonce', false)) {
+            wp_send_json_error(array('message' => 'Permission denied.'));
+        }
+
+        $token = isset($_POST['token']) ? sanitize_text_field(wp_unslash($_POST['token'])) : '';
+
+        if (empty($token)) {
+            wp_send_json_error(array('message' => 'Token is required.'));
+        }
+
+        // Encrypt and store
+        $security = TC_Security::get_instance();
+        $encrypted = $security->encrypt_token($token);
+
+        if (empty($encrypted)) {
+            wp_send_json_error(array('message' => 'Encryption failed.'));
+        }
+
+        update_option('tablecrafter_airtable_token', $encrypted);
+
+        wp_send_json_success(array('message' => 'Token saved securely.'));
     }
 
     /**

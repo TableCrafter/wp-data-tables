@@ -79,6 +79,87 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    // --- Airtable Integration (v3.5.0) ---
+    const atBtn = document.getElementById('tc-airtable-btn');
+    const atModal = document.getElementById('tc-airtable-modal');
+    const atCancel = document.getElementById('tc-at-cancel');
+    const atSave = document.getElementById('tc-at-save');
+
+    if (atBtn && atModal) {
+        // Open Modal
+        atBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            atModal.style.display = 'block';
+        });
+
+        // Close Modal
+        const closeModal = () => { atModal.style.display = 'none'; };
+        atCancel.addEventListener('click', closeModal);
+        
+        // Close on overlay click
+        atModal.querySelector('.tc-modal-overlay').addEventListener('click', closeModal);
+
+        // Save & Connect
+        atSave.addEventListener('click', function() {
+            const baseId = document.getElementById('tc-at-base').value.trim();
+            const tableName = document.getElementById('tc-at-table').value.trim();
+            const viewName = document.getElementById('tc-at-view').value.trim();
+            const token = document.getElementById('tc-at-token').value.trim();
+
+            if (!baseId || !tableName || !token) {
+                alert('Please fill in Base ID, Table Name, and Personal Access Token.');
+                return;
+            }
+
+            // 1. Save Token Securely via AJAX
+            const originalText = atSave.textContent;
+            atSave.textContent = 'Saving...';
+            atSave.disabled = true;
+
+            const formData = new FormData();
+            formData.append('action', 'tc_save_airtable_token');
+            formData.append('token', token);
+            formData.append('nonce', tablecrafterAdmin.nonce);
+
+            fetch(tablecrafterAdmin.ajaxUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    // 2. Generate Secure URL (Token is stored server-side)
+                    let url = `airtable://${baseId}/${tableName}`;
+                    if (viewName) {
+                        url += `?view=${encodeURIComponent(viewName)}`;
+                    }
+
+                    // 3. Update Input & Preview
+                    urlInput.value = url;
+                    urlInput.dispatchEvent(new Event('input'));
+                    
+                    closeModal();
+                    
+                    // Clear sensitive input
+                    document.getElementById('tc-at-token').value = ''; 
+                    
+                    setTimeout(() => previewBtn.click(), 100);
+                } else {
+                    alert('Error saving token: ' + (result.data.message || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Airtable Setup Error:', error);
+                alert('Network error. Please try again.');
+            })
+            .finally(() => {
+                atSave.textContent = originalText;
+                atSave.disabled = false;
+            });
+        });
+    }
+    // -------------------------------------
     // ---------------------------------------------
 
     const BUTTON_COLORS = {
