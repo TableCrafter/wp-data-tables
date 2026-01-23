@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.5.1] - 2026-01-23
+### Fixed
+- **Caching:** Implemented 5-minute cache TTL for Airtable requests to respect rate limits.
+- **Tests:** Fixed syntax error in Elementor integration validation tests.
+
 ## [3.5.0] - 2026-01-23
 ### Added
 - **Airtable Data Source:** Connect directly to Airtable bases using Personal Access Tokens (PAT).

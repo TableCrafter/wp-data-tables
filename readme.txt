@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 3.5.0
+Stable tag: 3.5.1
 Requires PHP: 7.4
 License: GPLv2 or later
 
