@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – Data to Beautiful Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: Transform any data source into responsive WordPress tables. WCAG 2.1 compliant, advanced export (Excel/PDF), keyboard navigation, screen readers.
- * Version: 3.3.2
+ * Version: 3.4.0
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '3.3.2');
+define('TABLECRAFTER_VERSION', '3.4.0');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -53,15 +53,15 @@ if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-performance-optimizer.php
 }
 
 // Load Elementor widget only when Elementor is available
-add_action('elementor/loaded', function() {
+add_action('elementor/loaded', function () {
     if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-elementor-widget.php')) {
         require_once TABLECRAFTER_PATH . 'includes/class-tc-elementor-widget.php';
-        
+
         // Register category first
         if (function_exists('add_tc_elementor_category')) {
             add_action('elementor/elements/categories_registered', 'add_tc_elementor_category');
         }
-        
+
         // Register widget using both hooks for maximum compatibility  
         if (function_exists('register_tc_elementor_widget')) {
             // Try both registration methods for maximum compatibility
@@ -128,7 +128,7 @@ class TableCrafter
         // Lead Magnet Handler
         add_action('wp_ajax_tc_subscribe_lead', array($this, 'handle_lead_subscription'));
         add_action('wp_ajax_nopriv_tc_subscribe_lead', array($this, 'handle_lead_subscription'));
-        
+
         // Advanced Export Handlers
         add_action('wp_ajax_tc_export_data', array($this, 'ajax_export_data'));
         add_action('wp_ajax_nopriv_tc_export_data', array($this, 'ajax_export_data'));
@@ -206,7 +206,8 @@ class TableCrafter
             <div class="tc-admin-layout">
 
                 <div class="tc-sidebar">
-                    <div class="card" style="margin: 0 0 20px 0; max-width: none; background: linear-gradient(135deg, #e0f7fa 0%, #f0f9ff 100%); border-left: 4px solid #0891b2;">
+                    <div class="card"
+                        style="margin: 0 0 20px 0; max-width: none; background: linear-gradient(135deg, #e0f7fa 0%, #f0f9ff 100%); border-left: 4px solid #0891b2;">
                         <h2 style="color: #0e7490; margin-top: 0; display: flex; align-items: center; gap: 8px;">
                             <span style="font-size: 20px;">🚀</span>
                             <?php esc_html_e('Quick Start Demos', 'tablecrafter-wp-data-tables'); ?>
@@ -215,23 +216,40 @@ class TableCrafter
                             <?php esc_html_e('Click any dataset below to instantly load a demo table:', 'tablecrafter-wp-data-tables'); ?>
                         </p>
                         <ul class="tc-demo-links" style="margin: 0;">
-                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large"
+                                    style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;"
+                                    onmouseover="this.style.background='#0891b2'; this.style.color='white'"
+                                    onmouseout="this.style.background='white'; this.style.color='#0e7490'"
                                     data-url="<?php echo esc_url($sheets_url); ?>">📑
-                                    <?php esc_html_e('Student Grades (Google Sheet)', 'tablecrafter-wp-data-tables'); ?></a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                                    <?php esc_html_e('Student Grades (Google Sheet)', 'tablecrafter-wp-data-tables'); ?></a>
+                            </li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large"
+                                    style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;"
+                                    onmouseover="this.style.background='#0891b2'; this.style.color='white'"
+                                    onmouseout="this.style.background='white'; this.style.color='#0e7490'"
                                     data-url="<?php echo esc_url($users_url); ?>">👤
                                     <?php esc_html_e('User Directory (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large"
+                                    style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;"
+                                    onmouseover="this.style.background='#0891b2'; this.style.color='white'"
+                                    onmouseout="this.style.background='white'; this.style.color='#0e7490'"
                                     data-url="<?php echo esc_url($products_url); ?>">📦
                                     <?php esc_html_e('Product Inventory (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                            <li style="margin-bottom: 8px;"><a href="#" class="button button-large"
+                                    style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;"
+                                    onmouseover="this.style.background='#0891b2'; this.style.color='white'"
+                                    onmouseout="this.style.background='white'; this.style.color='#0e7490'"
                                     data-url="<?php echo esc_url($employees_url); ?>">📊
                                     <?php esc_html_e('Employee List (CSV)', 'tablecrafter-wp-data-tables'); ?></a></li>
-                            <li style="margin-bottom: 0;"><a href="#" class="button button-large" style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='#0891b2'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#0e7490'"
+                            <li style="margin-bottom: 0;"><a href="#" class="button button-large"
+                                    style="width: 100%; text-align: left; background: white; border: 2px solid #0891b2; color: #0e7490; font-weight: 600; transition: all 0.2s ease;"
+                                    onmouseover="this.style.background='#0891b2'; this.style.color='white'"
+                                    onmouseout="this.style.background='white'; this.style.color='#0e7490'"
                                     data-url="<?php echo esc_url($metrics_url); ?>">📈
                                     <?php esc_html_e('Sales Metrics (JSON)', 'tablecrafter-wp-data-tables'); ?></a></li>
                         </ul>
-                        <div style="margin-top: 12px; padding: 8px 12px; background: rgba(8, 145, 178, 0.1); border-radius: 6px; border: 1px dashed #0891b2;">
+                        <div
+                            style="margin-top: 12px; padding: 8px 12px; background: rgba(8, 145, 178, 0.1); border-radius: 6px; border: 1px dashed #0891b2;">
                             <p style="margin: 0; font-size: 12px; color: #155e75; text-align: center;">
                                 ↑ <strong>Instant Demo:</strong> No setup required! Each dataset shows different table features.
                             </p>
@@ -320,7 +338,8 @@ class TableCrafter
                         </div>
 
                         <div class="button-group">
-                            <button id="tc-preview-btn" class="button button-primary button-large"><?php esc_html_e('Preview Table', 'tablecrafter-wp-data-tables'); ?></button>
+                            <button id="tc-preview-btn"
+                                class="button button-primary button-large"><?php esc_html_e('Preview Table', 'tablecrafter-wp-data-tables'); ?></button>
                         </div>
                     </div>
 
@@ -338,9 +357,11 @@ class TableCrafter
                 <div class="tc-preview-area">
                     <div class="card"
                         style="margin: 0; max-width: none; min-height: 500px; display: flex; flex-direction: column;">
-                        <h2 style="border-bottom: 1px solid #f0f0f1; padding-bottom: 15px; margin-bottom: 15px; margin-top: 0; display: flex; align-items: center; justify-content: space-between;">
+                        <h2
+                            style="border-bottom: 1px solid #f0f0f1; padding-bottom: 15px; margin-bottom: 15px; margin-top: 0; display: flex; align-items: center; justify-content: space-between;">
                             <span><?php esc_html_e('Live Preview', 'tablecrafter-wp-data-tables'); ?></span>
-                            <small style="font-weight: normal; color: #666; font-size: 13px;">Try search, sort, filters & export</small>
+                            <small style="font-weight: normal; color: #666; font-size: 13px;">Try search, sort, filters &
+                                export</small>
                         </h2>
 
                         <div id="tc-preview-wrap" style="flex: 1; overflow: auto; background: #fff;">
@@ -648,8 +669,7 @@ class TableCrafter
             data-refresh-interval="<?php echo esc_attr($atts['refresh_interval']); ?>"
             data-refresh-indicator="<?php echo $atts['refresh_indicator'] ? 'true' : 'false'; ?>"
             data-refresh-countdown="<?php echo $atts['refresh_countdown'] ? 'true' : 'false'; ?>"
-            data-refresh-last-updated="<?php echo $atts['refresh_last_updated'] ? 'true' : 'false'; ?>"
-            data-ssr="true">
+            data-refresh-last-updated="<?php echo $atts['refresh_last_updated'] ? 'true' : 'false'; ?>" data-ssr="true">
             <?php echo $html_content ? $this->sanitize_table_html($html_content) : '<div class="tc-loading">' . esc_html__('Loading TableCrafter...', 'tablecrafter-wp-data-tables') . '</div>'; ?>
             <?php if (!empty($initial_data)): ?>
                 <script type="application/json" class="tc-initial-data"><?php echo wp_json_encode($initial_data); ?></script>
@@ -1147,8 +1167,8 @@ class TableCrafter
         // 3. Email Addresses - Enhanced validation
         if (filter_var($str, FILTER_VALIDATE_EMAIL) && strlen($str) <= 254) {
             return sprintf(
-                '<a href="mailto:%s" title="%s">%s</a>', 
-                esc_attr($str), 
+                '<a href="mailto:%s" title="%s">%s</a>',
+                esc_attr($str),
                 esc_attr('Send email to ' . $str),
                 esc_html($str)
             );
@@ -1168,9 +1188,9 @@ class TableCrafter
         // 5. URLs - Enhanced security validation
         if ($this->is_safe_display_url($str)) {
             return sprintf(
-                '<a href="%s" target="_blank" rel="noopener noreferrer" title="%s">%s</a>', 
+                '<a href="%s" target="_blank" rel="noopener noreferrer" title="%s">%s</a>',
                 esc_url($str),
-                esc_attr('Open link in new window'), 
+                esc_attr('Open link in new window'),
                 esc_html($this->truncate_url($str))
             );
         }
@@ -1311,19 +1331,19 @@ class TableCrafter
         $tags = [];
         $max_items = 10; // Prevent excessive DOM creation
         $items = array_slice($val, 0, $max_items);
-        
+
         foreach ($items as $item) {
             $display = $this->extract_safe_display_value($item);
             $tags[] = sprintf('<span class="tc-tag">%s</span>', esc_html($display));
         }
 
         $result = '<div class="tc-tag-list">' . implode('', $tags);
-        
+
         if (count($val) > $max_items) {
             $remaining = count($val) - $max_items;
             $result .= sprintf('<span class="tc-tag tc-more">+%d more</span>', $remaining);
         }
-        
+
         $result .= '</div>';
         return $result;
     }
@@ -1338,7 +1358,7 @@ class TableCrafter
     {
         // Convert object to array for safe handling
         $array_val = json_decode(json_encode($val), true);
-        
+
         if (!is_array($array_val)) {
             return esc_html('[Object]');
         }
@@ -1368,7 +1388,7 @@ class TableCrafter
                     return $value;
                 }
             }
-            
+
             // Fallback to safe JSON representation
             return json_encode($item, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
         }
@@ -1739,8 +1759,8 @@ class TableCrafter
         // Known safe proxy configurations (only if explicitly enabled)
         $proxy_headers = array(
             'cloudflare' => 'HTTP_CF_CONNECTING_IP',
-            'forwarded'  => 'HTTP_X_FORWARDED_FOR',
-            'real_ip'    => 'HTTP_X_REAL_IP',
+            'forwarded' => 'HTTP_X_FORWARDED_FOR',
+            'real_ip' => 'HTTP_X_REAL_IP',
         );
 
         // Check trusted proxy headers first
@@ -1796,7 +1816,7 @@ class TableCrafter
         $this->register_assets();
         wp_enqueue_style('tablecrafter-style');
         wp_enqueue_script('tablecrafter-lib');
-        
+
         include TABLECRAFTER_PATH . 'views/welcome.php';
     }
 
@@ -1911,7 +1931,7 @@ class TableCrafter
 
         // Fetch data using existing method
         $data_result = $this->fetch_data_from_source($source);
-        
+
         if (is_wp_error($data_result)) {
             wp_send_json_error('Data fetch failed: ' . $data_result->get_error_message());
             return;
@@ -1991,14 +2011,14 @@ class TableCrafter
 
         // Get export ID
         $export_id = isset($_GET['export_id']) ? sanitize_text_field(wp_unslash($_GET['export_id'])) : '';
-        
+
         if (empty($export_id)) {
             wp_die('Invalid export ID');
         }
 
         // Retrieve export data
         $export_data = get_transient('tc_export_' . $export_id);
-        
+
         if (!$export_data) {
             wp_die('Export not found or expired');
         }
@@ -2011,7 +2031,7 @@ class TableCrafter
         // Set headers for download
         $filename = $export_data['filename'];
         $mime_type = $export_data['mime_type'];
-        
+
         header('Content-Type: ' . $mime_type);
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         header('Content-Length: ' . $export_data['size']);
@@ -2119,16 +2139,17 @@ class TableCrafter
      * 
      * @return string HTML placeholder content
      */
-    private function render_empty_source_placeholder() {
+    private function render_empty_source_placeholder()
+    {
         // Check if we're in the block editor (Gutenberg)
-        $is_in_editor = function_exists('get_current_screen') && 
-                       get_current_screen() && 
-                       get_current_screen()->is_block_editor;
-        
+        $is_in_editor = function_exists('get_current_screen') &&
+            get_current_screen() &&
+            get_current_screen()->is_block_editor;
+
         // Also check for REST API context (block editor preview)
-        $is_rest_request = (defined('REST_REQUEST') && REST_REQUEST) || 
-                          (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/wp-json/') !== false);
-        
+        $is_rest_request = (defined('REST_REQUEST') && REST_REQUEST) ||
+            (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/wp-json/') !== false);
+
         if ($is_in_editor || $is_rest_request) {
             // Friendly message for block editor
             return '
@@ -2149,15 +2170,15 @@ class TableCrafter
                             <line x1="12" y1="6" x2="12" y2="18" stroke="currentColor" stroke-width="2"/>
                         </svg>
                     </div>
-                    <h3 style="margin: 0 0 8px 0; color: #333; font-size: 18px; font-weight: 600;">' . 
-                        esc_html__('Configure Your Data Source', 'tablecrafter-wp-data-tables') . 
-                    '</h3>
-                    <p style="margin: 0 0 16px 0; font-size: 14px; line-height: 1.5;">' . 
-                        esc_html__('Add a JSON URL, CSV file, or Google Sheet to create your table.', 'tablecrafter-wp-data-tables') . 
-                    '</p>
-                    <p style="margin: 0; font-size: 12px; color: #888;">' . 
-                        esc_html__('👉 Use the sidebar settings to get started', 'tablecrafter-wp-data-tables') . 
-                    '</p>
+                    <h3 style="margin: 0 0 8px 0; color: #333; font-size: 18px; font-weight: 600;">' .
+                esc_html__('Configure Your Data Source', 'tablecrafter-wp-data-tables') .
+                '</h3>
+                    <p style="margin: 0 0 16px 0; font-size: 14px; line-height: 1.5;">' .
+                esc_html__('Add a JSON URL, CSV file, or Google Sheet to create your table.', 'tablecrafter-wp-data-tables') .
+                '</p>
+                    <p style="margin: 0; font-size: 12px; color: #888;">' .
+                esc_html__('👉 Use the sidebar settings to get started', 'tablecrafter-wp-data-tables') .
+                '</p>
                 </div>';
         } else {
             // Simple message for frontend when block is published without source
@@ -2168,9 +2189,9 @@ class TableCrafter
                 border-radius: 4px; 
                 color: #856404;
                 font-size: 14px;
-            ">' . 
-                esc_html__('⚠️ TableCrafter: Please configure a data source to display your table.', 'tablecrafter-wp-data-tables') . 
-            '</div>';
+            ">' .
+                esc_html__('⚠️ TableCrafter: Please configure a data source to display your table.', 'tablecrafter-wp-data-tables') .
+                '</div>';
         }
     }
 
@@ -2183,7 +2204,8 @@ class TableCrafter
      * @param string $html_content Raw HTML content from table generation
      * @return string Sanitized HTML content
      */
-    private function sanitize_table_html($html_content) {
+    private function sanitize_table_html($html_content)
+    {
         // Define allowed HTML tags and attributes for TableCrafter tables
         $allowed_tags = array(
             'table' => array('class' => true, 'id' => true),
@@ -2191,24 +2213,24 @@ class TableCrafter
             'tbody' => array('class' => true),
             'tr' => array('class' => true, 'data-tc-row-id' => true),
             'th' => array(
-                'class' => true, 
-                'tabindex' => true, 
-                'aria-sort' => true, 
+                'class' => true,
+                'tabindex' => true,
+                'aria-sort' => true,
                 'data-field' => true,
                 'scope' => true
             ),
             'td' => array('class' => true, 'data-tc-label' => true),
             'a' => array(
-                'href' => true, 
-                'title' => true, 
-                'target' => true, 
+                'href' => true,
+                'title' => true,
+                'target' => true,
                 'rel' => true,
                 'class' => true
             ),
             'img' => array(
-                'src' => true, 
-                'alt' => true, 
-                'style' => true, 
+                'src' => true,
+                'alt' => true,
+                'style' => true,
                 'loading' => true,
                 'class' => true,
                 'width' => true,
@@ -2227,20 +2249,20 @@ class TableCrafter
 
         // Use wp_kses with our custom configuration
         // Add temporary filter to ensure mailto is always allowed
-        $filter_callback = function($protocols) {
+        $filter_callback = function ($protocols) {
             if (!in_array('mailto', $protocols)) {
                 $protocols[] = 'mailto';
             }
             return $protocols;
         };
-        
+
         add_filter('wp_kses_allowed_protocols', $filter_callback, 10, 1);
-        
+
         $sanitized = wp_kses($html_content, $allowed_tags, $allowed_protocols);
-        
+
         // Clean up the specific filter
         remove_filter('wp_kses_allowed_protocols', $filter_callback, 10);
-        
+
         return $sanitized;
     }
 
