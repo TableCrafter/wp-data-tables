@@ -1,5 +1,38 @@
 # Changelog
 
+## [Unreleased] - Security & Architecture Improvements
+
+### Added
+- **Uninstall Script:** Clean plugin removal via `uninstall.php` - removes all options, transients, cron jobs, and temp files
+- **Secure Export Directory:** Export files now stored in protected wp-uploads subdirectory with `.htaccess` blocking
+- **Debug Mode:** JavaScript logging now conditional via `window.TABLECRAFTER_DEBUG = true`
+- **Cache Cleanup Method:** New `clear_all_caches()` method using WordPress APIs properly
+- **Export Cleanup Cron:** Automatic cleanup of old temporary export files
+- **Trusted Proxy Filter:** `tablecrafter_trusted_ip_headers` filter for configuring proxy headers
+
+### Security
+- **SSL Verification Enabled:** All cURL requests now verify SSL certificates (prevents MITM attacks)
+- **XSS Fix (PHP):** Sanitized `$_GET['demo_url']` parameter with `sanitize_text_field()` and `wp_unslash()`
+- **XSS Fix (JS):** Added `escapeHtml()` and `sanitizeUrl()` helpers, fixed `formatValue()` function
+- **Nonce Hardening:** All AJAX handlers now sanitize nonces before verification
+- **IP Spoofing Fix:** Rate limiter now uses `REMOTE_ADDR` by default (proxy headers opt-in via filter)
+- **SQL Injection Prevention:** CLI cache clear now uses prepared statements and WordPress APIs
+- **Directory Traversal Prevention:** Enhanced export file cleanup with path validation
+
+### Changed
+- Console.log statements wrapped in debug mode check for production cleanliness
+- Export temp files use UUID-based naming for unpredictability
+- User-agent string updated to identify TableCrafter version
+
+### Developer Notes
+- To enable debug logging: `window.TABLECRAFTER_DEBUG = true`
+- To trust proxy headers (e.g., behind Cloudflare):
+  ```php
+  add_filter('tablecrafter_trusted_ip_headers', function() {
+      return array('cloudflare'); // or 'forwarded', 'real_ip'
+  });
+  ```
+
 ## [3.3.2] - 2026-01-18
 ### 🔧 HOTFIX: Button Text Truncation in Admin Interface
 - **Critical Fix:** Resolved button text truncation in 300px sidebar where "Upload File (CSV/JSON)" displayed as "Upload File (CV"

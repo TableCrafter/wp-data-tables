@@ -25,10 +25,25 @@ define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 /**
  * Include Dependencies
  */
+// Core utilities (load first as others depend on them)
+if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-security.php')) {
+    require_once TABLECRAFTER_PATH . 'includes/class-tc-security.php';
+}
+
+if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-cache.php')) {
+    require_once TABLECRAFTER_PATH . 'includes/class-tc-cache.php';
+}
+
+// Data sources
 if (file_exists(TABLECRAFTER_PATH . 'includes/sources/class-tc-csv-source.php')) {
     require_once TABLECRAFTER_PATH . 'includes/sources/class-tc-csv-source.php';
 }
 
+if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-data-fetcher.php')) {
+    require_once TABLECRAFTER_PATH . 'includes/class-tc-data-fetcher.php';
+}
+
+// Feature handlers
 if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-export-handler.php')) {
     require_once TABLECRAFTER_PATH . 'includes/class-tc-export-handler.php';
 }
@@ -232,7 +247,7 @@ class TableCrafter
                             <div style="display: flex; gap: 5px; margin-bottom: 8px;">
                                 <input type="text" id="tc-preview-url" class="widefat"
                                     placeholder="https://api.example.com/data.json" style="flex: 1;"
-                                    value="<?php echo isset($_GET['demo_url']) ? esc_attr($_GET['demo_url']) : ''; ?>">
+                                    value="<?php echo isset($_GET['demo_url']) ? esc_attr(sanitize_text_field(wp_unslash($_GET['demo_url']))) : ''; ?>">
                             </div>
 
                             <div class="button-group">
@@ -379,7 +394,8 @@ class TableCrafter
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('tc_proxy_nonce'),
             'exportNonce' => wp_create_nonce('tc_export_nonce'),
-            'downloadNonce' => wp_create_nonce('tc_download_nonce')
+            'downloadNonce' => wp_create_nonce('tc_download_nonce'),
+            'i18n' => $this->get_js_i18n_strings()
         ));
 
         wp_register_style(
@@ -763,8 +779,20 @@ class TableCrafter
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'curl/8.7.1');
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+
+        // SSL verification - enabled for security (prevents MITM attacks)
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+
+        // Use WordPress bundled CA certificates if available
+        $ca_bundle = ABSPATH . WPINC . '/certificates/ca-bundle.crt';
+        if (file_exists($ca_bundle)) {
+            curl_setopt($ch, CURLOPT_CAINFO, $ca_bundle);
+        }
+
+        curl_setopt($ch, CURLOPT_USERAGENT, 'TableCrafter/' . TABLECRAFTER_VERSION . ' (WordPress Plugin)');
         curl_setopt($ch, CURLOPT_COOKIEFILE, "");
 
         $body = curl_exec($ch);
@@ -1472,9 +1500,9 @@ class TableCrafter
 
     /**
      * WP-CLI Utility Commands.
-     * 
+     *
      * Usage: wp tablecrafter [clear-cache|warm-cache]
-     * 
+     *
      * @param array $args Positional arguments.
      * @param array $assoc_args Associative arguments.
      * @return void
@@ -1484,15 +1512,61 @@ class TableCrafter
         $action = isset($args[0]) ? $args[0] : '';
 
         if ($action === 'clear-cache') {
-            global $wpdb;
-            $wpdb->query("DELETE FROM $wpdb->options WHERE option_name LIKE '_transient_tc_cache_%'");
-            WP_CLI::success('TableCrafter cache cleared.');
+            $cleared = $this->clear_all_caches();
+            WP_CLI::success(sprintf('TableCrafter cache cleared. %d transients removed.', $cleared));
         } elseif ($action === 'warm-cache') {
             $this->automated_cache_refresh();
             WP_CLI::success('TableCrafter cache warmed for all tracked URLs.');
         } else {
             WP_CLI::error('Usage: wp tablecrafter [clear-cache|warm-cache]');
         }
+    }
+
+    /**
+     * Clear all TableCrafter caches using WordPress API.
+     *
+     * @return int Number of transients cleared.
+     */
+    private function clear_all_caches(): int
+    {
+        global $wpdb;
+        $cleared = 0;
+
+        // Get all TableCrafter transient names using prepared statement
+        $transient_names = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s",
+                $wpdb->esc_like('_transient_tc_cache_') . '%',
+                $wpdb->esc_like('_transient_tc_html_') . '%',
+                $wpdb->esc_like('_transient_tc_export_') . '%'
+            )
+        );
+
+        // Delete each transient using WordPress API
+        foreach ($transient_names as $transient_name) {
+            // Remove '_transient_' prefix to get actual transient name
+            $name = str_replace('_transient_', '', $transient_name);
+            if (delete_transient($name)) {
+                $cleared++;
+            }
+        }
+
+        // Also clear rate limit transients
+        $rate_transients = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+                $wpdb->esc_like('_transient_tc_rate_') . '%'
+            )
+        );
+
+        foreach ($rate_transients as $transient_name) {
+            $name = str_replace('_transient_', '', $transient_name);
+            if (delete_transient($name)) {
+                $cleared++;
+            }
+        }
+
+        return $cleared;
     }
 
     /**
@@ -1573,40 +1647,129 @@ class TableCrafter
     }
 
     /**
+     * Get translatable strings for JavaScript.
+     *
+     * @return array Associative array of translation strings.
+     */
+    private function get_js_i18n_strings(): array
+    {
+        return array(
+            // Table labels
+            'table' => __('Data table', 'tablecrafter-wp-data-tables'),
+            'loading' => __('Loading data...', 'tablecrafter-wp-data-tables'),
+            'noResults' => __('No results found', 'tablecrafter-wp-data-tables'),
+            'noData' => __('No data available', 'tablecrafter-wp-data-tables'),
+            'error' => __('Error loading data', 'tablecrafter-wp-data-tables'),
+
+            // Search
+            'search' => __('Search...', 'tablecrafter-wp-data-tables'),
+            'searchPlaceholder' => __('Search table data', 'tablecrafter-wp-data-tables'),
+            'clearSearch' => __('Clear search', 'tablecrafter-wp-data-tables'),
+
+            // Sorting
+            'sortAsc' => __('Sort ascending', 'tablecrafter-wp-data-tables'),
+            'sortDesc' => __('Sort descending', 'tablecrafter-wp-data-tables'),
+            'sortBy' => __('Sort by {column}', 'tablecrafter-wp-data-tables'),
+
+            // Filtering
+            'filter' => __('Filter', 'tablecrafter-wp-data-tables'),
+            'filterBy' => __('Filter {column}', 'tablecrafter-wp-data-tables'),
+            'clearFilters' => __('Clear all filters', 'tablecrafter-wp-data-tables'),
+            'allItems' => __('All', 'tablecrafter-wp-data-tables'),
+
+            // Pagination
+            'pagination' => __('Table pagination', 'tablecrafter-wp-data-tables'),
+            'previous' => __('Previous', 'tablecrafter-wp-data-tables'),
+            'next' => __('Next', 'tablecrafter-wp-data-tables'),
+            'first' => __('First', 'tablecrafter-wp-data-tables'),
+            'last' => __('Last', 'tablecrafter-wp-data-tables'),
+            'page' => __('Page', 'tablecrafter-wp-data-tables'),
+            'of' => __('of', 'tablecrafter-wp-data-tables'),
+            'rowsPerPage' => __('Rows per page', 'tablecrafter-wp-data-tables'),
+            'showing' => __('Showing {start} to {end} of {total} entries', 'tablecrafter-wp-data-tables'),
+
+            // Export
+            'export' => __('Export', 'tablecrafter-wp-data-tables'),
+            'exportCsv' => __('Export to CSV', 'tablecrafter-wp-data-tables'),
+            'exportExcel' => __('Export to Excel', 'tablecrafter-wp-data-tables'),
+            'exportPdf' => __('Export to PDF', 'tablecrafter-wp-data-tables'),
+            'copyClipboard' => __('Copy to clipboard', 'tablecrafter-wp-data-tables'),
+            'copied' => __('Copied!', 'tablecrafter-wp-data-tables'),
+            'exportSuccess' => __('Export completed', 'tablecrafter-wp-data-tables'),
+            'exportError' => __('Export failed', 'tablecrafter-wp-data-tables'),
+
+            // Auto-refresh
+            'autoRefresh' => __('Auto-refresh', 'tablecrafter-wp-data-tables'),
+            'refreshPaused' => __('Auto-refresh paused', 'tablecrafter-wp-data-tables'),
+            'refreshResumed' => __('Auto-refresh resumed', 'tablecrafter-wp-data-tables'),
+            'lastUpdated' => __('Last updated: {time}', 'tablecrafter-wp-data-tables'),
+            'nextRefresh' => __('Next refresh in {time}', 'tablecrafter-wp-data-tables'),
+            'refreshNow' => __('Refresh now', 'tablecrafter-wp-data-tables'),
+
+            // Boolean values
+            'yes' => __('Yes', 'tablecrafter-wp-data-tables'),
+            'no' => __('No', 'tablecrafter-wp-data-tables'),
+            'true' => __('True', 'tablecrafter-wp-data-tables'),
+            'false' => __('False', 'tablecrafter-wp-data-tables'),
+
+            // Accessibility
+            'expandRow' => __('Expand row', 'tablecrafter-wp-data-tables'),
+            'collapseRow' => __('Collapse row', 'tablecrafter-wp-data-tables'),
+            'selectRow' => __('Select row', 'tablecrafter-wp-data-tables'),
+            'selectAll' => __('Select all', 'tablecrafter-wp-data-tables'),
+            'deselectAll' => __('Deselect all', 'tablecrafter-wp-data-tables'),
+            'selected' => __('{count} selected', 'tablecrafter-wp-data-tables'),
+        );
+    }
+
+    /**
      * Get Client IP Address.
-     * 
+     *
      * Handles proxies and load balancers safely.
-     * 
+     * SECURITY: Only trusts proxy headers when explicitly configured via filter.
+     *
      * @return string The client IP address.
      */
     private function get_client_ip(): string
     {
-        $ip = '';
+        // Allow site owners to specify trusted proxy headers via filter
+        // Default: only trust REMOTE_ADDR (direct connection)
+        $trusted_headers = apply_filters('tablecrafter_trusted_ip_headers', array());
 
-        // Check for proxy headers (only trust if you control the proxy)
-        $headers = array(
-            'HTTP_CF_CONNECTING_IP',     // Cloudflare
-            'HTTP_X_FORWARDED_FOR',      // Standard proxy header
-            'HTTP_X_REAL_IP',            // Nginx proxy
-            'REMOTE_ADDR'                // Direct connection
+        // Known safe proxy configurations (only if explicitly enabled)
+        $proxy_headers = array(
+            'cloudflare' => 'HTTP_CF_CONNECTING_IP',
+            'forwarded'  => 'HTTP_X_FORWARDED_FOR',
+            'real_ip'    => 'HTTP_X_REAL_IP',
         );
 
-        foreach ($headers as $header) {
-            if (!empty($_SERVER[$header])) {
-                // X-Forwarded-For can contain multiple IPs, take the first
-                $ip = explode(',', sanitize_text_field(wp_unslash($_SERVER[$header])))[0];
-                $ip = trim($ip);
+        // Check trusted proxy headers first
+        foreach ($trusted_headers as $header_key) {
+            if (isset($proxy_headers[$header_key])) {
+                $header = $proxy_headers[$header_key];
+                if (!empty($_SERVER[$header])) {
+                    // X-Forwarded-For can contain multiple IPs, take the first (client IP)
+                    $ip = explode(',', sanitize_text_field(wp_unslash($_SERVER[$header])))[0];
+                    $ip = trim($ip);
 
-                // Validate it's a proper IP
-                if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                    break;
+                    // Validate it's a proper IP and not a private/reserved range
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                        return $ip;
+                    }
                 }
-                $ip = '';
+            }
+        }
+
+        // Default: use REMOTE_ADDR (cannot be spoofed at HTTP level)
+        if (!empty($_SERVER['REMOTE_ADDR'])) {
+            $ip = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR']));
+            if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                return $ip;
             }
         }
 
         // Fallback to a hash if no valid IP found (shouldn't happen)
-        return $ip ?: 'unknown_' . md5(wp_json_encode($_SERVER));
+        return 'unknown_' . wp_hash(wp_json_encode($_SERVER));
     }
 
     /**
@@ -1668,9 +1831,9 @@ class TableCrafter
      */
     public function handle_lead_subscription(): void
     {
-        // Verify nonce
-        // Note: Using 'tc_lead_nonce' which should be localized in the frontend script
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'tc_lead_nonce')) {
+        // Verify nonce with proper sanitization
+        $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
+        if (empty($nonce) || !wp_verify_nonce($nonce, 'tc_lead_nonce')) {
             wp_send_json_error('Invalid nonce');
             return;
         }
@@ -1720,8 +1883,9 @@ class TableCrafter
      */
     public function ajax_export_data(): void
     {
-        // Verify nonce
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'tc_export_nonce')) {
+        // Verify nonce with proper sanitization
+        $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
+        if (empty($nonce) || !wp_verify_nonce($nonce, 'tc_export_nonce')) {
             wp_send_json_error('Invalid nonce');
             return;
         }
@@ -1819,13 +1983,14 @@ class TableCrafter
      */
     public function ajax_download_export(): void
     {
-        // Verify nonce
-        if (!isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'tc_download_nonce')) {
+        // Verify nonce with proper sanitization
+        $nonce = isset($_GET['nonce']) ? sanitize_text_field(wp_unslash($_GET['nonce'])) : '';
+        if (empty($nonce) || !wp_verify_nonce($nonce, 'tc_download_nonce')) {
             wp_die('Invalid nonce');
         }
 
         // Get export ID
-        $export_id = isset($_GET['export_id']) ? sanitize_text_field($_GET['export_id']) : '';
+        $export_id = isset($_GET['export_id']) ? sanitize_text_field(wp_unslash($_GET['export_id'])) : '';
         
         if (empty($export_id)) {
             wp_die('Invalid export ID');
@@ -1873,8 +2038,9 @@ class TableCrafter
      */
     public function ajax_elementor_preview(): void
     {
-        // Verify nonce
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'tc_proxy_nonce')) {
+        // Verify nonce with proper sanitization
+        $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
+        if (empty($nonce) || !wp_verify_nonce($nonce, 'tc_proxy_nonce')) {
             wp_send_json_error('Invalid nonce');
             return;
         }

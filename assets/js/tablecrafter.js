@@ -5,9 +5,67 @@
  * @license MIT
  */
 
+/**
+ * Debug utility - only logs when debug mode is enabled
+ * Enable via: window.TABLECRAFTER_DEBUG = true or data-debug="true" on container
+ */
+const TC_DEBUG = {
+  enabled: typeof window !== 'undefined' && window.TABLECRAFTER_DEBUG === true,
+  log: function(...args) {
+    if (this.enabled) {
+      console.log('[TableCrafter]', ...args);
+    }
+  },
+  warn: function(...args) {
+    if (this.enabled) {
+      console.warn('[TableCrafter]', ...args);
+    }
+  },
+  error: function(...args) {
+    // Always log errors
+    console.error('[TableCrafter]', ...args);
+  }
+};
+
+/**
+ * Internationalization utility
+ * Gets translated strings from WordPress localization or falls back to defaults
+ */
+const TC_I18N = {
+  strings: (typeof window !== 'undefined' && window.tablecrafterData && window.tablecrafterData.i18n)
+    ? window.tablecrafterData.i18n
+    : {},
+
+  /**
+   * Get a translated string with optional placeholder replacement
+   * @param {string} key - The translation key
+   * @param {Object} replacements - Object of placeholder replacements
+   * @param {string} fallback - Fallback string if key not found
+   * @returns {string} The translated string
+   */
+  get: function(key, replacements = {}, fallback = null) {
+    let str = this.strings[key] || fallback || key;
+
+    // Replace placeholders like {column}, {count}, {time}
+    Object.keys(replacements).forEach(placeholder => {
+      str = str.replace(new RegExp(`\\{${placeholder}\\}`, 'g'), replacements[placeholder]);
+    });
+
+    return str;
+  },
+
+  /**
+   * Check if i18n strings are available
+   * @returns {boolean}
+   */
+  isAvailable: function() {
+    return Object.keys(this.strings).length > 0;
+  }
+};
+
 class TableCrafter {
   constructor(container, config = {}) {
-    console.log('TableCrafter: Initializing for', container);
+    TC_DEBUG.log('Initializing for', container);
     // Handle container parameter
     this.container = this.resolveContainer(container);
     if (!this.container) {
@@ -24,7 +82,7 @@ class TableCrafter {
       sortable: true,
       filterable: true,
       globalSearch: true,
-      globalSearchPlaceholder: 'Search...',
+      globalSearchPlaceholder: TC_I18N.get('search', {}, 'Search...'),
       exportable: false,
       exportFiltered: true,
       exportFilename: 'table-export',
@@ -168,16 +226,16 @@ class TableCrafter {
           focusVisible: true
         },
         labels: {
-          table: 'Data table',
-          search: 'Search table data',
-          pagination: 'Table pagination',
-          sort: 'Sort by {column}',
-          filter: 'Filter {column}',
-          edit: 'Edit cell',
-          export: 'Export table data',
-          noResults: 'No data found',
-          loading: 'Loading data',
-          error: 'Error loading data'
+          table: TC_I18N.get('table', {}, 'Data table'),
+          search: TC_I18N.get('searchPlaceholder', {}, 'Search table data'),
+          pagination: TC_I18N.get('pagination', {}, 'Table pagination'),
+          sort: TC_I18N.get('sortBy', {}, 'Sort by {column}'),
+          filter: TC_I18N.get('filterBy', {}, 'Filter {column}'),
+          edit: TC_I18N.get('edit', {}, 'Edit cell'),
+          export: TC_I18N.get('export', {}, 'Export table data'),
+          noResults: TC_I18N.get('noResults', {}, 'No results found'),
+          loading: TC_I18N.get('loading', {}, 'Loading data...'),
+          error: TC_I18N.get('error', {}, 'Error loading data')
         }
       },
       // Smart Auto-Refresh configuration
@@ -246,7 +304,7 @@ class TableCrafter {
     if (initialDataScript) {
       try {
         this.data = JSON.parse(initialDataScript.textContent);
-      console.log('TableCrafter: Initialized from embedded data payload');
+      TC_DEBUG.log(' Initialized from embedded data payload');
       
       // If hydrating from SSR with embedded data, we must initialize state and listeners
       if (this.container.dataset.ssr === "true") {
@@ -299,11 +357,39 @@ class TableCrafter {
   }
 
   /**
+   * Escape HTML to prevent XSS attacks
+   * @param {string} str - String to escape
+   * @returns {string} - Escaped string safe for HTML insertion
+   */
+  escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    const div = document.createElement('div');
+    div.textContent = String(str);
+    return div.innerHTML;
+  }
+
+  /**
+   * Escape URL for safe use in href attributes
+   * @param {string} url - URL to sanitize
+   * @returns {string} - Safe URL or empty string if dangerous
+   */
+  sanitizeUrl(url) {
+    if (!url || typeof url !== 'string') return '';
+    const trimmed = url.trim().toLowerCase();
+    // Block javascript:, data:, vbscript: and other dangerous protocols
+    if (/^(javascript|data|vbscript|file):/i.test(trimmed)) {
+      return '';
+    }
+    // Encode special characters
+    return encodeURI(url);
+  }
+
+  /**
    * Format value for display
    */
   formatValue(value, type) {
     if (value === null || value === undefined) return '';
-    
+
     // Auto-detect if not specified
     if (!type) {
       type = this.detectDataType(value);
@@ -313,52 +399,67 @@ class TableCrafter {
       case 'date':
         // Try to parse date
         const date = new Date(value);
-        if (isNaN(date.getTime())) return value;
-        
-        return date.toLocaleDateString(undefined, {
+        if (isNaN(date.getTime())) return this.escapeHtml(value);
+
+        return this.escapeHtml(date.toLocaleDateString(undefined, {
           year: 'numeric',
           month: 'short',
           day: 'numeric'
-        });
-      
+        }));
+
       case 'datetime':
         const dt = new Date(value);
-        if (isNaN(dt.getTime())) return value;
+        if (isNaN(dt.getTime())) return this.escapeHtml(value);
 
-        return dt.toLocaleString(undefined, {
+        return this.escapeHtml(dt.toLocaleString(undefined, {
           year: 'numeric',
           month: 'short',
           day: 'numeric',
           hour: '2-digit',
           minute: '2-digit'
-        });
+        }));
 
       case 'boolean':
         const isTrue = value === true || value === 'true' || value === 1 || value === '1';
-        return isTrue 
-          ? '<span class="tc-badge tc-badge-success">Yes</span>' 
-          : '<span class="tc-badge tc-badge-error">No</span>';
+        const yesLabel = TC_I18N.get('yes', {}, 'Yes');
+        const noLabel = TC_I18N.get('no', {}, 'No');
+        return isTrue
+          ? `<span class="tc-badge tc-badge-success">${this.escapeHtml(yesLabel)}</span>`
+          : `<span class="tc-badge tc-badge-error">${this.escapeHtml(noLabel)}</span>`;
 
       case 'email':
-        return `<a href="mailto:${value}" class="tc-link">${value}</a>`;
+        // Validate email format before rendering
+        const emailStr = String(value);
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailStr) || emailStr.length > 254) {
+          return this.escapeHtml(value);
+        }
+        const safeEmail = this.escapeHtml(emailStr);
+        return `<a href="mailto:${safeEmail}" class="tc-link">${safeEmail}</a>`;
 
       case 'url':
-        let url = value.toString();
+        let url = String(value);
         // Ensure protocol
         if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+        // Sanitize URL
+        const sanitizedUrl = this.sanitizeUrl(url);
+        if (!sanitizedUrl) return this.escapeHtml(value);
         // Truncate for display
         const displayUrl = value.length > 30 ? value.substring(0, 27) + '...' : value;
-        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="tc-link">${displayUrl}</a>`;
+        return `<a href="${sanitizedUrl}" target="_blank" rel="noopener noreferrer" class="tc-link">${this.escapeHtml(displayUrl)}</a>`;
 
       case 'image':
-         return `<img src="${value}" alt="Image" class="tc-cell-image" style="max-height: 50px; border-radius: 4px;">`;
+        const imgUrl = String(value);
+        // Only allow http/https URLs for images
+        if (!/^https?:\/\//i.test(imgUrl)) {
+          return this.escapeHtml(value);
+        }
+        const safeImgUrl = this.sanitizeUrl(imgUrl);
+        if (!safeImgUrl) return this.escapeHtml(value);
+        return `<img src="${safeImgUrl}" alt="Image" class="tc-cell-image" style="max-height: 50px; border-radius: 4px;" loading="lazy">`;
 
       default:
-        // Basic XSS protection for unknown types if it's a string
-        if (typeof value === 'string') {
-             return value;
-        }
-        return value.toString();
+        // Always escape HTML for unknown types
+        return this.escapeHtml(value);
     }
   }
 
@@ -461,7 +562,7 @@ class TableCrafter {
       
       // Check for Proxy Configuration
       if (this.config.api && this.config.api.proxy && this.config.api.proxy.url) {
-        console.log('TableCrafter: Using Proxy', this.config.api.proxy);
+        TC_DEBUG.log(' Using Proxy', this.config.api.proxy);
         
         const formData = new FormData();
         formData.append('action', 'tc_proxy_fetch');
@@ -491,7 +592,7 @@ class TableCrafter {
         }
         const text = await response.text();
         // Debug: Log raw response to find HTML errors
-        console.log('TableCrafter Raw Response:', text.substring(0, 500)); 
+        TC_DEBUG.log('Raw Response:', text.substring(0, 500)); 
         
         data = JSON.parse(text);
       }
@@ -620,14 +721,14 @@ class TableCrafter {
         this.config.pageSize = 25; // Medium pages for large datasets  
       }
       
-      console.log(`TableCrafter: Large dataset detected (${dataSize} rows). Enabling optimizations.`);
+      TC_DEBUG.log(`Large dataset detected (${dataSize} rows). Enabling optimizations.`);
     }
     
     // Auto-enable virtual scrolling for massive datasets
     if (dataSize > this.config.largeDataset.virtualThreshold) {
       this.config.largeDataset.virtualScrolling = true;
       this.config.pageSize = 100; // Larger virtual pages
-      console.log(`TableCrafter: Massive dataset detected (${dataSize} rows). Enabling virtual scrolling.`);
+      TC_DEBUG.log(`Massive dataset detected (${dataSize} rows). Enabling virtual scrolling.`);
     }
     
     // Performance warning for extremely large datasets
@@ -4623,7 +4724,7 @@ class TableCrafter {
       this.config.autoRefresh.showLastUpdated = dataset.refreshLastUpdated === 'true';
     }
 
-    console.log('TableCrafter: Parsed data attributes', {
+    TC_DEBUG.log(' Parsed data attributes', {
       autoRefreshEnabled: this.config.autoRefresh.enabled,
       interval: this.config.autoRefresh.interval,
       showIndicator: this.config.autoRefresh.showIndicator
@@ -4641,7 +4742,7 @@ class TableCrafter {
       return;
     }
 
-    console.log('TableCrafter: Initializing Smart Auto-Refresh');
+    TC_DEBUG.log(' Initializing Smart Auto-Refresh');
     
     // Create refresh indicator if configured
     if (this.config.autoRefresh.showIndicator) {
@@ -4879,7 +4980,7 @@ class TableCrafter {
     this.updateRefreshIndicator();
     
     if (!smart) {
-      console.log('TableCrafter: Auto-refresh paused manually');
+      TC_DEBUG.log(' Auto-refresh paused manually');
     }
   }
 
@@ -4894,7 +4995,7 @@ class TableCrafter {
     this.updateRefreshIndicator();
     
     if (!smart) {
-      console.log('TableCrafter: Auto-refresh resumed manually');
+      TC_DEBUG.log(' Auto-refresh resumed manually');
     }
   }
 
@@ -4913,7 +5014,7 @@ class TableCrafter {
    * Manually trigger refresh
    */
   refreshNow() {
-    console.log('TableCrafter: Manual refresh triggered');
+    TC_DEBUG.log(' Manual refresh triggered');
     this.performRefresh();
     
     // Reset the interval
@@ -4924,7 +5025,7 @@ class TableCrafter {
    * Perform the actual data refresh
    */
   async performRefresh() {
-    console.log('TableCrafter: Performing auto-refresh');
+    TC_DEBUG.log(' Performing auto-refresh');
     
     try {
       // Store current state before refresh
@@ -4952,7 +5053,7 @@ class TableCrafter {
       this.refreshAttempts = 0;
       
       this.updateRefreshIndicator();
-      console.log('TableCrafter: Auto-refresh completed successfully');
+      TC_DEBUG.log(' Auto-refresh completed successfully');
 
     } catch (error) {
       console.error('TableCrafter: Auto-refresh failed', error);
@@ -4960,7 +5061,7 @@ class TableCrafter {
 
       if (this.config.autoRefresh.retryOnFailure && 
           this.refreshAttempts < this.config.autoRefresh.maxRetries) {
-        console.log(`TableCrafter: Retrying refresh (${this.refreshAttempts}/${this.config.autoRefresh.maxRetries})`);
+        TC_DEBUG.log(`Retrying refresh (${this.refreshAttempts}/${this.config.autoRefresh.maxRetries})`);
         
         // Exponential backoff: retry after 2^attempt seconds
         const retryDelay = Math.pow(2, this.refreshAttempts) * 1000;
@@ -5048,7 +5149,7 @@ class TableCrafter {
       clearTimeout(this.interactionTimeout);
     }
     
-    console.log('TableCrafter: Auto-refresh destroyed');
+    TC_DEBUG.log(' Auto-refresh destroyed');
   }
 
   /**
@@ -5078,7 +5179,7 @@ class TableCrafter {
       this.setupFocusManagement();
     }
 
-    console.log('TableCrafter: Accessibility features initialized');
+    TC_DEBUG.log(' Accessibility features initialized');
   }
 
   /**

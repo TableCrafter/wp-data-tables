@@ -19,6 +19,62 @@ class TC_Export_Handler
      * Supported export formats
      */
     const SUPPORTED_FORMATS = ['csv', 'xlsx', 'pdf'];
+
+    /**
+     * Get secure temporary directory for exports
+     *
+     * Creates a protected directory within wp-uploads for temporary export files.
+     *
+     * @return string|false Path to temp directory or false on failure
+     */
+    private static function get_secure_temp_dir()
+    {
+        $upload_dir = wp_upload_dir();
+        $temp_dir = trailingslashit($upload_dir['basedir']) . 'tablecrafter-exports/';
+
+        // Create directory if it doesn't exist
+        if (!file_exists($temp_dir)) {
+            if (!wp_mkdir_p($temp_dir)) {
+                return false;
+            }
+
+            // Create .htaccess to prevent direct access
+            $htaccess_content = "# Deny access to all files\n";
+            $htaccess_content .= "<IfModule mod_authz_core.c>\n";
+            $htaccess_content .= "    Require all denied\n";
+            $htaccess_content .= "</IfModule>\n";
+            $htaccess_content .= "<IfModule !mod_authz_core.c>\n";
+            $htaccess_content .= "    Order deny,allow\n";
+            $htaccess_content .= "    Deny from all\n";
+            $htaccess_content .= "</IfModule>\n";
+
+            file_put_contents($temp_dir . '.htaccess', $htaccess_content);
+
+            // Create index.php to prevent directory listing
+            file_put_contents($temp_dir . 'index.php', '<?php // Silence is golden');
+        }
+
+        return $temp_dir;
+    }
+
+    /**
+     * Generate a secure temporary file path
+     *
+     * @param string $extension File extension
+     * @return string|false Path to temp file or false on failure
+     */
+    private static function get_secure_temp_file(string $extension): string
+    {
+        $temp_dir = self::get_secure_temp_dir();
+        if (!$temp_dir) {
+            // Fallback to system temp dir if our secure dir fails
+            $temp_dir = sys_get_temp_dir() . '/';
+        }
+
+        // Generate unique filename with random component
+        $unique_id = wp_generate_uuid4();
+        return $temp_dir . 'tc_export_' . $unique_id . '.' . $extension;
+    }
     
     /**
      * Export data in specified format
@@ -78,7 +134,7 @@ class TC_Export_Handler
      */
     private static function export_csv(array $data, array $headers, array $options): array
     {
-        $temp_file = tempnam(sys_get_temp_dir(), 'tc_export_') . '.csv';
+        $temp_file = self::get_secure_temp_file('csv');
         $handle = fopen($temp_file, 'w');
         
         if (!$handle) {
@@ -137,8 +193,8 @@ class TC_Export_Handler
     {
         // For now, we'll create a basic XML-based XLSX file
         // In a full implementation, you'd use PhpSpreadsheet library
-        
-        $temp_file = tempnam(sys_get_temp_dir(), 'tc_export_') . '.xlsx';
+
+        $temp_file = self::get_secure_temp_file('xlsx');
         
         // Create basic Excel XML structure
         $excel_data = self::create_basic_xlsx($data, $headers, $options);
@@ -161,7 +217,7 @@ class TC_Export_Handler
      */
     private static function export_pdf(array $data, array $headers, array $options): array
     {
-        $temp_file = tempnam(sys_get_temp_dir(), 'tc_export_') . '.pdf';
+        $temp_file = self::get_secure_temp_file('pdf');
         
         // Create basic PDF using built-in functionality
         // In production, you'd use a proper PDF library like TCPDF or FPDF
@@ -215,7 +271,7 @@ class TC_Export_Handler
     {
         // This is a simplified XLSX creation - in production, use PhpSpreadsheet
         $zip = new ZipArchive();
-        $temp_zip = tempnam(sys_get_temp_dir(), 'xlsx_') . '.xlsx';
+        $temp_zip = self::get_secure_temp_file('xlsx');
         
         if ($zip->open($temp_zip, ZipArchive::CREATE) !== TRUE) {
             throw new Exception('Cannot create XLSX file');
@@ -430,13 +486,85 @@ class TC_Export_Handler
     
     /**
      * Clean up temporary files
+     *
+     * Only allows deletion of files in our secure temp directory or system temp.
      */
     public static function cleanup_temp_file(string $file_path): bool
     {
-        if (file_exists($file_path) && strpos($file_path, sys_get_temp_dir()) === 0) {
-            return unlink($file_path);
+        if (!file_exists($file_path)) {
+            return false;
         }
-        return false;
+
+        // Get real path to prevent directory traversal attacks
+        $real_path = realpath($file_path);
+        if (!$real_path) {
+            return false;
+        }
+
+        // Define allowed directories
+        $allowed_dirs = array(
+            realpath(sys_get_temp_dir()),
+        );
+
+        // Add our secure temp directory if it exists
+        $upload_dir = wp_upload_dir();
+        $secure_dir = realpath(trailingslashit($upload_dir['basedir']) . 'tablecrafter-exports');
+        if ($secure_dir) {
+            $allowed_dirs[] = $secure_dir;
+        }
+
+        // Check if file is in an allowed directory
+        $is_allowed = false;
+        foreach ($allowed_dirs as $allowed_dir) {
+            if ($allowed_dir && strpos($real_path, $allowed_dir) === 0) {
+                $is_allowed = true;
+                break;
+            }
+        }
+
+        if (!$is_allowed) {
+            return false;
+        }
+
+        // Only delete files with expected prefixes
+        $filename = basename($real_path);
+        if (strpos($filename, 'tc_export_') !== 0) {
+            return false;
+        }
+
+        return unlink($real_path);
+    }
+
+    /**
+     * Clean up old export files (called via cron or manually)
+     *
+     * @param int $max_age Maximum age in seconds (default: 1 hour)
+     * @return int Number of files cleaned up
+     */
+    public static function cleanup_old_exports(int $max_age = 3600): int
+    {
+        $cleaned = 0;
+        $temp_dir = self::get_secure_temp_dir();
+
+        if (!$temp_dir || !is_dir($temp_dir)) {
+            return 0;
+        }
+
+        $files = glob($temp_dir . 'tc_export_*');
+        if (!$files) {
+            return 0;
+        }
+
+        $now = time();
+        foreach ($files as $file) {
+            if (is_file($file) && ($now - filemtime($file)) > $max_age) {
+                if (unlink($file)) {
+                    $cleaned++;
+                }
+            }
+        }
+
+        return $cleaned;
     }
     
     /**
