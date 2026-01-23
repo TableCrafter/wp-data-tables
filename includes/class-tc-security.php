@@ -213,8 +213,8 @@ class TC_Security
 
         $proxy_headers = array(
             'cloudflare' => 'HTTP_CF_CONNECTING_IP',
-            'forwarded'  => 'HTTP_X_FORWARDED_FOR',
-            'real_ip'    => 'HTTP_X_REAL_IP',
+            'forwarded' => 'HTTP_X_FORWARDED_FOR',
+            'real_ip' => 'HTTP_X_REAL_IP',
         );
 
         foreach ($trusted_headers as $header_key) {
@@ -274,5 +274,84 @@ class TC_Security
             $log = sprintf('[TableCrafter Security] %s | Context: %s', $message, json_encode($context));
             error_log($log);
         }
+    }
+
+    /**
+     * Encrypt a token for secure storage
+     *
+     * Uses WordPress salt for encryption key.
+     *
+     * @param string $token Plain text token
+     * @return string Encrypted token (base64 encoded)
+     */
+    public function encrypt_token(string $token): string
+    {
+        if (empty($token)) {
+            return '';
+        }
+
+        $key = $this->get_encryption_key();
+        $iv = openssl_random_pseudo_bytes(16);
+
+        $encrypted = openssl_encrypt(
+            $token,
+            'AES-256-CBC',
+            $key,
+            OPENSSL_RAW_DATA,
+            $iv
+        );
+
+        if ($encrypted === false) {
+            return '';
+        }
+
+        // Combine IV and encrypted data, then base64 encode
+        return base64_encode($iv . $encrypted);
+    }
+
+    /**
+     * Decrypt a stored token
+     *
+     * @param string $encrypted_token Base64 encoded encrypted token
+     * @return string Decrypted token
+     */
+    public function decrypt_token(string $encrypted_token): string
+    {
+        if (empty($encrypted_token)) {
+            return '';
+        }
+
+        $key = $this->get_encryption_key();
+        $data = base64_decode($encrypted_token);
+
+        if ($data === false || strlen($data) < 17) {
+            return '';
+        }
+
+        // Extract IV (first 16 bytes) and encrypted data
+        $iv = substr($data, 0, 16);
+        $encrypted = substr($data, 16);
+
+        $decrypted = openssl_decrypt(
+            $encrypted,
+            'AES-256-CBC',
+            $key,
+            OPENSSL_RAW_DATA,
+            $iv
+        );
+
+        return $decrypted !== false ? $decrypted : '';
+    }
+
+    /**
+     * Get encryption key from WordPress salts
+     *
+     * @return string 32-byte encryption key
+     */
+    private function get_encryption_key(): string
+    {
+        // Use WordPress AUTH_KEY salt, hash to 32 bytes for AES-256
+        $salt = defined('AUTH_KEY') ? AUTH_KEY : 'tablecrafter-default-salt';
+        return hash('sha256', $salt, true);
     }
 }

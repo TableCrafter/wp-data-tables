@@ -7,6 +7,35 @@
  * @package TableCrafter\Tests
  */
 
+// i18n function mocks
+if (!function_exists('__')) {
+    function __($text, $domain = 'default')
+    {
+        return $text;
+    }
+}
+
+if (!function_exists('_e')) {
+    function _e($text, $domain = 'default')
+    {
+        echo $text;
+    }
+}
+
+if (!function_exists('esc_html__')) {
+    function esc_html__($text, $domain = 'default')
+    {
+        return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    }
+}
+
+if (!function_exists('esc_attr__')) {
+    function esc_attr__($text, $domain = 'default')
+    {
+        return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    }
+}
+
 if (!function_exists('wp_parse_url')) {
     function wp_parse_url($url, $component = -1)
     {

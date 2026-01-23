@@ -63,6 +63,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     require_once TABLECRAFTER_PATH . 'includes/class-tc-cache.php';
     require_once TABLECRAFTER_PATH . 'includes/class-tc-data-fetcher.php';
     require_once TABLECRAFTER_PATH . 'includes/sources/class-tc-csv-source.php';
+    require_once TABLECRAFTER_PATH . 'includes/sources/class-tc-airtable-source.php';
 }
 
 // Load Composer autoloader if available

@@ -93,11 +93,12 @@ class TC_Data_Fetcher
             return new WP_Error('security_error', 'The provided URL is blocked for safety (Local/Private IP).');
         }
 
+        // Check for Airtable source (airtable:// protocol)
+        if (strpos($url, 'airtable://') === 0) {
+            $result = $this->fetch_airtable($url);
+        }
         // Check for CSV / Google Sheets
-        $is_google_sheet = preg_match('/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/', $url);
-        $is_csv_ext = (substr($url, -4) === '.csv');
-
-        if ($is_google_sheet || $is_csv_ext) {
+        elseif (preg_match('/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/', $url) || substr($url, -4) === '.csv') {
             $result = TC_CSV_Source::fetch($url);
         } else {
             $result = $this->fetch_remote_json($url);
@@ -125,9 +126,11 @@ class TC_Data_Fetcher
         $plugin_url = TABLECRAFTER_URL;
 
         // Check if URL is local
-        if (strpos($url, $site_url) !== 0 &&
+        if (
+            strpos($url, $site_url) !== 0 &&
             strpos($url, $home_url) !== 0 &&
-            strpos($url, $plugin_url) !== 0) {
+            strpos($url, $plugin_url) !== 0
+        ) {
             return false;
         }
 
@@ -201,6 +204,65 @@ class TC_Data_Fetcher
         }
 
         return false;
+    }
+
+    /**
+     * Fetch data from Airtable source
+     *
+     * Parses airtable:// URL and delegates to TC_Airtable_Source.
+     *
+     * @param string $url Airtable URL (airtable://baseId/tableName?token=xxx)
+     * @return array|WP_Error Parsed data or error
+     */
+    private function fetch_airtable(string $url)
+    {
+        // Parse the Airtable URL
+        $parsed = TC_Airtable_Source::parse_url($url);
+
+        if (is_wp_error($parsed)) {
+            $this->log_error('Airtable URL Parse Error', array('url' => $url));
+            return $parsed;
+        }
+
+        // Token is required
+        if (empty($parsed['token'])) {
+            // Try to get token from saved settings
+            $saved_token = get_option('tablecrafter_airtable_token', '');
+            if (!empty($saved_token)) {
+                $parsed['token'] = $this->security->decrypt_token($saved_token);
+            }
+        }
+
+        if (empty($parsed['token'])) {
+            return new WP_Error(
+                'airtable_no_token',
+                __('Airtable Personal Access Token is required.', 'tablecrafter-wp-data-tables')
+            );
+        }
+
+        // Build optional params
+        $params = [];
+        if (!empty($parsed['view'])) {
+            $params['view'] = $parsed['view'];
+        }
+
+        // Fetch from Airtable
+        $result = TC_Airtable_Source::fetch(
+            $parsed['base_id'],
+            $parsed['table_name'],
+            $parsed['token'],
+            $params
+        );
+
+        if (is_wp_error($result)) {
+            $this->log_error('Airtable Fetch Error', array(
+                'base_id' => $parsed['base_id'],
+                'table' => $parsed['table_name'],
+                'error' => $result->get_error_message()
+            ));
+        }
+
+        return $result;
     }
 
     /**
