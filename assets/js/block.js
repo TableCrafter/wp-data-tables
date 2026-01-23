@@ -1,11 +1,17 @@
 /**
  * TableCrafter Gutenberg Block
- * 
- * Provides a native WordPress editing experience with a live preview 
+ *
+ * Provides a native WordPress editing experience with a live preview
  * and a comprehensive sidebar for data configuration.
  */
 (function (blocks, editor, components, serverSideRender, element) {
     const el = element.createElement;
+
+    // Debug utility - only logs when debug mode is enabled
+    const TC_DEBUG = {
+        enabled: typeof window !== 'undefined' && window.TABLECRAFTER_DEBUG === true,
+        log: function(...args) { if (this.enabled) console.log('[TableCrafter Block]', ...args); }
+    };
     const { InspectorControls } = editor;
     const { PanelBody, TextControl, ToggleControl, ExternalLink, SelectControl } = components;
 
@@ -214,7 +220,7 @@
         const exportable = container.getAttribute('data-export') === 'true';
         const perPage = parseInt(container.getAttribute('data-per-page')) || 0;
 
-        console.log('TableCrafter Block: Checking container', {
+        TC_DEBUG.log(' Checking container', {
             id: container.id,
             source,
             search,
@@ -247,7 +253,7 @@
                 container.dataset.tcAutoRefresh !== autoRefresh.toString() ||
                 container.dataset.tcRefreshInterval !== refreshInterval.toString() ||
                 container.dataset.tcInitialized !== 'true') {
-                console.log('TableCrafter Block: (Re)Initializing instance', {
+                TC_DEBUG.log(' (Re)Initializing instance', {
                     oldSearch: container.dataset.tcSearch,
                     newSearch: search.toString(),
                     oldExport: container.dataset.tcExport,
@@ -262,7 +268,7 @@
                 
                 // Clear any existing TableCrafter UI elements
                 const existingUI = container.querySelectorAll('.tc-controls, .tc-filters, .tc-global-search, .tc-pagination');
-                console.log('TableCrafter Block: Removing existing UI elements', existingUI.length);
+                TC_DEBUG.log(' Removing existing UI elements', existingUI.length);
                 existingUI.forEach(el => el.remove());
 
                 // Get auto-refresh settings from data attributes
@@ -301,10 +307,10 @@
                     forceRender: true
                 };
                 
-                console.log('TableCrafter Block: Creating new instance with config', config);
+                TC_DEBUG.log(' Creating new instance with config', config);
                 const tcInstance = new TC(container, config);
                 
-                console.log('TableCrafter Block: Instance created', {
+                TC_DEBUG.log(' Instance created', {
                     instance: tcInstance,
                     hasSearchAfter: !!container.querySelector('.tc-global-search'),
                     hasFiltersAfter: !!container.querySelector('.tc-filters'),
@@ -321,7 +327,7 @@
                 
                 // Double check after a short delay
                 setTimeout(() => {
-                    console.log('TableCrafter Block: Post-init check', {
+                    TC_DEBUG.log(' Post-init check', {
                         id: container.id,
                         search,
                         hasSearchUI: !!container.querySelector('.tc-global-search'),

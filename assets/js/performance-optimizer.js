@@ -1,12 +1,18 @@
 /**
  * TableCrafter Performance Optimizer
- * 
+ *
  * Implements virtual scrolling, lazy loading, and performance optimizations
  * for large datasets to ensure smooth rendering and user experience.
  */
 
 (function() {
     'use strict';
+
+    // Use global debug utility if available, otherwise create local one
+    const TC_DEBUG = window.TC_DEBUG || {
+        enabled: typeof window !== 'undefined' && window.TABLECRAFTER_DEBUG === true,
+        log: function(...args) { if (this.enabled) console.log('[TableCrafter]', ...args); }
+    };
     
     // Global performance configuration
     const PERF_CONFIG = window.tcPerformance || {
@@ -52,7 +58,7 @@
             this.renderInitialRows();
             
             // Performance monitoring
-            console.log(`[TableCrafter] Virtual scrolling initialized for ${this.originalData.length} rows`);
+            TC_DEBUG.log(` Virtual scrolling initialized for ${this.originalData.length} rows`);
         }
         
         createVirtualContainer() {
@@ -203,7 +209,7 @@
             // Performance logging
             const renderTime = performance.now() - startTime;
             if (renderTime > 50) { // Log if rendering takes > 50ms
-                console.log(`[TableCrafter] Virtual render took ${renderTime.toFixed(2)}ms for ${visibleData.length} rows`);
+                TC_DEBUG.log(` Virtual render took ${renderTime.toFixed(2)}ms for ${visibleData.length} rows`);
             }
             
             // Trigger lazy loading for images
@@ -458,7 +464,7 @@
                 this.data.length > PERF_CONFIG.virtualScrollThreshold &&
                 PERF_CONFIG.enableVirtualScrolling) {
                 
-                console.log(`[TableCrafter] Enabling virtual scrolling for ${this.data.length} rows`);
+                TC_DEBUG.log(` Enabling virtual scrolling for ${this.data.length} rows`);
                 
                 // Initialize virtual scrolling
                 this.virtualScrollManager = new VirtualScrollManager(

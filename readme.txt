@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 3.3.2
+Stable tag: 3.4.0
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -281,6 +281,21 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 3.4.0 =
+* 🔒 **SECURITY & ARCHITECTURE IMPROVEMENTS**
+* **Security:** SSL verification enabled for all cURL requests (MITM protection)
+* **Security:** XSS fixes - added escapeHtml() and sanitizeUrl() helpers
+* **Security:** Nonce hardening - all AJAX handlers now sanitize before verification
+* **Security:** IP spoofing fix - rate limiter uses REMOTE_ADDR by default
+* **Added:** GitHub Actions CI/CD pipeline with PHP 7.4-8.3 testing
+* **Added:** Unit tests for TC_Cache, TC_Security, TC_Data_Fetcher classes
+* **Added:** TC_Cache class for centralized caching with SWR pattern
+* **Added:** TC_Security class for SSRF prevention and rate limiting
+* **Added:** TC_Data_Fetcher class for unified data fetching
+* **Added:** Debug mode via window.TABLECRAFTER_DEBUG = true
+* **Added:** i18n support with TC_I18N utility
+* **Fixed:** Live Preview no longer has fixed height/scrolling constraints
+
 = 3.3.2 =
 * 🔧 **HOTFIX: Button Text Truncation in Admin Interface**
 * **Fixed:** Button text no longer truncated in 300px sidebar - "Upload File (CSV/JSON)" and "Google Sheets" now display fully

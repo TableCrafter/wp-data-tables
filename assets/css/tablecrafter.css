@@ -621,13 +621,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 2px 4px rgba(0,123,255,0.2);
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
 }
 
 .tc-export-main-btn:hover {
   background: #0056b3;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
 }
 
 .tc-dropdown-arrow {
@@ -642,7 +642,7 @@
   background: white;
   border: 1px solid #e1e5e9;
   border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   min-width: 280px;
   overflow: hidden;
@@ -880,9 +880,12 @@
   /* Enhanced Table Mobile Experience */
   .tc-table-container {
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    scrollbar-width: thin; /* Firefox */
-    scrollbar-color: #ccc transparent; /* Firefox */
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scrolling on iOS */
+    scrollbar-width: thin;
+    /* Firefox */
+    scrollbar-color: #ccc transparent;
+    /* Firefox */
   }
 
   /* Webkit scrollbar styling */
@@ -908,7 +911,8 @@
   .tc-table th,
   .tc-table td {
     padding: 10px 12px;
-    min-width: 120px; /* Prevent excessive squishing */
+    min-width: 120px;
+    /* Prevent excessive squishing */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -932,7 +936,8 @@
 
   /* Touch-friendly sortable headers */
   .tc-table th.tc-sortable {
-    min-height: 44px; /* WCAG touch target minimum */
+    min-height: 44px;
+    /* WCAG touch target minimum */
     padding: 12px;
     cursor: pointer;
     user-select: none;
@@ -953,7 +958,8 @@
   }
 
   .tc-card:active {
-    transform: scale(0.98); /* Touch feedback */
+    transform: scale(0.98);
+    /* Touch feedback */
   }
 
   .tc-card-field {
@@ -990,8 +996,10 @@
   .tc-filter-item input,
   .tc-filter-item select {
     width: 100%;
-    min-height: 44px; /* Touch-friendly */
-    font-size: 16px; /* Prevents zoom on iOS */
+    min-height: 44px;
+    /* Touch-friendly */
+    font-size: 16px;
+    /* Prevents zoom on iOS */
     padding: 12px;
   }
 
@@ -1036,7 +1044,8 @@
   /* Mobile search */
   .tc-global-search input {
     width: 100%;
-    font-size: 16px; /* Prevents zoom on iOS */
+    font-size: 16px;
+    /* Prevents zoom on iOS */
     min-height: 44px;
     padding: 12px 16px;
   }
@@ -1122,7 +1131,8 @@
   .tc-filter-item input,
   .tc-filter-item select {
     min-height: 40px;
-    font-size: 15px; /* Still prevents iOS zoom */
+    font-size: 15px;
+    /* Still prevents iOS zoom */
     padding: 10px;
   }
 
@@ -1158,11 +1168,13 @@
 /* Large Mobile/Phablet (up to 580px) - Enhanced coverage */
 @media (max-width: 580px) {
   .tc-table-container {
-    border-radius: 4px; /* Smaller border radius for mobile */
+    border-radius: 4px;
+    /* Smaller border radius for mobile */
   }
 
   .tc-card {
-    border-radius: 6px; /* Consistent smaller radius */
+    border-radius: 6px;
+    /* Consistent smaller radius */
   }
 
   /* Improved card layout spacing */
@@ -1174,6 +1186,7 @@
 
 /* Portrait Tablet (up to 900px) */
 @media (max-width: 900px) and (min-width: 769px) {
+
   .tc-table th,
   .tc-table td {
     padding: 11px 14px;
@@ -1192,6 +1205,7 @@
 
 /* Touch Device Optimizations (any touch-capable device) */
 @media (pointer: coarse) {
+
   /* Enhance all interactive elements for touch */
   .tc-sortable,
   .tc-pagination button,
@@ -1934,9 +1948,9 @@
   margin: 0 !important;
   max-width: none !important;
   width: 100% !important;
-  height: calc(100vh - 200px) !important;
-  min-height: 500px !important;
-  max-height: 800px !important;
+  height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
   display: flex !important;
   flex-direction: column !important;
   padding: 20px !important;
@@ -1955,12 +1969,12 @@
 
 #tc-preview-wrap {
   flex: 1 1 auto !important;
-  overflow: auto !important;
+  overflow: visible !important;
   background: #fff !important;
   padding: 15px !important;
   border: 1px solid #ddd !important;
   border-radius: 4px !important;
-  height: 100% !important;
+  height: auto !important;
   max-height: none !important;
 }
 
@@ -2002,9 +2016,9 @@
 
 #tc-preview-container .tc-table-container {
   flex: 1 1 auto !important;
-  height: 100% !important;
+  height: auto !important;
   max-height: none !important;
-  overflow: auto !important;
+  overflow: visible !important;
 }
 
 #tc-preview-container .tc-table {
@@ -2066,7 +2080,7 @@
   margin-bottom: 15px !important;
 }
 
-.tc-admin-layout .card .form-row > div {
+.tc-admin-layout .card .form-row>div {
   flex: 1 !important;
 }
 
@@ -2122,14 +2136,14 @@
     margin-top: 20px !important;
     align-items: flex-start !important;
   }
-  
+
   body.wp-admin .tc-sidebar {
     flex: 0 0 300px !important;
     min-width: 300px !important;
     max-width: 300px !important;
     width: 300px !important;
   }
-  
+
   /* Button responsiveness in constrained sidebar */
   body.wp-admin .tc-sidebar .button-group .button {
     min-width: 140px !important;
@@ -2138,12 +2152,12 @@
     overflow: hidden !important;
     text-overflow: ellipsis !important;
   }
-  
+
   /* Always stack buttons in 300px sidebar to prevent text truncation */
   body.wp-admin .tc-sidebar .button-group {
     flex-direction: column !important;
   }
-  
+
   body.wp-admin .tc-sidebar .button-group .button {
     width: 100% !important;
     flex: none !important;
@@ -2151,18 +2165,18 @@
     overflow: visible !important;
     text-overflow: unset !important;
   }
-  
+
   body.wp-admin .tc-preview-area {
     flex: 1 1 auto !important;
     min-width: 0 !important;
     max-width: none !important;
     width: auto !important;
   }
-  
+
   body.wp-admin .tc-preview-area .card {
-    height: calc(100vh - 200px) !important;
-    min-height: 500px !important;
-    max-height: 800px !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
   }
 }
 
@@ -2171,22 +2185,22 @@
   .tc-admin-layout {
     flex-direction: column !important;
   }
-  
+
   .tc-sidebar {
     flex: none !important;
     max-width: none !important;
     width: 100% !important;
   }
-  
+
   .tc-preview-area {
     min-width: auto !important;
     width: 100% !important;
   }
-  
+
   .tc-preview-area .card {
-    height: calc(100vh - 300px) !important;
-    min-height: 400px !important;
-    max-height: 600px !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
   }
 }
 
@@ -2194,27 +2208,27 @@
   .tc-admin-layout {
     gap: 15px !important;
   }
-  
+
   .tc-preview-area .card {
-    height: calc(100vh - 250px) !important;
-    min-height: 350px !important;
-    max-height: 500px !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
   }
-  
+
   .tc-sidebar .card .form-row {
     flex-direction: column !important;
     gap: 10px !important;
   }
-  
+
   .tc-sidebar .card .checkbox-group {
     flex-direction: column !important;
     gap: 10px !important;
   }
-  
+
   .tc-sidebar .card .button-group {
     flex-direction: column !important;
   }
-  
+
   .tc-sidebar .card .button-group .button {
     width: 100% !important;
   }
@@ -2474,7 +2488,7 @@
     min-width: 0 !important;
     word-wrap: break-word !important;
   }
-  
+
   .tc-table th,
   .tc-table td {
     word-wrap: break-word !important;
@@ -2546,6 +2560,7 @@
 
 /* Mobile accessibility improvements */
 @media screen and (max-width: 768px) {
+
   /* Ensure touch targets are at least 44x44px */
   .tc-table th.tc-sortable,
   .tc-table td.tc-editable,
@@ -2554,14 +2569,14 @@
     min-height: 44px !important;
     min-width: 44px !important;
   }
-  
+
   /* Improve text readability on small screens */
   .tc-table th,
   .tc-table td {
     font-size: 14px !important;
     line-height: 1.4 !important;
   }
-  
+
   /* Focus indicators need to be more prominent on touch devices */
   .tc-wrapper *:focus,
   .tc-wrapper .tc-focused {
@@ -2576,14 +2591,14 @@
     color: black !important;
     background: white !important;
   }
-  
+
   .tc-table th,
   .tc-table td {
     border: 1px solid black !important;
     background: white !important;
     color: black !important;
   }
-  
+
   /* Hide interactive elements in print */
   .tc-pagination,
   .tc-global-search-container,
@@ -2597,17 +2612,22 @@
 /* === Admin Preview Enhancements === */
 /* Prevent table column squishing in admin preview */
 .tc-preview-area .tc-table {
-  min-width: 600px; /* Ensure minimum table width */
-  table-layout: auto; /* Allow columns to size naturally */
+  min-width: 600px;
+  /* Ensure minimum table width */
+  table-layout: auto;
+  /* Allow columns to size naturally */
 }
 
 .tc-preview-area .tc-table th,
 .tc-preview-area .tc-table td {
-  min-width: 100px; /* Minimum column width */
-  white-space: nowrap; /* Prevent text wrapping for headers */
+  min-width: 100px;
+  /* Minimum column width */
+  white-space: nowrap;
+  /* Prevent text wrapping for headers */
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 200px; /* Maximum width to prevent extremely wide columns */
+  max-width: 200px;
+  /* Maximum width to prevent extremely wide columns */
 }
 
 /* Allow text wrapping for data cells to show more content */
@@ -2620,7 +2640,8 @@
 /* Specific styling for common column types */
 .tc-preview-area .tc-table th:first-child,
 .tc-preview-area .tc-table td:first-child {
-  min-width: 120px; /* Usually names, need more space */
+  min-width: 120px;
+  /* Usually names, need more space */
 }
 
 /* Email and URL columns */
@@ -2644,7 +2665,8 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   background: #fff;
   overflow-x: auto;
-  max-height: none; /* Remove height restrictions */
+  max-height: none;
+  /* Remove height restrictions */
 }
 
 /* Better spacing for admin preview */
@@ -2658,13 +2680,13 @@
   .tc-admin-layout {
     flex-direction: column;
   }
-  
+
   .tc-sidebar {
     flex: none !important;
     max-width: none !important;
     width: 100% !important;
   }
-  
+
   .tc-preview-area {
     min-width: auto !important;
   }
@@ -2675,7 +2697,7 @@
   .tc-admin-layout {
     gap: 15px;
   }
-  
+
   .tc-preview-area .tc-table th,
   .tc-preview-area .tc-table td {
     min-width: 80px;

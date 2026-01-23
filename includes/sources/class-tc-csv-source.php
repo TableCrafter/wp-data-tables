@@ -47,8 +47,20 @@ class TC_CSV_Source
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'curl/8.7.1');
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+
+        // SSL verification - enabled for security (prevents MITM attacks)
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+
+        // Use WordPress bundled CA certificates if available
+        $ca_bundle = ABSPATH . WPINC . '/certificates/ca-bundle.crt';
+        if (file_exists($ca_bundle)) {
+            curl_setopt($ch, CURLOPT_CAINFO, $ca_bundle);
+        }
+
+        curl_setopt($ch, CURLOPT_USERAGENT, 'TableCrafter/' . TABLECRAFTER_VERSION . ' (WordPress Plugin)');
         curl_setopt($ch, CURLOPT_COOKIEFILE, "");
 
         $body = curl_exec($ch);
