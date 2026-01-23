@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased] - Security & Architecture Improvements
+## [3.4.0] - 2026-01-23 - Security & Architecture Improvements
 
 ### Added
 - **Uninstall Script:** Clean plugin removal via `uninstall.php` - removes all options, transients, cron jobs, and temp files

@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 3.3.2
+Stable tag: 3.4.0
 Requires PHP: 7.4
 License: GPLv2 or later
 
@@ -16,7 +16,17 @@ Transform JSON APIs, Google Sheets & CSV into accessible WordPress tables. Mobil
 
 [Try Live Demo](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
 
-### 📱 NEW: Mobile-First Excellence (v3.2.0)
+### 🔒 NEW: Security & Architecture Improvements (v3.4.0)
+
+**🛡️ ENHANCED SECURITY** - SSL verification enabled on all remote requests, XSS vulnerability fixes in both PHP and JavaScript, hardened nonce verification, and secure temporary file handling for exports.
+
+**🏗️ IMPROVED ARCHITECTURE** - Refactored monolithic codebase into focused, testable classes (TC_Security, TC_Cache, TC_Data_Fetcher) for better maintainability and extensibility.
+
+**🧪 TESTING INFRASTRUCTURE** - Added PHPUnit test suite, GitHub Actions CI pipeline, and build system for asset minification. Enterprise-ready code quality.
+
+**🌐 INTERNATIONALIZATION** - Full i18n support for JavaScript strings, making TableCrafter ready for translation into any language.
+
+### 📱 Mobile-First Excellence (v3.2.0)
 
 **🎯 MOBILE-FIRST RESPONSIVE DESIGN** - Complete mobile-first architecture with card-based layouts optimized for mobile devices. Seamlessly adapts from 320px mobile screens to 4K desktops with intelligent breakpoint system (≤768px mobile, 768-900px tablet, >900px desktop).
 
@@ -281,6 +291,22 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+= 3.4.0 =
+* 🔒 **MAJOR: Security, Architecture & Developer Experience Improvements**
+* **Security:** Enabled SSL certificate verification on all cURL requests (prevents MITM attacks)
+* **Security:** Fixed XSS vulnerability in admin URL parameter with proper sanitization
+* **Security:** Fixed XSS vulnerability in JavaScript formatValue() with escapeHtml() helper
+* **Security:** Hardened nonce verification in all AJAX handlers
+* **Security:** Fixed IP spoofing vulnerability in rate limiting system
+* **Security:** Added secure temporary directory for exports with .htaccess protection
+* **Architecture:** Split monolithic class into TC_Security, TC_Cache, TC_Data_Fetcher
+* **Testing:** Added PHPUnit test infrastructure with unit tests
+* **CI/CD:** Added GitHub Actions workflow for linting, testing, and security scans
+* **Build:** Added esbuild/clean-css build system for asset minification
+* **i18n:** Added JavaScript internationalization support with TC_I18N utility
+* **DX:** Added conditional debug logging (enable via window.TABLECRAFTER_DEBUG)
+* **Cleanup:** Added uninstall.php for clean plugin removal
+
 = 3.3.2 =
 * 🔧 **HOTFIX: Button Text Truncation in Admin Interface**
 * **Fixed:** Button text no longer truncated in 300px sidebar - "Upload File (CSV/JSON)" and "Google Sheets" now display fully
