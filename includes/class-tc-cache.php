@@ -137,11 +137,12 @@ class TC_Cache
      *
      * @param string $cache_key Cache key
      * @param mixed $data Data to cache
+     * @param int $ttl Cache TTL in seconds (optional)
      * @return bool Success
      */
-    public function set_data_cache(string $cache_key, $data): bool
+    public function set_data_cache(string $cache_key, $data, int $ttl = self::DATA_CACHE_TTL): bool
     {
-        return set_transient($cache_key, $data, self::DATA_CACHE_TTL);
+        return set_transient($cache_key, $data, $ttl);
     }
 
     /**

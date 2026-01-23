@@ -106,7 +106,15 @@ class TC_Data_Fetcher
 
         // Cache successful results
         if ($use_cache && !is_wp_error($result) && !empty($result)) {
-            $this->cache->set_data_cache($this->cache->get_data_cache_key($url), $result);
+            // Determine TTL based on source type
+            $ttl = HOUR_IN_SECONDS;
+
+            // Airtable requires stricter caching (5 minutes) due to rate limits
+            if (strpos($url, 'airtable://') === 0) {
+                $ttl = 5 * MINUTE_IN_SECONDS;
+            }
+
+            $this->cache->set_data_cache($this->cache->get_data_cache_key($url), $result, $ttl);
             $this->cache->track_url($url);
         }
 
