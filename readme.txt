@@ -16,15 +16,32 @@ Transform JSON APIs, Google Sheets & CSV into accessible WordPress tables. Mobil
 
 [Try Live Demo](https://tastewp.org/plugins/tablecrafter-wp-data-tables)
 
-### 📱 NEW: Mobile-First Excellence (v3.2.0)
+### 🔮 NEW: Native Airtable Integration (v3.5+)
 
-**🎯 MOBILE-FIRST RESPONSIVE DESIGN** - Complete mobile-first architecture with card-based layouts optimized for mobile devices. Seamlessly adapts from 320px mobile screens to 4K desktops with intelligent breakpoint system (≤768px mobile, 768-900px tablet, >900px desktop).
+**🔌 CONNECT DIRECTLY TO AIRTABLE** - Connect any Airtable Base using a secure Personal Access Token (PAT). No third-party connectors or Zapier needed! Simply enter your Base ID and Table Name to instantly visualize your data.
 
-**👆 TOUCH GESTURE SYSTEM** - Intuitive swipe gestures for mobile card interactions. Right swipe to expand/collapse, left swipe for quick actions, with visual feedback and haptic support on supported devices. The only WordPress table plugin with native touch gesture support.
+**🔒 SECURE TOKEN HANDLING** - Enterprise-grade security ensures your API tokens are encrypted (using WordPress salts) and never exposed to the frontend. Data is fetched server-side via a secure proxy.
 
-**♿ WCAG 2.1 AA ACCESSIBILITY COMPLIANCE** - Full accessibility compliance with 44px minimum touch targets, semantic ARIA labels, screen reader optimization, high contrast support, and comprehensive keyboard navigation. Perfect for enterprises and government organizations requiring strict accessibility standards compliance.
+**⚡ 5-MINUTE INTELLIGENT CACHING** - Built-in caching layer (5-minute TTL) ensures you never hit Airtable's 5 requests/second rate limit, guaranteeing 100% uptime for your data tables even under high traffic.
 
-**⚡ MOBILE PERFORMANCE OPTIMIZED** - 40%+ performance improvement on mobile devices with <150ms touch response times. Reduced memory footprint and optimized rendering for smooth 60fps interactions on all mobile devices.
+**👆 AUTO-PAGINATION** - Automatically handles Airtable's 100-record pagination limit to fetch all your data seamlessly.
+
+### 🛡️ Enterprise Security Architecture (v3.4.0)
+
+**🔒 BANK-GRADE PROTECTION** - Completely re-architected security layer with strict SSRF protection, preventing internal network scanning.
+**🔑 NONCE HARDENING** - All Admin & AJAX operations are protected by enhanced cryptographic nonces.
+**🛡️ XSS PREVENTION** - Advanced sanitization for all outputs (HTML, URLs, Attributes) ensures data safety.
+
+### 📱 Mobile & Accessibility Core (v3.2.0)
+
+**🎯 RESPONSIVE DESIGN** - Mobile-first architecture adapts tables to card layouts on small screens.
+**👆 TOUCH GESTURES** - Native swipe interactions for mobile cards.
+**♿ WCAG 2.1 AA** - Full accessibility compliance for government/enterprise use.
+
+### 🎨 Elementor Live Preview (v3.1.0)
+
+**👁️ TRUE WYSIWYG** - The *only* table plugin with real-time data preview inside Elementor.
+**⚡ INSTANT FEEDBACK** - See search, filters, and styles update instantly while you design.
 
 ### 🚀 Why TableCrafter is the Best WordPress Table Plugin
 
