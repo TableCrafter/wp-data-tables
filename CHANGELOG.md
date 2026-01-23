@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.5.0] - 2026-01-23
+### Added
+- **Airtable Data Source:** Connect directly to Airtable bases using Personal Access Tokens (PAT).
+- **Admin UI:** New "Airtable" button and settings modal in the dashboard.
+- **Secure Token Storage:** Airtable tokens are securely encrypted using WordPress salts.
+- **URL Protocol:** Introduced `airtable://` protocol for routing Airtable requests.
+- **Quick Demo:** Added "Airtable Base (API)" to Quick Start Demos.
+- **Developer API:** Added `TC_Airtable_Source` class and `tc_save_airtable_token` AJAX handler.
+
 ## [3.4.0] - 2026-01-23
 
 ### Added
