@@ -71,6 +71,11 @@ if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-export-handler.php')) {
     require_once TABLECRAFTER_PATH . 'includes/class-tc-export-handler.php';
 }
 
+// Enhanced export handler (fixes export deception issue)
+if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-export-handler-enhanced.php')) {
+    require_once TABLECRAFTER_PATH . 'includes/class-tc-export-handler-enhanced.php';
+}
+
 if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-performance-optimizer.php')) {
     require_once TABLECRAFTER_PATH . 'includes/class-tc-performance-optimizer.php';
 }
@@ -137,7 +142,10 @@ class TableCrafter
      */
     private function __construct()
     {
-
+        // Initialize enhanced export handler
+        if (class_exists('TC_Export_Handler_Enhanced')) {
+            TC_Export_Handler_Enhanced::get_instance();
+        }
 
         add_action('init', array($this, 'register_assets'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
@@ -145,6 +153,8 @@ class TableCrafter
         add_shortcode('tablecrafter', array($this, 'render_table'));
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('admin_init', array($this, 'welcome_redirect'));
+        add_action('wp_head', array($this, 'add_export_nonce'));
+        add_action('admin_head', array($this, 'add_export_nonce'));
 
         // AJAX Proxy Handlers for frontend and admin
         add_action('wp_ajax_tc_proxy_fetch', array($this, 'ajax_proxy_fetch'));
@@ -463,6 +473,9 @@ class TableCrafter
             'downloadNonce' => wp_create_nonce('tc_download_nonce'),
             'i18n' => $this->get_js_i18n_strings()
         ));
+        
+        // Make export nonce globally available for enhanced export functionality
+        wp_add_inline_script('tablecrafter-frontend', 'window.tcExportNonce = "' . wp_create_nonce('tc_export_nonce') . '";', 'before');
 
         wp_register_style(
             'tablecrafter-style',
@@ -2353,6 +2366,15 @@ class TableCrafter
         remove_filter('wp_kses_allowed_protocols', $filter_callback, 10);
 
         return $sanitized;
+    }
+
+    /**
+     * Add export nonce to page head for enhanced export security
+     */
+    public function add_export_nonce(): void
+    {
+        $nonce = wp_create_nonce('tc_export_nonce');
+        echo '<meta name="tc-export-nonce" content="' . esc_attr($nonce) . '">' . "\n";
     }
 
     /**
