@@ -290,7 +290,7 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 * **Improvement:** Enhanced error handling and logging consistency
 * **Enhancement:** Added comprehensive HTTP request statistics and monitoring
 * **Developer:** New TC_HTTP_Request class provides standardized API for all HTTP operations
-* **Testing:** Comprehensive test suite validates HTTP request reliability with PHPUnit 10.5
+* **Testing:** Comprehensive test suite validates HTTP request reliability with PHPUnit 9.6
 * **CI/CD:** GitHub Actions workflow updated for PHP 8.0-8.3 compatibility testing
 * **Business Impact:** Resolves intermittent data fetching failures that caused customer churn
 
