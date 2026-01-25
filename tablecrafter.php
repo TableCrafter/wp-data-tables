@@ -16,6 +16,19 @@ if (!defined('ABSPATH')) {
 }
 
 /**
+ * Check PHP version compatibility
+ */
+if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+    add_action('admin_notices', function() {
+        echo '<div class="notice notice-error"><p>';
+        echo '<strong>TableCrafter Error:</strong> This plugin requires PHP 8.1 or higher. ';
+        echo 'You are running PHP ' . PHP_VERSION . '. Please upgrade your PHP version.';
+        echo '</p></div>';
+    });
+    return;
+}
+
+/**
  * Global Constants
  */
 define('TABLECRAFTER_VERSION', '3.5.2');
