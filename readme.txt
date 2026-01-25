@@ -3,7 +3,7 @@ Contributors: fahdi
 Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 3.5.2
+Stable tag: 3.5.3
 Requires PHP: 8.0
 License: GPLv2 or later
 
@@ -281,6 +281,16 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 4. **Reactive Gutenberg Block** - Visual block editor with proxy-supported live previews. Settings for Search, Export, and Filters trigger instant updates without coding.
 
 == Changelog ==
+
+= 3.5.3 - January 26, 2026 =
+* **INFRASTRUCTURE:** Complete GitHub Actions CI/CD pipeline with PHP 8.0-8.3 testing
+* **BREAKING:** Minimum PHP requirement updated to 8.0 (drops all PHP 7 support for security/performance)
+* **FEATURE:** Data Source Health Monitoring system with TDD implementation (webhook notifications, history tracking)
+* **DEVELOPER:** Repository organization - all reports moved to reports/ folder for cleaner structure
+* **DEVELOPER:** ESLint configuration with WordPress globals (tablecrafterAdmin, tablecrafterData, etc.)
+* **TESTING:** PHPUnit 9.6 with doctrine/instantiator 1.5 for PHP 8.0 compatibility
+* **CI/CD:** E2E tests disabled in CI pending WordPress environment setup
+* **QUALITY:** All tests passing - PHP lint, unit tests, JavaScript lint, security scan, build process
 
 = 3.5.2 - January 25, 2026 =
 * **MAJOR FIX:** HTTP Request Standardization - Unified HTTP handling eliminates "JSON links not working" customer complaints
