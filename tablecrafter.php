@@ -3,7 +3,7 @@
  * Plugin Name: TableCrafter – Data to Beautiful Tables
  * Plugin URI: https://github.com/TableCrafter/wp-data-tables
  * Description: Transform any data source into responsive WordPress tables. WCAG 2.1 compliant, advanced export (Excel/PDF), keyboard navigation, screen readers.
- * Version: 3.5.1
+ * Version: 3.5.2
  * Author: TableCrafter Team
  * Author URI: https://github.com/fahdi
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Global Constants
  */
-define('TABLECRAFTER_VERSION', '3.5.1');
+define('TABLECRAFTER_VERSION', '3.5.2');
 define('TABLECRAFTER_URL', plugin_dir_url(__FILE__));
 define('TABLECRAFTER_PATH', plugin_dir_path(__FILE__));
 
@@ -37,6 +37,16 @@ if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-cache.php')) {
 // Data sources
 if (file_exists(TABLECRAFTER_PATH . 'includes/sources/class-tc-csv-source.php')) {
     require_once TABLECRAFTER_PATH . 'includes/sources/class-tc-csv-source.php';
+}
+
+// HTTP Request handler (load before data fetcher as it depends on it)
+if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-http-request.php')) {
+    require_once TABLECRAFTER_PATH . 'includes/class-tc-http-request.php';
+}
+
+// Data Source Health Monitor (new TDD feature)
+if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-data-source-health-monitor.php')) {
+    require_once TABLECRAFTER_PATH . 'includes/class-tc-data-source-health-monitor.php';
 }
 
 if (file_exists(TABLECRAFTER_PATH . 'includes/class-tc-data-fetcher.php')) {
@@ -85,6 +95,12 @@ class TableCrafter
      * @var TableCrafter|null
      */
     private static $instance = null;
+
+    /**
+     * HTTP request handler
+     * @var TC_HTTP_Request
+     */
+    private $http;
 
 
 
@@ -1552,13 +1568,27 @@ class TableCrafter
     public function automated_cache_refresh(): void
     {
         $urls = get_option('tc_tracked_urls', array());
+        
+        // Initialize HTTP handler if not already done
+        if (!$this->http && class_exists('TC_HTTP_Request')) {
+            $this->http = TC_HTTP_Request::get_instance();
+        }
+        
         foreach ($urls as $url) {
-            $response = wp_remote_get($url, array('timeout' => 10));
-            if (!is_wp_error($response)) {
-                $body = wp_remote_retrieve_body($response);
-                $data = json_decode($body);
-                if ($data) {
-                    set_transient('tc_cache_' . md5($url), $data, HOUR_IN_SECONDS);
+            if ($this->http) {
+                $result = $this->http->request($url, TC_HTTP_Request::TYPE_CACHE_WARMUP);
+                if (!is_wp_error($result)) {
+                    set_transient('tc_cache_' . md5($url), $result, HOUR_IN_SECONDS);
+                }
+            } else {
+                // Fallback to wp_remote_get if HTTP handler not available
+                $response = wp_remote_get($url, array('timeout' => 10));
+                if (!is_wp_error($response)) {
+                    $body = wp_remote_retrieve_body($response);
+                    $data = json_decode($body);
+                    if ($data) {
+                        set_transient('tc_cache_' . md5($url), $data, HOUR_IN_SECONDS);
+                    }
                 }
             }
         }
