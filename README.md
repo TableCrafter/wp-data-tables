@@ -513,6 +513,15 @@ php tests/run-tests.php
 php tests/run-tests.php --filter=TestSSRFProtection
 ```
 
+### E2E Testing (Development)
+```bash
+# E2E tests require local WordPress environment
+npm run test:e2e
+
+# Note: E2E tests are disabled in CI pending WordPress environment setup
+# See .github/workflows/ci.yml for details
+```
+
 ### Browser Testing Matrix
 | Browser | Version | Status |
 |---------|---------|--------|
