@@ -3,7 +3,7 @@
 .github
 node_modules
 README.md
-RELEASE_PLAN.md
+reports
 sync_svn.sh
 test_sheets_logic.php
 tests
@@ -11,3 +11,14 @@ tests
 .vscode
 .idea
 *.zip
+composer.json
+composer.lock
+package.json
+package-lock.json
+.eslintrc.js
+playwright.config.js
+phpunit.xml.dist
+run-tdd-green-test.php
+simple-test.php
+tdd-demo.php
+test-*.php
