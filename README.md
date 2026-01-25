@@ -256,7 +256,7 @@ echo tablecrafter_render([
 
 ### System Requirements
 - **WordPress:** 5.0+
-- **PHP:** 7.4+ (8.0+ recommended)
+- **PHP:** 8.0+ (PHP 7 no longer supported)
 - **MySQL:** 5.7+ or MariaDB 10.3+
 - **Memory:** 64MB+ (128MB+ recommended for large datasets)
 
@@ -616,7 +616,7 @@ npm run dev
 
 **License:** GPLv2 or later  
 **Copyright:** © 2024 TableCrafter Team  
-**Compatibility:** WordPress 5.0+ | PHP 7.4+
+**Compatibility:** WordPress 5.0+ | PHP 8.0+
 
 ### Third-Party Assets
 - Icons: Heroicons (MIT License)

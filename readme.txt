@@ -4,7 +4,7 @@ Tags: table, json, api, accessibility, wcag
 Requires at least: 5.0
 Tested up to: 6.9
 Stable tag: 3.5.2
-Requires PHP: 8.1
+Requires PHP: 8.0
 License: GPLv2 or later
 
 
@@ -284,14 +284,14 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 
 = 3.5.2 - January 25, 2026 =
 * **MAJOR FIX:** HTTP Request Standardization - Unified HTTP handling eliminates "JSON links not working" customer complaints
-* **BREAKING:** Minimum PHP version increased to 8.1 (from 7.4) for enhanced security and performance
+* **BREAKING:** Minimum PHP version increased to 8.0 (drops all PHP 7 support) for enhanced security and performance
 * **Improvement:** Consistent timeout values across all data sources (30s for data fetching, 10s for health checks)
 * **Improvement:** Unified retry logic with exponential backoff for better reliability
 * **Improvement:** Enhanced error handling and logging consistency
 * **Enhancement:** Added comprehensive HTTP request statistics and monitoring
 * **Developer:** New TC_HTTP_Request class provides standardized API for all HTTP operations
 * **Testing:** Comprehensive test suite validates HTTP request reliability with PHPUnit 10.5
-* **CI/CD:** GitHub Actions workflow updated for PHP 8.1-8.3 compatibility testing
+* **CI/CD:** GitHub Actions workflow updated for PHP 8.0-8.3 compatibility testing
 * **Business Impact:** Resolves intermittent data fetching failures that caused customer churn
 
 = 3.4.0 =
@@ -300,7 +300,7 @@ Yes! If you need specific features, deep integrations, or custom designs, I am a
 * **Security:** XSS fixes - added escapeHtml() and sanitizeUrl() helpers
 * **Security:** Nonce hardening - all AJAX handlers now sanitize before verification
 * **Security:** IP spoofing fix - rate limiter uses REMOTE_ADDR by default
-* **Added:** GitHub Actions CI/CD pipeline with PHP 7.4-8.3 testing
+* **Added:** GitHub Actions CI/CD pipeline with PHP 8.0-8.3 testing
 * **Added:** Unit tests for TC_Cache, TC_Security, TC_Data_Fetcher classes
 * **Added:** TC_Cache class for centralized caching with SWR pattern
 * **Added:** TC_Security class for SSRF prevention and rate limiting
