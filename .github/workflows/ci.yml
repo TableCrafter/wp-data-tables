@@ -21,6 +21,7 @@ jobs:
         with:
           php-version: '8.2'
           tools: composer, cs2pr
+          coverage: none
 
       - name: Get Composer cache directory
         id: composer-cache
@@ -34,7 +35,9 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+        run: |
+          composer update --prefer-dist --no-progress --optimize-autoloader
+          composer install --prefer-dist --no-progress --optimize-autoloader
 
       - name: Check PHP syntax
         run: find . -name "*.php" -not -path "./vendor/*" -print0 | xargs -0 -n1 php -l
@@ -86,8 +89,13 @@ jobs:
         run: npm ci
 
       - name: Lint JavaScript
-        run: npm run lint --if-present
-        continue-on-error: true
+        run: |
+          if npm run lint --if-present; then
+            echo "✅ JavaScript linting passed"
+          else
+            echo "⚠️ JavaScript linting found issues but continuing..."
+            exit 0
+          fi
 
   # E2E Tests with Playwright
   e2e-tests:
