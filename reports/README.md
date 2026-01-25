@@ -11,7 +11,8 @@ This directory contains all technical reports, impact analyses, and development 
 - **ELEMENTOR_LIVE_PREVIEW_IMPACT_REPORT.md** - Elementor integration improvements
 - **LARGE_DATASET_IMPACT_REPORT.md** - Performance optimizations for large datasets
 - **VIRTUAL_SCROLLING_IMPACT_REPORT.md** - Virtual scrolling implementation
-- **IMPACT_REPORT.md** - General impact analysis template
+- **IMPACT_REPORT.md** - Advanced Export Suite impact analysis
+- **IMPACT_REPORT_DOCS.md** - Critical SSRF security vulnerability fix
 - **IMPACT_REPORT-elementor-activation-fatal-error.md** - Fatal error fix analysis
 - **IMPACT_REPORT-http-request-standardization.md** - HTTP standardization business impact
 - **IMPACT_REPORT-mobile-user-experience.md** - Mobile UX improvements
